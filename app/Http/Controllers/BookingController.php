@@ -352,7 +352,6 @@ class BookingController extends Controller
     }
     public function store_assign_booking(Request $request,$id)
     {
-        // dd($request->all());
         $start_date = $request->data[0]['start_date'];
         $end_date = $request->data[0]['end_date'];
 
@@ -365,23 +364,69 @@ class BookingController extends Controller
                 $all_dates[] = date('Y-m-d', $current_date);
                 $current_date = strtotime('+1 day', $current_date);
             }
-            
+            $error = [];
+            $null_count = [];
             if(!empty($request->staff_data)){
                 foreach($request->staff_data as $staff){
+                    if($staff['staff_id'] == null){
+                        $null_count[] = $staff;
+                    }else{
                         if(!empty($all_dates)){
-                        foreach($all_dates as $date){
-                            $booking_assign = BookingAssign::where(['staff_id'=>null,'booking_id'=>$request->booking_id,'type'=>$staff['type'],'shift'=>$staff['shift'],'date'=>$date])->first();
-                            if($booking_assign){
-                                $booking_assign->staff_id = $staff['staff_id'];
-                                $booking_assign->cost_rate = $staff['rate'];
-                                $booking_assign->status = 1;
-                                $booking_assign->update();
+                            foreach($all_dates as $date){
+                                $booking_assign_varification = BookingAssign::whereNotNull('staff_id')
+                                    ->where(['staff_id' => $staff['staff_id'],'type' => $staff['type'], 'date' => $date]);
+    
+                                // Add shift conditions based on the staff's shift
+                                if ($staff['shift'] == 3) {
+                                    $booking_assign_varification->whereIn('shift', ['1', '2', '3']);
+                                } elseif ($staff['shift'] == 2) {
+                                    $booking_assign_varification->whereIn('shift', ['2', '3']);
+                                } elseif ($staff['shift'] == 1) {
+                                    $booking_assign_varification->whereIn('shift', ['1', '3']);
+                                } else {
+                                    $booking_assign_varification->whereIn('shift', ['1', '2', '3']);
+                                }
+    
+                                // Execute the query and get the results
+                                $ids = $booking_assign_varification->get();
+    
+                                // Check if any booking assignments were found
+                                if (!$ids->isEmpty()) {
+                                    // Staff is not available, retrieve their data
+                                    $staff_data = Staff::find($staff['staff_id']);
+                                    if ($staff_data) {
+                                        $error[] = $staff_data->f_name . " " . $staff_data->m_name . " " . $staff_data->l_name . " are not available on date " . $date;
+                                    }
+                                } else {
+                                    // No conflicting booking assignments, assign the staff to the booking
+                                    $booking_assign = BookingAssign::where([
+                                        'staff_id' => null,
+                                        'booking_id' => $request->booking_id,
+                                        'type' => $staff['type'],
+                                        'shift' => $staff['shift'],
+                                        'date' => $date
+                                    ])->first();
+    
+                                    if ($booking_assign) {
+                                        $booking_assign->staff_id = $staff['staff_id'];
+                                        $booking_assign->cost_rate = $staff['rate'];
+                                        $booking_assign->update();
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
-            return redirect()->back()->with('success','Staff Assigned Successfully.');
+            if(!empty($error)){
+                return redirect()->back()->with('bulk_error', $error);
+            }else{
+                if(count($null_count) == count($request->staff_data)){
+                    return redirect()->back()->with('error','Please Select Staff.');
+                }else{
+                    return redirect()->back()->with('success','Staff Assigned Successfully.');
+                }
+            }
         }else{
             return redirect()->back()->with('error','Please Enter Start Date & End Date.');
         }

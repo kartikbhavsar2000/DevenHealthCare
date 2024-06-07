@@ -99,7 +99,7 @@
                                   (CRP)
                                 @endif
                                 <br>{{$booking->unique_id}}<br>
-                                <button class="badge badge-center bg-primary border-none mt-1" onclick="openCustomerDetailsModal('{{$booking}}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
+                                <button class="badge badge-center bg-primary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Customer Details" data-bs-custom-class="tooltip-dark" onclick="openCustomerDetailsModal('{{$booking}}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
                               </b>
                             </td>
                             @if(!empty($staff_type))
@@ -113,13 +113,13 @@
                                       @if($stf->staff_details)
                                         @if($stf->type == $st->title && $date == date('Y-m-d', strtotime($stf->date)))
                                           <div class="row p-1">
-                                            <div class="col-8">
+                                            <div class="col-8 text-start">
                                                 {{$stf->staff_details->f_name}} {{$stf->staff_details->m_name}} {{$stf->staff_details->l_name}}<br>
                                                 <b style="font-size: 12px;"> {{$stf->shiftt->name}}</b>
                                             </div>
                                             <div class="col-4">
-                                              <button class="badge badge-center bg-label-secondary border-none mt-1" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 10px;"><i class="ri-pencil-line"></i></button>
-                                              <button class="badge badge-center bg-label-secondary border-none mt-1" onclick="openStaffDetailsModal('{{$stf->staff_details}}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
+                                              <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit Staff" data-bs-custom-class="tooltip-primary" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 10px;"><i class="ri-pencil-line"></i></button>
+                                              <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Staff Details" data-bs-custom-class="tooltip-primary" onclick="openStaffDetailsModal('{{$stf->staff_details}}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
                                             </div>
                                           </div>
                                           @php
@@ -129,11 +129,11 @@
                                       @else
                                         @if($stf->type == $st->title && $date == date('Y-m-d', strtotime($stf->date)))
                                           <div class="row p-1">
-                                            <div class="col-8 pt-2">
+                                            <div class="col-8 pt-2 text-start">
                                               <b style="font-size: 12px;"> {{$stf->shiftt->name}}</b>
                                             </div>
                                             <div class="col-4">
-                                              <button class="badge badge-center bg-primary border-none mt-1" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 0px;"><i class="ri-add-line"></i></button>
+                                              <button class="badge badge-center bg-primary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Assign Staff" data-bs-custom-class="tooltip-primary" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 0px;"><i class="ri-add-line"></i></button>
                                             </div>
                                           </div>
                                           @php
@@ -162,12 +162,12 @@
                                   @if($dct->staff_details)
                                     @if($date == date('Y-m-d', strtotime($dct->date)))
                                       <div class="row p-1">
-                                        <div class="col-8">
+                                        <div class="col-8 text-start">
                                           {{$dct->staff_details->name}}<br><b style="font-size: 12px;">{{$dct->shiftt->name}}</b>
                                         </div>
                                         <div class="col-4">
-                                          <button class="badge badge-center bg-label-secondary border-none mt-1" onclick="openDoctorAssignModal('{{$dct->id}}','{{date('Y-m-d', strtotime($dct->date))}}','Doctor', {{$dct->shiftt->id}}, {{$dct->sell_rate}})"  style="line-height: 10px;"><i class="ri-pencil-line"></i></button>
-                                          <button class="badge badge-center bg-label-secondary border-none mt-1" onclick="openDoctorDetailsModal('{{$dct->staff_details}}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
+                                          <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit Doctor" data-bs-custom-class="tooltip-primary" onclick="openDoctorAssignModal('{{$dct->id}}','{{date('Y-m-d', strtotime($dct->date))}}','Doctor', {{$dct->shiftt->id}}, {{$dct->sell_rate}})"  style="line-height: 10px;"><i class="ri-pencil-line"></i></button>
+                                          <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Doctor Details" data-bs-custom-class="tooltip-primary" onclick="openDoctorDetailsModal('{{$dct->staff_details}}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
                                         </div>
                                       </div>
                                       @php
@@ -177,11 +177,11 @@
                                   @else
                                     @if($date == date('Y-m-d', strtotime($dct->date)))
                                       <div class="row p-1">
-                                        <div class="col-8 pt-2">
+                                        <div class="col-8 pt-2 text-start">
                                           <b style="font-size: 12px;"> {{$dct->shiftt->name}}</b>
                                         </div>
                                         <div class="col-4">
-                                          <button class="badge badge-center bg-primary border-none mt-1" onclick="openDoctorAssignModal('{{$dct->id}}','{{date('Y-m-d', strtotime($dct->date))}}','Doctor', {{$dct->shiftt->id}}, {{$dct->sell_rate}})"  style="line-height: 0px;"><i class="ri-add-line"></i></button>
+                                          <button class="badge badge-center bg-primary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Assign Doctor" data-bs-custom-class="tooltip-primary" onclick="openDoctorAssignModal('{{$dct->id}}','{{date('Y-m-d', strtotime($dct->date))}}','Doctor', {{$dct->shiftt->id}}, {{$dct->sell_rate}})"  style="line-height: 0px;"><i class="ri-add-line"></i></button>
                                         </div>
                                       </div>
                                       @php
@@ -501,13 +501,22 @@
               Corporation Name
             </div>
             <div class="mt-1">
-              Address
-            </div>
-            <div class="mt-1">
               Contact Number 1
             </div>
             <div class="mt-1">
               Contact Number 2
+            </div>
+            <div class="mt-1">
+              Address
+            </div>
+            <div class="mt-1">
+              State
+            </div>
+            <div class="mt-1">
+              City
+            </div>
+            <div class="mt-1">
+              Area
             </div>
           </div>
           <div class="col-8">
@@ -515,13 +524,22 @@
               : <span id="corp_Name">-</span>
             </div>
             <div class="mt-1">
-              : <span id="corp_Address">-</span>
-            </div>
-            <div class="mt-1">
               : <span id="corp_Mobile">-</span>
             </div>
             <div class="mt-1">
               : <span id="corp_Mobile2">-</span>
+            </div>
+            <div class="mt-1">
+              : <span id="corp_Address">-</span>
+            </div>
+            <div class="mt-1">
+              : <span id="corp_State">-</span>
+            </div>
+            <div class="mt-1">
+              : <span id="corp_City">-</span>
+            </div>
+            <div class="mt-1">
+              : <span id="corp_Area">-</span>
             </div>
           </div>
         </div>
@@ -728,9 +746,12 @@
       $('#customerDetailsCanvas').modal('show');
     }else{
       $('#corp_Name').text((data.customer_details.name || ''));
-      $('#corp_Address').text(data.customer_details.address || '');
       $('#corp_Mobile').text(data.customer_details.mobile1 || '');
       $('#corp_Mobile2').text(data.customer_details.mobile2 || '');
+      $('#corp_Address').text(data.customer_details.address || '');
+      $('#corp_State').text(data.customer_details.state.name || '');
+      $('#corp_City').text(data.customer_details.city.name || '');
+      $('#corp_Area').text(data.customer_details.area.name || '');
       $('#corporationDetailsCanvas').modal('show');
     }
   }

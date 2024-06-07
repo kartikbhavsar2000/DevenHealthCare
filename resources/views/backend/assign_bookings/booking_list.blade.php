@@ -47,7 +47,7 @@
                             <th>Customer Name</th>
                             <th>Staff</th>
                             {{-- <th>Equipments</th> --}}
-                            <th>Doctors</th>
+                            {{-- <th>Doctors</th> --}}
                             {{-- <th>Ambulance</th> --}}
                             <th>Start Date</th>
                             <th>End Date</th>
@@ -76,7 +76,7 @@
             extend: 'excel',
             title: 'Bookings List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8]
+                columns: [1,2,3,4,5,6,7]
             }
         }],
         columnDefs: [{
@@ -128,9 +128,9 @@
             // {"data": "equipment_count" , render : function ( data, type, row, meta ) {
             //     return "<span class='badge badge-center bg-primary'>"+ data +"</span>";
             // }},
-            {"data": "doctor_count" , render : function ( data, type, row, meta ) {
-                return "<span class='badge badge-center bg-primary'>"+ data +"</span>";
-            }},
+            // {"data": "doctor_count" , render : function ( data, type, row, meta ) {
+            //     return "<span class='badge badge-center bg-primary'>"+ data +"</span>";
+            // }},
             // {"data": "ambulance_count" , render : function ( data, type, row, meta ) {
             //     return "<span class='badge badge-center bg-primary'>"+ data +"</span>";
             // }},

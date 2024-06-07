@@ -346,21 +346,25 @@ class MenuController extends Controller
     }
     public function get_corporates_list()
     {   
-        $data = Corporate::orderBy('id',"DESC")->get();
+        $data = Corporate::with('state')->with('city')->with('area')->orderBy('id',"DESC")->get();
         return response()->json(['data'=>$data]);
     }
     public function add_corporate()
     {
         if (in_array("corporates", Auth::user()->permissions())) {
-            return view('backend.corporates.add_corporate');
+            $states = State::where('status',1)->orderBy('name','asc')->get();
+            return view('backend.corporates.add_corporate',['states'=>$states]);
         }
         abort(403);
     }
     public function edit_corporate($id)
     {
         if (in_array("corporates", Auth::user()->permissions())) {
-        $data = Corporate::find($id);
-            return view('backend.corporates.edit_corporate',['data'=>$data]);
+            $states = State::where('status',1)->orderBy('name','asc')->get();
+            $cities = City::where('status',1)->orderBy('name','asc')->get();
+            $area = Area::orderBy('name','asc')->get();
+            $data = Corporate::find($id);
+            return view('backend.corporates.edit_corporate',['data'=>$data,'states'=>$states,'cities'=>$cities,'area'=>$area]);
         }
         abort(403);
     }
@@ -374,6 +378,9 @@ class MenuController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'address' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'area' => 'required',
             'mobile1' => 'required|numeric|min:7',
             'mobile2' => 'required|numeric|min:7',
         ],[
@@ -384,6 +391,9 @@ class MenuController extends Controller
         $data = new Corporate();
         $data->name = $request->name;
         $data->address = $request->address;
+        $data->city = $request->city;
+        $data->state = $request->state;
+        $data->area = $request->area;
         $data->mobile1 = $request->mobile1;
         $data->mobile2 = $request->mobile2;
         $data->save();
@@ -394,6 +404,9 @@ class MenuController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'address' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'area' => 'required',
             'mobile1' => 'required|numeric|min:7',
             'mobile2' => 'required|numeric|min:7',
         ],[
@@ -405,6 +418,9 @@ class MenuController extends Controller
         if($data){
             $data->name = $request->name;
             $data->address = $request->address;
+            $data->city = $request->city;
+            $data->state = $request->state;
+            $data->area = $request->area;
             $data->mobile1 = $request->mobile1;
             $data->mobile2 = $request->mobile2;
             $data->update();

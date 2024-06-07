@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 06, 2024 at 12:46 PM
+-- Generation Time: Jun 07, 2024 at 03:31 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -134,7 +134,12 @@ CREATE TABLE `booking_assign` (
   `cost_rate` text DEFAULT NULL,
   `sell_rate` text DEFAULT NULL,
   `date` date DEFAULT NULL,
-  `status` int(11) DEFAULT 0,
+  `att_date_time` datetime DEFAULT NULL,
+  `lat` text DEFAULT NULL,
+  `lng` text DEFAULT NULL,
+  `att_proof` text DEFAULT NULL,
+  `att_marked` int(11) NOT NULL DEFAULT 0 COMMENT '0 = No, 1 = Yes',
+  `status` int(11) DEFAULT 0 COMMENT '0 = pending, 1 = approve, 2 = rejected',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -144,77 +149,77 @@ CREATE TABLE `booking_assign` (
 -- Dumping data for table `booking_assign`
 --
 
-INSERT INTO `booking_assign` (`id`, `booking_id`, `staff_id`, `type`, `shift`, `cost_rate`, `sell_rate`, `date`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 6, 'Nurse', 1, '600', '800', '2024-06-05', 0, '2024-06-05 06:10:19', '2024-06-05 06:21:55', NULL),
-(2, 1, 6, 'Nurse', 1, '1000', '800', '2024-06-06', 0, '2024-06-05 06:10:19', '2024-06-06 07:23:45', NULL),
-(3, 1, NULL, 'Nurse', 1, NULL, '800', '2024-06-07', 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
-(4, 1, NULL, 'Nurse', 1, NULL, '800', '2024-06-08', 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
-(5, 1, NULL, 'Nurse', 2, NULL, '800', '2024-06-05', 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
-(6, 1, NULL, 'Nurse', 2, NULL, '800', '2024-06-06', 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
-(7, 1, NULL, 'Nurse', 2, NULL, '800', '2024-06-07', 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
-(8, 1, NULL, 'Nurse', 2, NULL, '800', '2024-06-08', 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
-(9, 1, NULL, 'Caretaker', 1, NULL, '800', '2024-06-05', 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
-(10, 1, NULL, 'Caretaker', 1, NULL, '800', '2024-06-06', 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
-(11, 1, NULL, 'Caretaker', 1, NULL, '800', '2024-06-07', 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
-(12, 1, NULL, 'Caretaker', 1, NULL, '800', '2024-06-08', 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
-(13, 1, 9, 'Baby Care', 1, '1000', '800', '2024-06-05', 0, '2024-06-05 06:10:19', '2024-06-05 13:46:23', NULL),
-(14, 1, NULL, 'Baby Care', 1, NULL, '800', '2024-06-06', 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
-(15, 1, NULL, 'Baby Care', 1, NULL, '800', '2024-06-07', 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
-(16, 1, NULL, 'Baby Care', 1, NULL, '800', '2024-06-08', 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
-(17, 1, 1, 'Doctor', 1, '1000', '1500', '2024-06-05', 0, '2024-06-05 06:10:19', '2024-06-05 06:22:04', NULL),
-(18, 1, 1, 'Doctor', 1, '1000', '1500', '2024-06-06', 0, '2024-06-05 06:10:19', '2024-06-05 06:35:04', NULL),
-(19, 1, 1, 'Doctor', 1, '1000', '1500', '2024-06-07', 0, '2024-06-05 06:10:19', '2024-06-05 06:33:55', NULL),
-(20, 1, NULL, 'Doctor', 1, NULL, '1500', '2024-06-08', 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
-(21, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-05', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(22, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-06', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(23, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-07', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(24, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-08', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(25, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-09', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(26, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-10', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(27, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-11', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(28, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-12', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(29, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-13', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(30, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-14', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(31, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-15', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(32, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-16', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(33, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-17', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(34, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-18', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(35, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-19', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(36, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-05', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(37, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-06', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(38, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-07', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(39, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-08', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(40, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-09', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(41, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-10', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(42, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-11', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(43, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-12', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(44, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-13', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(45, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-14', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(46, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-15', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(47, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-16', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(48, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-17', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(49, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-18', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(50, 2, 6, 'Nurse', 2, '1000', '1500', '2024-06-19', 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
-(51, 3, 6, 'Nurse', 3, '2000', '3000', '2024-06-05', 0, '2024-06-05 11:35:22', '2024-06-05 11:36:29', NULL),
-(52, 4, NULL, 'Baby Care', 1, NULL, '500', '2024-06-06', 0, '2024-06-06 09:59:56', '2024-06-06 09:59:56', NULL),
-(53, 4, NULL, 'Baby Care', 1, NULL, '500', '2024-06-07', 0, '2024-06-06 09:59:56', '2024-06-06 09:59:56', NULL),
-(54, 4, NULL, 'Baby Care', 1, NULL, '500', '2024-06-08', 0, '2024-06-06 09:59:56', '2024-06-06 09:59:56', NULL),
-(55, 5, NULL, 'Caretaker', 1, NULL, '500', '2024-06-06', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(56, 5, NULL, 'Caretaker', 1, NULL, '500', '2024-06-07', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(57, 5, NULL, 'Caretaker', 1, NULL, '500', '2024-06-08', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(58, 5, NULL, 'Caretaker', 1, NULL, '500', '2024-06-09', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(59, 5, NULL, 'Nurse', 1, NULL, '500', '2024-06-06', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(60, 5, NULL, 'Nurse', 1, NULL, '500', '2024-06-07', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(61, 5, NULL, 'Nurse', 1, NULL, '500', '2024-06-08', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(62, 5, NULL, 'Nurse', 1, NULL, '500', '2024-06-09', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(63, 5, NULL, 'Baby Care', 1, NULL, '500', '2024-06-06', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(64, 5, NULL, 'Baby Care', 1, NULL, '500', '2024-06-07', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(65, 5, NULL, 'Baby Care', 1, NULL, '500', '2024-06-08', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(66, 5, NULL, 'Baby Care', 1, NULL, '500', '2024-06-09', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(67, 5, NULL, 'Doctor', 1, NULL, '1000', '2024-06-06', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(68, 5, NULL, 'Doctor', 1, NULL, '1000', '2024-06-07', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(69, 5, NULL, 'Doctor', 1, NULL, '1000', '2024-06-08', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
-(70, 5, NULL, 'Doctor', 1, NULL, '1000', '2024-06-09', 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL);
+INSERT INTO `booking_assign` (`id`, `booking_id`, `staff_id`, `type`, `shift`, `cost_rate`, `sell_rate`, `date`, `att_date_time`, `lat`, `lng`, `att_proof`, `att_marked`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, NULL, 'Nurse', 1, NULL, '800', '2024-06-05', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-05 06:21:55', NULL),
+(2, 1, NULL, 'Nurse', 1, NULL, '800', '2024-06-06', '1970-01-01 00:00:00', '23.046945', '72.566315', '1717766455.png', 1, 0, '2024-06-05 06:10:19', '2024-06-07 07:50:55', NULL),
+(3, 1, NULL, 'Nurse', 1, NULL, '800', '2024-06-07', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-07 00:08:27', NULL),
+(4, 1, NULL, 'Nurse', 1, NULL, '800', '2024-06-08', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
+(5, 1, NULL, 'Nurse', 2, NULL, '800', '2024-06-05', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
+(6, 1, NULL, 'Nurse', 2, NULL, '800', '2024-06-06', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
+(7, 1, NULL, 'Nurse', 2, '1500', '800', '2024-06-07', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-07 00:44:41', NULL),
+(8, 1, NULL, 'Nurse', 2, NULL, '800', '2024-06-08', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
+(9, 1, NULL, 'Caretaker', 1, NULL, '800', '2024-06-05', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
+(10, 1, NULL, 'Caretaker', 1, '600', '800', '2024-06-06', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-06 06:37:23', NULL),
+(11, 1, NULL, 'Caretaker', 1, '00', '800', '2024-06-07', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-07 00:44:13', NULL),
+(12, 1, NULL, 'Caretaker', 1, '1000', '800', '2024-06-08', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-07 00:20:58', NULL),
+(13, 1, NULL, 'Baby Care', 1, '1000', '800', '2024-06-05', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-05 13:46:23', NULL),
+(14, 1, NULL, 'Baby Care', 1, NULL, '800', '2024-06-06', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
+(15, 1, NULL, 'Baby Care', 1, '00', '800', '2024-06-07', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 06:10:19', '2024-06-07 00:44:13', NULL),
+(16, 1, NULL, 'Baby Care', 1, NULL, '800', '2024-06-08', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
+(17, 1, NULL, 'Doctor', 1, '1000', '1500', '2024-06-05', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-05 06:22:04', NULL),
+(18, 1, NULL, 'Doctor', 1, '1000', '1500', '2024-06-06', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-05 06:35:04', NULL),
+(19, 1, NULL, 'Doctor', 1, '1000', '1500', '2024-06-07', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-05 06:33:55', NULL),
+(20, 1, NULL, 'Doctor', 1, NULL, '1500', '2024-06-08', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 06:10:19', '2024-06-05 06:10:19', NULL),
+(21, 2, NULL, 'Nurse', 3, '2000', '3000', '2024-06-05', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(22, 2, NULL, 'Nurse', 3, '2000', '3000', '2024-06-06', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(23, 2, 5, 'Nurse', 3, '2000', '3000', '2024-06-07', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-07 01:00:12', NULL),
+(24, 2, NULL, 'Nurse', 3, '2000', '3000', '2024-06-08', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(25, 2, NULL, 'Nurse', 3, '2000', '3000', '2024-06-09', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(26, 2, NULL, 'Nurse', 3, '2000', '3000', '2024-06-10', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(27, 2, NULL, 'Nurse', 3, '2000', '3000', '2024-06-11', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(28, 2, NULL, 'Nurse', 3, '2000', '3000', '2024-06-12', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(29, 2, NULL, 'Nurse', 3, '2000', '3000', '2024-06-13', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(30, 2, NULL, 'Nurse', 3, '2000', '3000', '2024-06-14', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(31, 2, NULL, 'Nurse', 3, '2000', '3000', '2024-06-15', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(32, 2, NULL, 'Nurse', 3, '2000', '3000', '2024-06-16', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(33, 2, NULL, 'Nurse', 3, '2000', '3000', '2024-06-17', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(34, 2, NULL, 'Nurse', 3, '2000', '3000', '2024-06-18', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(35, 2, NULL, 'Nurse', 3, '2000', '3000', '2024-06-19', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(36, 2, NULL, 'Nurse', 2, '1000', '1500', '2024-06-05', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(37, 2, NULL, 'Nurse', 2, '1000', '1500', '2024-06-06', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(38, 2, 6, 'Nurse', 2, '1500', '1500', '2024-06-07', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-07 00:46:31', NULL),
+(39, 2, NULL, 'Nurse', 2, '1000', '1500', '2024-06-08', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(40, 2, NULL, 'Nurse', 2, '1000', '1500', '2024-06-09', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(41, 2, NULL, 'Nurse', 2, '1000', '1500', '2024-06-10', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(42, 2, NULL, 'Nurse', 2, '1000', '1500', '2024-06-11', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(43, 2, NULL, 'Nurse', 2, '1000', '1500', '2024-06-12', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(44, 2, NULL, 'Nurse', 2, '1000', '1500', '2024-06-13', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(45, 2, NULL, 'Nurse', 2, '1000', '1500', '2024-06-14', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(46, 2, NULL, 'Nurse', 2, '1000', '1500', '2024-06-15', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(47, 2, NULL, 'Nurse', 2, '1000', '1500', '2024-06-16', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(48, 2, NULL, 'Nurse', 2, '1000', '1500', '2024-06-17', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(49, 2, NULL, 'Nurse', 2, '1000', '1500', '2024-06-18', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(50, 2, NULL, 'Nurse', 2, '1000', '1500', '2024-06-19', NULL, NULL, NULL, NULL, 0, 1, '2024-06-05 11:30:33', '2024-06-05 11:34:53', NULL),
+(51, 3, NULL, 'Nurse', 3, '2000', '3000', '2024-06-05', NULL, NULL, NULL, NULL, 0, 0, '2024-06-05 11:35:22', '2024-06-05 11:36:29', NULL),
+(52, 4, NULL, 'Baby Care', 1, NULL, '500', '2024-06-06', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 09:59:56', '2024-06-06 09:59:56', NULL),
+(53, 4, NULL, 'Baby Care', 1, NULL, '500', '2024-06-07', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 09:59:56', '2024-06-06 09:59:56', NULL),
+(54, 4, NULL, 'Baby Care', 1, NULL, '500', '2024-06-08', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 09:59:56', '2024-06-06 09:59:56', NULL),
+(55, 5, NULL, 'Caretaker', 1, '500', '500', '2024-06-06', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 10:00:55', '2024-06-06 06:36:48', NULL),
+(56, 5, NULL, 'Caretaker', 1, '00', '500', '2024-06-07', NULL, NULL, NULL, NULL, 0, 1, '2024-06-06 10:00:55', '2024-06-07 00:43:08', NULL),
+(57, 5, NULL, 'Caretaker', 1, NULL, '500', '2024-06-08', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
+(58, 5, NULL, 'Caretaker', 1, '400', '500', '2024-06-09', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 10:00:55', '2024-06-06 06:36:01', NULL),
+(59, 5, NULL, 'Nurse', 1, '00', '500', '2024-06-06', NULL, NULL, NULL, NULL, 0, 1, '2024-06-06 10:00:55', '2024-06-06 07:01:02', NULL),
+(60, 5, 6, 'Nurse', 1, '1000', '500', '2024-06-07', NULL, NULL, NULL, NULL, 0, 1, '2024-06-06 10:00:55', '2024-06-07 01:01:35', NULL),
+(61, 5, NULL, 'Nurse', 1, '1000', '500', '2024-06-08', NULL, NULL, NULL, NULL, 0, 1, '2024-06-06 10:00:55', '2024-06-07 00:21:27', NULL),
+(62, 5, NULL, 'Nurse', 1, NULL, '500', '2024-06-09', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
+(63, 5, NULL, 'Baby Care', 1, NULL, '500', '2024-06-06', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 10:00:55', '2024-06-06 07:01:02', NULL),
+(64, 5, NULL, 'Baby Care', 1, NULL, '500', '2024-06-07', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 10:00:55', '2024-06-07 00:43:08', NULL),
+(65, 5, NULL, 'Baby Care', 1, NULL, '500', '2024-06-08', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
+(66, 5, NULL, 'Baby Care', 1, NULL, '500', '2024-06-09', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
+(67, 5, NULL, 'Doctor', 1, NULL, '1000', '2024-06-06', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
+(68, 5, NULL, 'Doctor', 1, NULL, '1000', '2024-06-07', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL),
+(69, 5, 1, 'Doctor', 1, '1000', '1000', '2024-06-08', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 10:00:55', '2024-06-07 05:26:56', NULL),
+(70, 5, NULL, 'Doctor', 1, NULL, '1000', '2024-06-09', NULL, NULL, NULL, NULL, 0, 0, '2024-06-06 10:00:55', '2024-06-06 10:00:55', NULL);
 
 -- --------------------------------------------------------
 
@@ -892,6 +897,9 @@ CREATE TABLE `corporate` (
   `id` int(11) NOT NULL,
   `name` text DEFAULT NULL,
   `address` text DEFAULT NULL,
+  `city` text DEFAULT NULL,
+  `state` text DEFAULT NULL,
+  `area` text DEFAULT NULL,
   `mobile1` text DEFAULT NULL,
   `mobile2` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -903,11 +911,11 @@ CREATE TABLE `corporate` (
 -- Dumping data for table `corporate`
 --
 
-INSERT INTO `corporate` (`id`, `name`, `address`, `mobile1`, `mobile2`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Test Corporate', '6006 Kunze Heights', '6740206713', '6740206713', '2024-06-04 00:16:06', '2024-06-04 00:16:06', NULL),
-(2, 'Gage Odom', 'Ad ut placeat maxim', '2222222222', '1111111111', '2024-06-04 08:03:16', '2024-06-04 08:03:16', NULL),
-(3, 'Aline Woods', 'Debitis ipsum praese', '1111111111', '2222222222', '2024-06-04 08:04:09', '2024-06-04 08:04:09', NULL),
-(4, 'Timothy Rodriquez', 'Omnis aut magni aut', '2222222222', '2222222222', '2024-06-04 08:07:05', '2024-06-04 08:07:05', NULL);
+INSERT INTO `corporate` (`id`, `name`, `address`, `city`, `state`, `area`, `mobile1`, `mobile2`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Test Corporate', '6006 Kunze Heights', '125', '5', '19', '6740206713', '6740206713', '2024-06-04 00:16:06', '2024-06-07 06:28:40', NULL),
+(2, 'Gage Odom', 'Ad ut placeat maxim', '125', '5', '7', '2222222222', '1111111111', '2024-06-04 08:03:16', '2024-06-07 06:28:29', NULL),
+(3, 'Aline Woods', 'Debitis ipsum praese', '133', '5', '1', '1111111111', '2222222222', '2024-06-04 08:04:09', '2024-06-07 06:28:11', NULL),
+(4, 'Timothy Rodriquez', 'Omnis aut magni aut', '125', '5', '8', '2222222222', '2222222222', '2024-06-04 08:07:05', '2024-06-07 06:24:46', NULL);
 
 -- --------------------------------------------------------
 
@@ -1217,17 +1225,18 @@ CREATE TABLE `staff` (
 --
 
 INSERT INTO `staff` (`id`, `staff_id`, `f_name`, `m_name`, `l_name`, `password`, `type`, `email`, `mobile`, `mobile2`, `dob`, `gender`, `address`, `state`, `city`, `area`, `bank_name`, `branch`, `ifsc_code`, `acc_no`, `day_cost`, `night_cost`, `full_cost`, `age`, `doj`, `experience`, `reference`, `qualification`, `specification`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'DHCS202401', 'Kartik', 'Rajendrakumar', 'Bhavsar', NULL, 2, 'kartikbhavsar1757@gmail.com', '8141614389', NULL, '2000-03-14', 'Male', '350, Kotfali, Nr. Jain Derasar, Pethapur', '5', '125', '7', 'BOB', 'Gandhinagar', 'KBSH123', 'BOB123456', 500, 500, 1000, '25', '2024-05-24', '2.5', NULL, 'B.E Greduate', NULL, '2024-05-24 04:36:13', '2024-05-31 11:53:01', '2024-05-31 11:53:01'),
-(2, 'DHCS202402', 'Hyacinth', 'Lars', 'Samuel', NULL, 2, 'jery@mailinator.com', '5555555555', NULL, '2024-05-01', 'Male', 'Iste quasi laboriosa', '5', '125', '8', 'Yen Shelton', 'Autem culpa magna na', 'Molestiae ut consect', 'Facilis asperiores c', 600, 600, 1200, '31', '2024-05-27', '2', 'Dolorem ex ut nisi i', 'Qui id exercitation', 'Animi totam velit', '2024-05-27 00:24:35', '2024-05-27 00:50:34', NULL),
-(3, 'DHCS202403', 'ANJU', NULL, 'BEN', NULL, 2, 'anju.budtech@gmail.com', '7990161705', NULL, '2022-05-01', 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '9', 'BOI', 'Ashramraoad', 'BOIB47851', '8444484487871', 1000, 1500, 2000, '26', '2024-05-01', '5', NULL, NULL, NULL, '2024-05-31 10:15:32', '2024-05-31 10:15:49', '2024-05-31 10:15:49'),
-(4, 'DHCS202404', 'ANJU', NULL, 'BEN', NULL, 2, 'anju.budtech@gmail.com', '7990161705', NULL, '2022-05-01', 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '9', 'BOI', 'Ashramraoad', 'BOIB47851', '8444484487871', 1000, 1500, 2000, '26', '2024-05-01', '5', NULL, NULL, NULL, '2024-05-31 10:15:39', '2024-05-31 10:15:39', NULL),
-(5, 'DHCS202405', 'JIGNESH', NULL, 'BATOT', NULL, 1, 'jinesh.budtech@gmail.com', '6367964951', NULL, NULL, 'Male', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '5', 'BOI', 'usmanpura', 'BOIB47851', '783584487871', 1000, 1500, 2000, '29', '2024-05-09', '15', NULL, NULL, NULL, '2024-05-31 10:23:20', '2024-05-31 10:23:20', NULL),
-(6, 'DHCS202406', 'MUKESH', NULL, 'KUMAR', NULL, 1, 'Mukesh.budtech@gmail.com', '6367967862', NULL, NULL, 'Male', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '6', 'BOI', 'usmanpura', 'BOIB47851', '725484487871', 1000, 1500, 2000, '29', '2024-02-01', '15', NULL, NULL, NULL, '2024-05-31 10:25:14', '2024-05-31 10:25:14', NULL),
-(7, 'DHCS202407', 'ANISHA', NULL, 'GAMETI', NULL, 4, NULL, '9638480848', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '18', 'BOI', 'Himmat Nagar', 'BOIB47851', '8444484487871', 1000, 2500, 3000, NULL, '2022-05-01', '7', '10th', NULL, NULL, '2024-05-31 10:42:22', '2024-05-31 10:42:22', NULL),
-(8, 'DHCS202408', 'DIPIKABEN', NULL, NULL, NULL, 4, NULL, '7869686852', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '19', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 1500, 1800, NULL, '2024-03-07', '3', NULL, NULL, NULL, '2024-05-31 10:44:25', '2024-05-31 10:46:14', NULL),
-(9, 'DHCS202409', 'VEENA', 'BEN', 'YADAV', NULL, 4, 'veenayadav.budtech@gmail.com', '7624049852', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '9', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 2100, 2800, NULL, '2024-01-04', '7', NULL, NULL, NULL, '2024-05-31 10:52:57', '2024-05-31 10:52:57', NULL),
-(10, 'DHCS202410', 'URMILA', 'BEN', 'DEVI', NULL, 2, 'urmila.budtech@gmail.com', '6375604700', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '19', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 2100, 2800, NULL, '2024-05-01', '7', NULL, NULL, NULL, '2024-05-31 10:55:15', '2024-05-31 10:55:15', NULL),
-(11, 'DHCS202411', 'VARSHA', 'BEN', 'GAMETHI', NULL, 2, 'Varsha.budtech@gmail.com', '9328233006', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '20', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 2100, 2800, NULL, '2024-01-30', '7', NULL, NULL, NULL, '2024-05-31 10:59:40', '2024-05-31 10:59:40', NULL);
+(1, 'DHCS202401', 'Kartik', 'Rajendrakumar', 'Bhavsar', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'kartikbhavsar1757@gmail.com', '8141614389', NULL, '2000-03-14', 'Male', '350, Kotfali, Nr. Jain Derasar, Pethapur', '5', '125', '7', 'BOB', 'Gandhinagar', 'KBSH123', 'BOB123456', 500, 500, 1000, '25', '2024-05-24', '2.5', NULL, 'B.E Greduate', NULL, '2024-05-24 04:36:13', '2024-05-31 11:53:01', '2024-05-31 11:53:01'),
+(2, 'DHCS202402', 'Hyacinth', 'Lars', 'Samuel', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'jery@mailinator.com', '5555555555', NULL, '2024-05-01', 'Male', 'Iste quasi laboriosa', '5', '125', '8', 'Yen Shelton', 'Autem culpa magna na', 'Molestiae ut consect', 'Facilis asperiores c', 600, 600, 1200, '31', '2024-05-27', '2', 'Dolorem ex ut nisi i', 'Qui id exercitation', 'Animi totam velit', '2024-05-27 00:24:35', '2024-05-27 00:50:34', NULL),
+(3, 'DHCS202403', 'ANJU', NULL, 'BEN', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'anju.budtech@gmail.com', '7990161705', NULL, '2022-05-01', 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '9', 'BOI', 'Ashramraoad', 'BOIB47851', '8444484487871', 1000, 1500, 2000, '26', '2024-05-01', '5', NULL, NULL, NULL, '2024-05-31 10:15:32', '2024-05-31 10:15:49', '2024-05-31 10:15:49'),
+(4, 'DHCS202404', 'ANJU', NULL, 'BEN', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'anju.budtech@gmail.com', '7990161705', NULL, '2022-05-01', 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '9', 'BOI', 'Ashramraoad', 'BOIB47851', '8444484487871', 1000, 1500, 2000, '26', '2024-05-01', '5', NULL, NULL, NULL, '2024-05-31 10:15:39', '2024-05-31 10:15:39', NULL),
+(5, 'DHCS202405', 'JIGNESH', NULL, 'BATOT', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 1, 'jinesh.budtech@gmail.com', '6367964951', NULL, NULL, 'Male', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '5', 'BOI', 'usmanpura', 'BOIB47851', '783584487871', 1000, 1500, 2000, '29', '2024-05-09', '15', NULL, NULL, NULL, '2024-05-31 10:23:20', '2024-05-31 10:23:20', NULL),
+(6, 'DHCS202406', 'MUKESH', NULL, 'KUMAR', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 1, 'Mukesh.budtech@gmail.com', '6367967862', NULL, NULL, 'Male', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '6', 'BOI', 'usmanpura', 'BOIB47851', '725484487871', 1000, 1500, 2000, '29', '2024-02-01', '15', NULL, NULL, NULL, '2024-05-31 10:25:14', '2024-05-31 10:25:14', NULL),
+(7, 'DHCS202407', 'ANISHA', NULL, 'GAMETI', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 4, NULL, '9638480848', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '18', 'BOI', 'Himmat Nagar', 'BOIB47851', '8444484487871', 1000, 2500, 3000, NULL, '2022-05-01', '7', '10th', NULL, NULL, '2024-05-31 10:42:22', '2024-05-31 10:42:22', NULL),
+(8, 'DHCS202408', 'DIPIKABEN', NULL, NULL, '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 4, NULL, '7869686852', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '19', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 1500, 1800, NULL, '2024-03-07', '3', NULL, NULL, NULL, '2024-05-31 10:44:25', '2024-05-31 10:46:14', NULL),
+(9, 'DHCS202409', 'VEENA', 'BEN', 'YADAV', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 4, 'veenayadav.budtech@gmail.com', '7624049852', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '9', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 2100, 2800, NULL, '2024-01-04', '7', NULL, NULL, NULL, '2024-05-31 10:52:57', '2024-05-31 10:52:57', NULL),
+(10, 'DHCS202410', 'URMILA', 'BEN', 'DEVI', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'urmila.budtech@gmail.com', '6375604700', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '19', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 2100, 2800, NULL, '2024-05-01', '7', NULL, NULL, NULL, '2024-05-31 10:55:15', '2024-05-31 10:55:15', NULL),
+(11, 'DHCS202411', 'VARSHA', 'BEN', 'GAMETHI', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'Varsha.budtech@gmail.com', '9328233006', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '20', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 2100, 2800, NULL, '2024-01-30', '7', NULL, NULL, NULL, '2024-05-31 10:59:40', '2024-05-31 10:59:40', NULL),
+(12, 'DHCS202412', 'tinkal', 'Rajendrakumar', 'bhavsar', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 4, 'kartikbhavsar1757@gmail.com', '8141614389', NULL, '1967-04-03', 'Female', '350,kotfali, Nr. jain derasar, pethapur', '5', '133', '1', 'BOB', 'Gandhinagar', 'KBSH123', 'BOB123456', 500, 500, 1000, '45', '2024-06-06', '2', NULL, NULL, NULL, '2024-06-07 01:59:44', '2024-06-07 01:59:44', NULL);
 
 -- --------------------------------------------------------
 
@@ -1580,7 +1589,7 @@ ALTER TABLE `shift`
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `staff_type`

@@ -25,6 +25,16 @@
         </button>
     </div>
 @endif
+@if(session()->has('bulk_error'))
+    @foreach(session()->get('bulk_error') as $error)
+    <div class="alert alert-danger d-flex align-items-center p-3 mt-4" role="alert">
+        <span>{{ $error }}</span>
+        <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+            <i class="ri-close-line text-danger"></i>
+        </button>
+    </div>
+    @endforeach
+@endif
 <div class="row">
     <div class="col-12">
         <div class="card py-5">

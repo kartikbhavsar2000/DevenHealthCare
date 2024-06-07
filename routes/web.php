@@ -8,6 +8,20 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false]);
 
+Route::get('/clear-cache', function () {
+    $exitCode = Artisan::call('cache:clear');
+    return 'Cache cleared';
+});
+Route::get('/clear-route', function () {
+    $exitCode = Artisan::call('route:clear');
+    return 'Route cleared';
+});
+
+Route::get('/clear-config-cache', function () {
+    $exitCode = Artisan::call('config:cache');
+    return 'Configuration cache cleared';
+});
+
 Route::group(['middleware' => ['admin']], function() {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
     Route::get('/analytics', [App\Http\Controllers\HomeController::class, 'analytics'])->name('analytics');

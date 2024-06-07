@@ -42,12 +42,15 @@
                 <table id="kt_datatable" class="table table-row-bordered table-row-gray-300">
                     <thead>
                         <tr>
-                            <th style="width: 5%">Sr No.</th>
-                            <th style="width: 20%">Name</th>
-                            <th style="width: 30%">Address</th>
-                            <th style="width: 15%">Contact 1</th>
-                            <th style="width: 15%">Contact 2</th>
-                            <th style="width: 15%">Action</th>
+                            <th>Sr No.</th>
+                            <th>Name</th>
+                            <th>Contact 1</th>
+                            <th>Contact 2</th>
+                            <th>Address</th>
+                            <th>State</th>
+                            <th>City</th>
+                            <th>Area</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -70,7 +73,7 @@
             extend: 'excel',
             title: 'Corporates List',
             exportOptions: {
-                columns: [1,2,3,4]
+                columns: [1,2,3,4,5,6,7]
             }
         }],
         columnDefs: [{
@@ -114,9 +117,12 @@
                     return meta.row+1;
             }},
             { "data": "name" ,"defaultContent": "-"},
-            { "data": "address" ,"defaultContent": "-"},
             { "data": "mobile1" ,"defaultContent": "-"},
             { "data": "mobile2" ,"defaultContent": "-"},
+            { "data": "address" ,"defaultContent": "-"},
+            { "data": "state.name" ,"defaultContent": "-"},
+            { "data": "city.name" ,"defaultContent": "-"},
+            { "data": "area.name" ,"defaultContent": "-"},
             {
                 "data": "id",
                 "render": function (data, type, row, meta) {
