@@ -6,10 +6,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
+
+    public function role()
+    {
+        return $this->hasOne(Role::class,'id','role_id');
+    }
+    public function permissions()
+    {
+        $role = $this->role;
+        $permissions = [];
+        if ($role) {
+            if($role->permission != NULL && $role->permission != ""){
+                $permissions = json_decode($role->permission);
+            }
+        }
+        return $permissions;
+    }
 
     /**
      * The attributes that are mass assignable.
