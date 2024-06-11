@@ -15,6 +15,7 @@ use App\Models\Doctor;
 use App\Models\State;
 use App\Models\City;
 use App\Models\Area;
+use App\Models\Booking;
 
 class MenuController extends Controller
 {
@@ -50,6 +51,18 @@ class MenuController extends Controller
             return view('backend.patients.edit_patient',['states'=>$states,'cities'=>$cities,'area'=>$area,'data'=>$data,'hospitals'=>$hospitals]);
         }
         abort(403);
+    }
+    public function view_patient_history($id)
+    {
+        if (in_array("patients", Auth::user()->permissions())) {
+            $data = Patient::find($id);
+            return view('backend.patients.view_patient_history',['data'=>$data]);
+        }
+        abort(403);
+    }
+    public function get_patient_history_list($id){
+        $data = Booking::where(['booking_type'=>'Patient','customer_id'=>$id])->orderBy('id',"DESC")->get();
+        return response()->json(['data'=>$data]);
     }
     public function delete_patient(Request $request)
     {
@@ -367,6 +380,18 @@ class MenuController extends Controller
             return view('backend.corporates.edit_corporate',['data'=>$data,'states'=>$states,'cities'=>$cities,'area'=>$area]);
         }
         abort(403);
+    }
+    public function view_corporate_history($id)
+    {
+        if (in_array("corporates", Auth::user()->permissions())) {
+            $data = Patient::find($id);
+            return view('backend.corporates.view_corporate_history',['data'=>$data]);
+        }
+        abort(403);
+    }
+    public function get_corporate_history_list($id){
+        $data = Booking::where(['booking_type'=>'Corporate','customer_id'=>$id])->orderBy('id',"DESC")->get();
+        return response()->json(['data'=>$data]);
     }
     public function delete_corporate(Request $request)
     {

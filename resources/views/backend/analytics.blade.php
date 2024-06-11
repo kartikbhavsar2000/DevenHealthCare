@@ -7,237 +7,139 @@
 <link rel="stylesheet" href="{{asset('public')}}/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
 <link rel="stylesheet" href="{{asset('public')}}/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
 <link rel="stylesheet" href="{{asset('public')}}/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css" />
+<link rel="stylesheet" href="{{asset('public')}}/assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.css" />
 @endsection
 
 @section('content')
 <div class="row g-6">
-  <div class="col-sm-6 col-lg-3">
-      <div class="card card-border-shadow-primary h-100">
+    <div class="col-sm-6 col-lg-3">
+      <a href="{{route('staff')}}"><div class="card card-border-shadow-primary h-100">
           <div class="card-body">
               <div class="d-flex align-items-center mb-2">
                   <div class="avatar me-4">
                       <span class="avatar-initial rounded-3 bg-label-primary"><i
-                              class="ri-car-line ri-24px"></i></span>
+                              class="ri-nurse-line ri-24px"></i></span>
                   </div>
-                  <h4 class="mb-0">42</h4>
+                  <h4 class="mb-0">{{$data['staff_count'] ?? "00"}}</h4>
               </div>
-              <h6 class="mb-0 fw-normal">On route vehicles</h6>
-              <p class="mb-0">
-                  <span class="me-1 fw-medium">+18.2%</span>
-                  <small class="text-muted">than last week</small>
-              </p>
+              <h6 class="mb-0 fw-normal">Staff</h6>
           </div>
-      </div>
-  </div>
-  <div class="col-sm-6 col-lg-3">
-      <div class="card card-border-shadow-warning h-100">
+      </div></a>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <a href="{{route('doctors')}}"><div class="card card-border-shadow-warning h-100">
           <div class="card-body">
               <div class="d-flex align-items-center mb-2">
                   <div class="avatar me-4">
                       <span class="avatar-initial rounded-3 bg-label-warning"><i
-                              class="ri-alert-line ri-24px"></i></span>
+                              class="ri-stethoscope-line ri-24px"></i></span>
                   </div>
-                  <h4 class="mb-0">8</h4>
+                  <h4 class="mb-0">{{$data['doctor_count'] ?? "00"}}</h4>
               </div>
-              <h6 class="mb-0 fw-normal">Vehicles with errors</h6>
-              <p class="mb-0">
-                  <span class="me-1 fw-medium">-8.7%</span>
-                  <small class="text-muted">than last week</small>
-              </p>
+              <h6 class="mb-0 fw-normal">Doctors</h6>
           </div>
-      </div>
-  </div>
-  <div class="col-sm-6 col-lg-3">
-      <div class="card card-border-shadow-danger h-100">
+      </div></a>
+    </div>
+    <div div class="col-sm-6 col-lg-3">
+        <a href="{{route('patients')}}"><div class="card card-border-shadow-danger h-100">
           <div class="card-body">
               <div class="d-flex align-items-center mb-2">
                   <div class="avatar me-4">
                       <span class="avatar-initial rounded-3 bg-label-danger"><i
-                              class="ri-route-line ri-24px"></i></span>
+                              class="ri-wheelchair-line ri-24px"></i></span>
                   </div>
-                  <h4 class="mb-0">27</h4>
+                  <h4 class="mb-0">{{$data['patient_count'] ?? "00"}}</h4>
               </div>
-              <h6 class="mb-0 fw-normal">Deviated from route</h6>
-              <p class="mb-0">
-                  <span class="me-1 fw-medium">+4.3%</span>
-                  <small class="text-muted">than last week</small>
-              </p>
+              <h6 class="mb-0 fw-normal">Patients</h6>
           </div>
-      </div>
-  </div>
-  <div class="col-sm-6 col-lg-3">
-      <div class="card card-border-shadow-info h-100">
+      </div></a>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <a href="{{route('bookings')}}"><div class="card card-border-shadow-success h-100">
           <div class="card-body">
               <div class="d-flex align-items-center mb-2">
                   <div class="avatar me-4">
-                      <span class="avatar-initial rounded-3 bg-label-info"><i class="ri-time-line ri-24px"></i></span>
+                      <span class="avatar-initial rounded-3 bg-label-success"><i class="ri-calendar-schedule-line ri-24px"></i></span>
                   </div>
-                  <h4 class="mb-0">13</h4>
+                  <h4 class="mb-0">{{$data['booking_count'] ?? "00"}}</h4>
               </div>
-              <h6 class="mb-0 fw-normal">Late vehicles</h6>
-              <p class="mb-0">
-                  <span class="me-1 fw-medium">-2.5%</span>
-                  <small class="text-muted">than last week</small>
-              </p>
+              <h6 class="mb-0 fw-normal">Bookings</h6>
           </div>
-      </div>
-  </div>
+      </div></a>
+    </div>
   <!--/ Card Border Shadow -->
 
   <!-- Vehicles overview -->
   <div class="col-xxl-6 order-5 order-xxl-0">
-      <div class="card h-100">
-          <div class="card-header d-flex align-items-center justify-content-between">
-              <div class="card-title mb-0">
-                  <h5 class="m-0 me-2">Vehicles overview</h5>
-              </div>
-              <div class="dropdown">
-                  <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-1" type="button"
-                      id="deliveryExceptions" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="ri-more-2-line ri-20px"></i>
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-end" aria-labelledby="deliveryExceptions">
-                      <a class="dropdown-item" href="javascript:void(0);">Select All</a>
-                      <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                      <a class="dropdown-item" href="javascript:void(0);">Share</a>
-                  </div>
-              </div>
+    <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <div>
+            <h5 class="card-title mb-0">Staff Allocation For Bookings</h5>
           </div>
-          <div class="card-body pb-2">
-              <div class="d-none d-lg-flex vehicles-progress-labels mb-5">
-                  <div class="vehicles-progress-label on-the-way-text" style="width: 39.7%">On the way</div>
-                  <div class="vehicles-progress-label unloading-text" style="width: 28.3%">Unloading</div>
-                  <div class="vehicles-progress-label loading-text" style="width: 17.4%">Loading</div>
-                  <div class="vehicles-progress-label waiting-text" style="width: 14.6%">Waiting</div>
-              </div>
-              <div class="vehicles-overview-progress progress rounded-4 bg-transparent mb-2" style="height: 46px">
-                  <div class="progress-bar small fw-medium text-start rounded-start bg-lighter text-heading px-1 px-lg-4"
-                      role="progressbar" style="width: 39.7%" aria-valuenow="39.7" aria-valuemin="0"
-                      aria-valuemax="100">
-                      39.7%
-                  </div>
-                  <div class="progress-bar small fw-medium text-start bg-primary px-1 px-lg-4" role="progressbar"
-                      style="width: 28.3%" aria-valuenow="28.3" aria-valuemin="0" aria-valuemax="100">
-                      28.3%
-                  </div>
-                  <div class="progress-bar small fw-medium text-start text-bg-info px-1 px-lg-4" role="progressbar"
-                      style="width: 17.4%" aria-valuenow="17.4" aria-valuemin="0" aria-valuemax="100">
-                      17.4%
-                  </div>
-                  <div class="progress-bar small fw-medium text-start rounded-end bg-gray-900 px-1 px-lg-4"
-                      role="progressbar" style="width: 14.6%" aria-valuenow="14.6" aria-valuemin="0"
-                      aria-valuemax="100">
-                      14.6%
-                  </div>
-              </div>
-              <div class="table-responsive">
-                  <table class="table card-table">
-                      <tbody class="table-border-bottom-0">
-                          <tr>
-                              <td class="w-75 ps-0">
-                                  <div class="d-flex justify-content-start align-items-center">
-                                      <div class="me-2">
-                                          <i class="text-heading ri-car-line ri-24px"></i>
-                                      </div>
-                                      <h6 class="mb-0 fw-normal">On the way</h6>
-                                  </div>
-                              </td>
-                              <td class="text-end pe-0 text-nowrap">
-                                  <h6 class="mb-0">2hr 10min</h6>
-                              </td>
-                              <td class="text-end pe-0 ps-6">
-                                  <span>39.7%</span>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td class="w-75 ps-0">
-                                  <div class="d-flex justify-content-start align-items-center">
-                                      <div class="me-2">
-                                          <i class="text-heading ri-download-line ri-24px"></i>
-                                      </div>
-                                      <h6 class="mb-0 fw-normal">Unloading</h6>
-                                  </div>
-                              </td>
-                              <td class="text-end pe-0 text-nowrap">
-                                  <h6 class="mb-0">3hr 15min</h6>
-                              </td>
-                              <td class="text-end pe-0 ps-6">
-                                  <span>28.3%</span>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td class="w-75 ps-0">
-                                  <div class="d-flex justify-content-start align-items-center">
-                                      <div class="me-2">
-                                          <i class="text-heading ri-upload-line ri-24px"></i>
-                                      </div>
-                                      <h6 class="mb-0 fw-normal">Loading</h6>
-                                  </div>
-                              </td>
-                              <td class="text-end pe-0 text-nowrap">
-                                  <h6 class="mb-0">1hr 24min</h6>
-                              </td>
-                              <td class="text-end pe-0 ps-6">
-                                  <span>17.4%</span>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td class="w-75 ps-0">
-                                  <div class="d-flex justify-content-start align-items-center">
-                                      <div class="me-2">
-                                          <i class="text-heading ri-time-line ri-24px"></i>
-                                      </div>
-                                      <h6 class="mb-0 fw-normal">Waiting</h6>
-                                  </div>
-                              </td>
-                              <td class="text-end pe-0 text-nowrap">
-                                  <h6 class="mb-0">5hr 19min</h6>
-                              </td>
-                              <td class="text-end pe-0 ps-6">
-                                  <span>14.6%</span>
-                              </td>
-                          </tr>
-                      </tbody>
-                  </table>
-              </div>
+          <div class="dropdown d-none d-sm-flex">
+            <div class="form-floating form-floating-outline">
+                <input type="text" id="StaffAllocationDaterange" class="form-control" />
+                <label for="StaffAllocationDaterange">Date</label>
+            </div>
           </div>
+        </div>
+        <div class="card-body">
+          <div id="donutChart"></div>
+        </div>
       </div>
   </div>
   <!--/ Vehicles overview -->
   <!-- Shipment statistics-->
   <div class="col-lg-6 col-xxl-6 order-3 order-xxl-1">
-      <div class="card h-100">
-          <div class="card-header d-flex align-items-center justify-content-between">
-              <div class="card-title mb-0">
-                  <h5 class="m-0 me-2 mb-1">Shipment statistics</h5>
-                  <p class="card-subtitle mb-0">Total number of deliveries 23.8k</p>
-              </div>
-              <div class="btn-group">
-                  <button type="button" class="btn btn-outline-primary">January</button>
-                  <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split"
-                      data-bs-toggle="dropdown" aria-expanded="false" data-bs-reference="parent">
-                      <span class="visually-hidden">Toggle Dropdown</span>
-                  </button>
-                  <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="javascript:void(0);">January</a></li>
-                      <li><a class="dropdown-item" href="javascript:void(0);">February</a></li>
-                      <li><a class="dropdown-item" href="javascript:void(0);">March</a></li>
-                      <li><a class="dropdown-item" href="javascript:void(0);">April</a></li>
-                      <li><a class="dropdown-item" href="javascript:void(0);">May</a></li>
-                      <li><a class="dropdown-item" href="javascript:void(0);">June</a></li>
-                      <li><a class="dropdown-item" href="javascript:void(0);">July</a></li>
-                      <li><a class="dropdown-item" href="javascript:void(0);">August</a></li>
-                      <li><a class="dropdown-item" href="javascript:void(0);">September</a></li>
-                      <li><a class="dropdown-item" href="javascript:void(0);">October</a></li>
-                      <li><a class="dropdown-item" href="javascript:void(0);">November</a></li>
-                      <li><a class="dropdown-item" href="javascript:void(0);">December</a></li>
-                  </ul>
-              </div>
-          </div>
-          <div class="card-body">
-              <div id="shipmentStatisticsChart"></div>
-          </div>
-      </div>
+    <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <div>
+                <h5 class="card-title mb-0">Area Wise Bookings</h5>
+            </div>
+            <div class="dropdown d-none d-sm-flex">
+                <div class="form-floating form-floating-outline">
+                    <input type="text" id="AreaWiseBookingDaterange" class="form-control" />
+                    <label for="AreaWiseBookingDaterange">Date</label>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="barChart"></div>
+        </div>
+    </div>
+  </div>
+  <div class="col-lg-6 col-xxl-6 order-3 order-xxl-1">
+    <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <div>
+                <h5 class="card-title mb-0">Patients Vs Corporations Booking</h5>
+            </div>
+            <div class="dropdown d-none d-sm-flex">
+                <div class="form-floating form-floating-outline">
+                    <input type="text" id="PatientVsCorporationDaterange" class="form-control" />
+                    <label for="PatientVsCorporationDaterange">Date</label>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="areaChart"></div>
+        </div>
+    </div>
+  </div>
+  <div class="col-lg-6 col-xxl-6 order-3 order-xxl-1">
+    <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <div>
+                <h5 class="card-title mb-0">Available & Unavailable Staff</h5>
+            </div>
+            <div class="dropdown d-none d-sm-flex">
+                
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="hbarChart"></div>
+        </div>
+    </div>
   </div>
   <!--/ Shipment statistics -->
   <!-- Delivery Performance -->
@@ -660,4 +562,418 @@
 @section('javascript')
 <script src="{{asset('public')}}/assets/vendor/libs/apex-charts/apexcharts.js"></script>
 <script src="{{asset('public')}}/assets/js/app-logistics-dashboard.js"></script>
+<script src="{{asset('public')}}/assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        $('#StaffAllocationDaterange').daterangepicker({
+            opens: 'left',
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            startDate: moment().startOf('month').format('DD/MM/YYYY'),
+            endDate: moment().endOf('month').format('DD/MM/YYYY')
+        }, function(start, end, label) {
+            $.ajax({
+                url: '{{route("get_staff_booking_chart_data")}}',
+                method: 'GET',
+                data: {
+                    start_date: start.format('YYYY-MM-DD'),
+                    end_date: end.format('YYYY-MM-DD')
+                },
+                success: function (data) {
+                    chart.updateOptions({
+                        series: data.series,
+                        labels: data.labels
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching chart data:', error);
+                }
+            });
+        });
+
+        var options = {
+            series: [],
+            chart: {
+                type: 'donut',
+                height: 350
+            },
+            labels: [],
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        width: 200
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+
+        var chart = new ApexCharts(document.querySelector("#donutChart"), options);
+        chart.render();
+
+        $.ajax({
+            url: '{{route("get_staff_booking_chart_data")}}',
+            method: 'GET',
+            data: {
+                start_date: moment().startOf('month').format('YYYY-MM-DD'),
+                end_date: moment().endOf('month').format('YYYY-MM-DD')
+            },
+            success: function (data) {
+                chart.updateOptions({
+                    series: data.series,
+                    labels: data.labels
+                });
+            },
+            error: function (error) {
+                console.error('Error fetching chart data:', error);
+            }
+        });
+    });
+
+
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var options = {
+            series: [],
+            chart: {
+                type: 'bar',
+                height: 370
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: true,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                },
+            },
+            dataLabels: {
+                enabled: true
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            xaxis: {
+                categories: []
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val + " staff"
+                    }
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#hbarChart"), options);
+        chart.render();
+
+        function updateChart() {
+            var url = '{{route("available_and_occupied_staff")}}';
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function (data) {
+                    chart.updateOptions({
+                        series: data.series,
+                        xaxis: {
+                            categories: data.categories
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching chart data:', error);
+                }
+            });
+        }
+
+        updateChart();
+    });
+
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     $('#AvailableAndOccupiedStaffDaterange').daterangepicker({
+    //         opens: 'left',
+    //         locale: {
+    //             format: 'DD/MM/YYYY'
+    //         },
+    //         startDate: moment().startOf('week').format('DD/MM/YYYY'),
+    //         endDate: moment().endOf('week').format('DD/MM/YYYY')
+    //     }, function(start, end, label) {
+    //         $.ajax({
+    //             url: '{{route("available_and_occupied_staff")}}',
+    //             method: 'GET',
+    //             data: {
+    //                 start_date: start.format('YYYY-MM-DD'),
+    //                 end_date: end.format('YYYY-MM-DD')
+    //             },
+    //             success: function (data) {
+    //                 console.log('Received data:', data); // Log received data
+    //                 chart.updateOptions({
+    //                     series: data.series,
+    //                     xaxis: {
+    //                         categories: data.categories
+    //                     }
+    //                 });
+    //             },
+    //             error: function (error) {
+    //                 console.error('Error fetching chart data:', error);
+    //             }
+    //         });
+    //     });
+
+    //     var options = {
+    //         series: [],
+    //         chart: {
+    //             type: 'bar',
+    //             height: 375
+    //         },
+    //         plotOptions: {
+    //             bar: {
+    //                 horizontal: true,
+    //                 columnWidth: '55%',
+    //                 endingShape: 'rounded'
+    //             },
+    //         },
+    //         dataLabels: {
+    //             enabled: true
+    //         },
+    //         stroke: {
+    //             show: true,
+    //             width: 2,
+    //             colors: ['transparent']
+    //         },
+    //         xaxis: {
+    //             categories: []
+    //         },
+    //         fill: {
+    //             opacity: 1
+    //         },
+    //         tooltip: {
+    //             y: {
+    //                 formatter: function (val) {
+    //                     return val + " staff"
+    //                 }
+    //             }
+    //         }
+    //     };
+
+    //     var chart = new ApexCharts(document.querySelector("#hbarChart"), options);
+    //     chart.render();
+
+    //     $.ajax({
+    //         url: '{{route("available_and_occupied_staff")}}',
+    //         method: 'GET',
+    //         data: {
+    //             start_date: moment().startOf('week').format('YYYY-MM-DD'),
+    //             end_date: moment().endOf('week').format('YYYY-MM-DD')
+    //         },
+    //         success: function (data) {
+    //             console.log('Received data:', data); // Log received data
+    //             chart.updateOptions({
+    //                 series: data.series,
+    //                 xaxis: {
+    //                     categories: data.categories
+    //                 }
+    //             });
+    //         },
+    //         error: function (error) {
+    //             console.error('Error fetching chart data:', error);
+    //         }
+    //     });
+        
+    // });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        $('#PatientVsCorporationDaterange').daterangepicker({
+            opens: 'left',
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            startDate: moment().startOf('week').format('DD/MM/YYYY'),
+            endDate: moment().endOf('week').format('DD/MM/YYYY')
+        }, function(start, end, label) {
+            $.ajax({
+                url: '{{route("patient_vs_corporation_chart")}}',
+                method: 'GET',
+                data: {
+                    start_date: start.format('YYYY-MM-DD'),
+                    end_date: end.format('YYYY-MM-DD')
+                },
+                success: function (data) {
+                    console.log('Received data:', data); // Log received data
+                    chart.updateOptions({
+                        series: data.series,
+                        xaxis: {
+                            categories: data.categories
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching chart data:', error);
+                }
+            });
+        });
+
+        var options = {
+            series: [],
+            chart: {
+                type: 'area',
+                height: 350
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                },
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            xaxis: {
+                categories: []
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val + " staff"
+                    }
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#areaChart"), options);
+        chart.render();
+
+        $.ajax({
+            url: '{{route("patient_vs_corporation_chart")}}',
+            method: 'GET',
+            data: {
+                start_date: moment().startOf('week').format('YYYY-MM-DD'),
+                end_date: moment().endOf('week').format('YYYY-MM-DD')
+            },
+            success: function (data) {
+                console.log('Received data:', data); // Log received data
+                chart.updateOptions({
+                    series: data.series,
+                    xaxis: {
+                        categories: data.categories
+                    }
+                });
+            },
+            error: function (error) {
+                console.error('Error fetching chart data:', error);
+            }
+        });
+        
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        $('#AreaWiseBookingDaterange').daterangepicker({
+            opens: 'left',
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            startDate: moment().startOf('week').format('DD/MM/YYYY'),
+            endDate: moment().endOf('week').format('DD/MM/YYYY')
+        }, function(start, end, label) {
+            $.ajax({
+                url: '{{ route("area_wise_booking_chart") }}',
+                method: 'GET',
+                data: {
+                    start_date: start.format('YYYY-MM-DD'),
+                    end_date: end.format('YYYY-MM-DD')
+                },
+                success: function (data) {
+                    chart.updateOptions({
+                        series: data.series,
+                        xaxis: {
+                            categories: data.categories
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching chart data:', error);
+                }
+            });
+        });
+
+        var options = {
+            series: [],
+            chart: {
+                type: 'bar',
+                height: 335
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            xaxis: {
+                categories: []
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val + " bookings"
+                    }
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#barChart"), options);
+        chart.render();
+
+        $.ajax({
+            url: '{{ route("area_wise_booking_chart") }}',
+            method: 'GET',
+            data: {
+                start_date: moment().startOf('week').format('YYYY-MM-DD'),
+                end_date: moment().endOf('week').format('YYYY-MM-DD')
+            },
+            success: function (data) {
+                chart.updateOptions({
+                    series: data.series,
+                    xaxis: {
+                        categories: data.categories
+                    }
+                });
+            },
+            error: function (error) {
+                console.error('Error fetching chart data:', error);
+            }
+        });
+    });
+</script>
+    
 @endsection

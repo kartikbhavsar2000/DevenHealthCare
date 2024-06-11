@@ -64,6 +64,14 @@
                                         </label>
                                     </div>
                                 </div>
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="staff_attendance" @if(in_array('staff_attendance',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Staff Attendance
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-12 mb-3">

@@ -141,7 +141,7 @@
                             <div>Analytics</div>
                         </a>
                     </li>
-                    @if(in_array('bookings',$permissions) || in_array('assign_bookings',$permissions))
+                    @if(in_array('bookings',$permissions) || in_array('assign_bookings',$permissions) || in_array('staff_attendance',$permissions))
                     <li class="menu-header mt-5">
                         <span class="menu-header-text">Bookings</span>
                     </li>
@@ -159,6 +159,14 @@
                         <a href="{{route('assign_bookings')}}" class="menu-link">
                             <i class="menu-icon tf-icons ri-user-follow-line"></i>
                             <div>Assign Booking</div>
+                        </a>
+                    </li>
+                    @endif
+                    @if(in_array('staff_attendance',$permissions))
+                    <li class="menu-item  @if (Route::currentRouteName() == 'staff_attendance') active @endif">
+                        <a href="{{route('staff_attendance')}}" class="menu-link">
+                            <i class="menu-icon tf-icons ri-calendar-check-line"></i>
+                            <div>Staff Attendance</div>
                         </a>
                     </li>
                     @endif

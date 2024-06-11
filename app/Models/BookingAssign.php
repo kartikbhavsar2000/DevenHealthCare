@@ -16,4 +16,12 @@ class BookingAssign extends Model
     {
         return $this->hasOne(Booking::class,'id','booking_id');
     }
+    public function staff()
+    {
+        return $this->hasOne(Staff::class,'id','staff_id');
+    }
+    public function shift()
+    {
+        return $this->hasOne(Shifts::class,'id','shift');
+    }
 }

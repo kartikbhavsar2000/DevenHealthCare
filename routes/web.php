@@ -26,6 +26,11 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
     Route::get('/analytics', [App\Http\Controllers\HomeController::class, 'analytics'])->name('analytics');
 
+    Route::get('/get_staff_booking_chart_data', [App\Http\Controllers\HomeController::class, 'get_staff_booking_chart_data'])->name('get_staff_booking_chart_data');
+    Route::get('/area_wise_booking_chart', [App\Http\Controllers\HomeController::class, 'area_wise_booking_chart'])->name('area_wise_booking_chart');
+    Route::get('/available_and_occupied_staff', [App\Http\Controllers\HomeController::class, 'available_and_occupied_staff'])->name('available_and_occupied_staff');
+    Route::get('/patient_vs_corporation_chart', [App\Http\Controllers\HomeController::class, 'patient_vs_corporation_chart'])->name('patient_vs_corporation_chart');
+
     Route::post('/get_cities_by_state', [App\Http\Controllers\HomeController::class, 'get_cities_by_state'])->name('get_cities_by_state');
     Route::post('/get_areas_by_city', [App\Http\Controllers\HomeController::class, 'get_areas_by_city'])->name('get_areas_by_city');
 
@@ -43,6 +48,10 @@ Route::group(['middleware' => ['admin']], function() {
     Route::post('/assign_single_doctor', [App\Http\Controllers\BookingController::class, 'assign_single_doctor'])->name('assign_single_doctor');
     Route::post('/check_staff_availability', [App\Http\Controllers\BookingController::class, 'check_staff_availability'])->name('check_staff_availability');
     Route::post('/check_doctor_availability', [App\Http\Controllers\BookingController::class, 'check_doctor_availability'])->name('check_doctor_availability');
+
+    Route::get('/staff_attendance', [App\Http\Controllers\BookingController::class, 'staff_attendance'])->name('staff_attendance');
+    Route::get('/get_staff_attendance_list', [App\Http\Controllers\BookingController::class, 'get_staff_attendance_list'])->name('get_staff_attendance_list');
+    Route::post('/approve_reject_staff_attendance', [App\Http\Controllers\BookingController::class, 'approve_reject_staff_attendance'])->name('approve_reject_staff_attendance');
 
     Route::get('/roles', [App\Http\Controllers\UserController::class, 'roles'])->name('roles');
     Route::get('/get_roles_list', [App\Http\Controllers\UserController::class, 'get_roles_list'])->name('get_roles_list');
@@ -124,6 +133,8 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/get_patients_list', [App\Http\Controllers\MenuController::class, 'get_patients_list'])->name('get_patients_list');
     Route::get('/add_patient', [App\Http\Controllers\MenuController::class, 'add_patient'])->name('add_patient');
     Route::get('/edit_patient/{id}', [App\Http\Controllers\MenuController::class, 'edit_patient'])->name('edit_patient');
+    Route::get('/view_patient_history/{id}', [App\Http\Controllers\MenuController::class, 'view_patient_history'])->name('view_patient_history');
+    Route::get('/get_patient_history_list/{id}', [App\Http\Controllers\MenuController::class, 'get_patient_history_list'])->name('get_patient_history_list');
     Route::post('/delete_patient', [App\Http\Controllers\MenuController::class, 'delete_patient'])->name('delete_patient');
     Route::post('/create_patient', [App\Http\Controllers\MenuController::class, 'create_patient'])->name('create_patient');
     Route::post('/update_patient', [App\Http\Controllers\MenuController::class, 'update_patient'])->name('update_patient');
@@ -141,6 +152,8 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/get_corporates_list', [App\Http\Controllers\MenuController::class, 'get_corporates_list'])->name('get_corporates_list');
     Route::get('/add_corporate', [App\Http\Controllers\MenuController::class, 'add_corporate'])->name('add_corporate');
     Route::get('/edit_corporate/{id}', [App\Http\Controllers\MenuController::class, 'edit_corporate'])->name('edit_corporate');
+    Route::get('/view_corporate_history/{id}', [App\Http\Controllers\MenuController::class, 'view_corporate_history'])->name('view_corporate_history');
+    Route::get('/get_corporate_history_list/{id}', [App\Http\Controllers\MenuController::class, 'get_corporate_history_list'])->name('get_corporate_history_list');
     Route::post('/delete_corporate', [App\Http\Controllers\MenuController::class, 'delete_corporate'])->name('delete_corporate');
     Route::post('/create_corporate', [App\Http\Controllers\MenuController::class, 'create_corporate'])->name('create_corporate');
     Route::post('/update_corporate', [App\Http\Controllers\MenuController::class, 'update_corporate'])->name('update_corporate');

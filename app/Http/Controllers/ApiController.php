@@ -137,7 +137,7 @@ class ApiController extends Controller
 
         return response()->json([
             'status' => 1,
-            'msg' => 'Data Found.',
+            'msg' => 'Attendance Marked',
             'data' => $booking_assign
         ]);
     }

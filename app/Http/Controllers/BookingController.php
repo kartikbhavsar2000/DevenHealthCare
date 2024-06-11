@@ -504,4 +504,30 @@ class BookingController extends Controller
         }
         return $doctors;
     }
+    public function staff_attendance()
+    {
+        if (in_array("staff_attendance", Auth::user()->permissions())) {
+            return view('backend.staff_attendance.staff_attendance_list');
+        }
+        abort(403);
+    }
+    public function get_staff_attendance_list()
+    {   
+        $data = BookingAssign::where('att_marked',1)->with('booking')->with('staff')->with('shift')->orderBy('id',"DESC")->get();
+        return response()->json(['data'=>$data]);
+    }
+    public function approve_reject_staff_attendance(Request $request)
+    {
+        $data = BookingAssign::find($request->id);
+        if($data){
+            $data->status = $request->status;
+            if($request->status == 2){
+                $data->rej_reason = $request->reason;
+            }
+            $data->update();
+            return "Done";
+        }else{
+            return "NoData";
+        }
+    }
 }
