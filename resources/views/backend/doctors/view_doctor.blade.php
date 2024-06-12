@@ -39,7 +39,7 @@
                 <div class="row">
                     <div class="col-4 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                            <label class="form-label">Full Name</label>
                             <input type="text" class="form-control d-none" value="{{$data->id}}" name="id" readonly />
                             <input type="text" class="form-control" value="{{$data->name}}" name="name"  placeholder="Enter full name" readonly />
                             @error('name')
@@ -49,7 +49,7 @@
                     </div>
                     <div class="col-4 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">Email Address<span class="text-danger">*</span></label>
+                            <label class="form-label">Email Address</label>
                             <input type="email" class="form-control" value="{{$data->email}}" name="email"  placeholder="Enter email address" readonly />
                             @error('email')
                                 <span class="text-danger">{{$message}}</span>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="col-4 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">Contact Number <span class="text-danger">*</span></label>
+                            <label class="form-label">Contact Number</label>
                             <input type="text" minlength="7" maxlength="10" class="form-control" value="{{$data->mobile}}" name="mobile"  placeholder="Enter contact number" readonly />
                             @error('mobile')
                                 <span class="text-danger">{{$message}}</span>
@@ -67,7 +67,7 @@
                     </div>
                     <div class="col-12 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">Address<span class="text-danger">*</span></label>
+                            <label class="form-label">Address</label>
                             <input type="text" class="form-control" value="{{$data->address}}" name="address" placeholder="Enter address" readonly />
                             @error('address')
                                 <span class="text-danger">{{$message}}</span>
@@ -76,7 +76,7 @@
                     </div>
                     <div class="col-4 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">State<span class="text-danger">*</span></label>
+                            <label class="form-label">State</label>
                             <select class="form-control mb-1" name="state" id="State" disabled>
                                 <option value=""></option>
                                 @if(!empty($states))
@@ -92,7 +92,7 @@
                     </div>
                     <div class="col-4 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">City<span class="text-danger">*</span></label>
+                            <label class="form-label">City</label>
                             <select class="form-control mb-1" name="city" id="City" disabled>
                                 <option value=""></option>
                                 @if(!empty($cities))
@@ -108,7 +108,7 @@
                     </div>
                     <div class="col-4 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">Area<span class="text-danger">*</span></label>
+                            <label class="form-label">Area</label>
                             <select class="form-control mb-1" name="area" id="Area" disabled>
                                 <option value=""></option>
                                 @if(!empty($area))
@@ -124,7 +124,7 @@
                     </div>
                     <div class="col-3 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">Gender <span class="text-danger">*</span></label>
+                            <label class="form-label">Gender</label>
                             <select class="form-control" name="gender" id="Gender" disabled>
                                 <option></option>
                                 <option value="Male" @if($data->gender == "Male") selected @endif>Male</option>
@@ -137,7 +137,7 @@
                     </div>
                     <div class="col-3 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">Age <span class="text-danger">*</span></label>
+                            <label class="form-label">Age</label>
                             <input type="number" min="18" max="60" class="form-control" value="{{$data->age}}" name="age"  placeholder="Enter age" readonly />
                             @error('age')
                                 <span class="text-danger">{{$message}}</span>
@@ -146,7 +146,7 @@
                     </div>
                     <div class="col-3 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">Date Of Birth<span class="text-danger">*</span></label>
+                            <label class="form-label">Date Of Birth</label>
                             <input type="text" class="form-control" value="{{$data->dob}}"  name="dob" placeholder="Month DD, YYYY" id="dob" disabled />
                             @error('dob')
                                 <span class="text-danger">{{$message}}</span>
@@ -155,7 +155,7 @@
                     </div>
                     <div class="col-3 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">Date Of Joining<span class="text-danger">*</span></label>
+                            <label class="form-label">Date Of Joining</label>
                             <input type="text" class="form-control" value="{{$data->doj}}" name="doj" placeholder="Month DD, YYYY" id="doj" disabled />
                             @error('doj')
                                 <span class="text-danger">{{$message}}</span>
@@ -164,7 +164,7 @@
                     </div>
                     <div class="col-6 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">Experience <span class="text-danger">*</span></label>
+                            <label class="form-label">Experience</label>
                             <input type="text" class="form-control" value="{{$data->experience}}" name="experience" pattern="^\d*(\.\d+)?$" placeholder="Enter experience" title="Please enter a valid number (integer or decimal)." readonly />
                             @error('experience')
                                 <span class="text-danger">{{$message}}</span>
@@ -203,7 +203,7 @@
                     <hr>
                     <div class="col-3 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">Bank Name <span class="text-danger">*</span></label>
+                            <label class="form-label">Bank Name</label>
                             <input type="text" class="form-control" value="{{$data->bank_name}}" name="bank_name" placeholder="Enter bank name" readonly/>
                             @error('bank_name')
                                 <span class="text-danger">{{$message}}</span>
@@ -212,7 +212,7 @@
                     </div>
                     <div class="col-3 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">Account Number <span class="text-danger">*</span></label>
+                            <label class="form-label">Account Number</label>
                             <input type="text" class="form-control" value="{{$data->acc_no}}" name="acc_no" placeholder="Enter account number" readonly/>
                             @error('acc_no')
                                 <span class="text-danger">{{$message}}</span>
@@ -221,7 +221,7 @@
                     </div>
                     <div class="col-3 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">Branch <span class="text-danger">*</span></label>
+                            <label class="form-label">Branch</label>
                             <input type="text" class="form-control" value="{{$data->branch}}" name="branch" placeholder="Enter branch" readonly/>
                             @error('branch')
                                 <span class="text-danger">{{$message}}</span>
@@ -230,7 +230,7 @@
                     </div>
                     <div class="col-3 mb-3">
                         <div class="mb-4">
-                            <label class="form-label">IFSC Code <span class="text-danger">*</span></label>
+                            <label class="form-label">IFSC Code</label>
                             <input type="text" class="form-control" value="{{$data->ifsc_code}}" name="ifsc_code" placeholder="Enter IFSC code" readonly/>
                             @error('ifsc_code')
                                 <span class="text-danger">{{$message}}</span>

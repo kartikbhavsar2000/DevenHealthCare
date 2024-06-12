@@ -46,25 +46,38 @@
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="bookings" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="bookings" name="permission[]" id="bookings" />
+                                        <label class="form-check-label" for="bookings">
                                             Create Booking
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="assign_bookings" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="assign_bookings" name="permission[]" id="assign_bookings" />
+                                        <label class="form-check-label" for="assign_bookings">
                                             Assign Booking
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="staff_attendance" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="staff_attendance" name="permission[]" id="staff_attendance" />
+                                        <label class="form-check-label" for="staff_attendance">
                                             Staff Attendance
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="mb-2"><b>Payments</b></label>
+                            <div class="row">
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="advance_salary" name="permission[]" id="advance_salary" />
+                                        <label class="form-check-label" for="advance_salary">
+                                            Advance Salary
                                         </label>
                                     </div>
                                 </div>
@@ -75,32 +88,32 @@
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="staff" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="staff" name="permission[]" id="staff" />
+                                        <label class="form-check-label" for="staff">
                                             Staff
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="doctors" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="doctors" name="permission[]" id="doctors" />
+                                        <label class="form-check-label" for="doctors">
                                             Doctors
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="patients" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="patients" name="permission[]" id="patients" />
+                                        <label class="form-check-label" for="patients">
                                             Patients
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="corporates" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="corporates" name="permission[]" id="corporates" />
+                                        <label class="form-check-label" for="corporates">
                                             Corporates
                                         </label>
                                     </div>
@@ -112,16 +125,16 @@
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="users" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="users" name="permission[]" id="users" />
+                                        <label class="form-check-label" for="users">
                                             Users
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="roles" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="roles" name="permission[]" id="roles" />
+                                        <label class="form-check-label" for="roles">
                                             Roles
                                         </label>
                                     </div>
@@ -133,64 +146,64 @@
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="hospitals" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="hospitals" name="permission[]" id="hospitals" />
+                                        <label class="form-check-label" for="hospitals">
                                             Hospitals
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="shifts" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="shifts" name="permission[]" id="shifts" />
+                                        <label class="form-check-label" for="shifts">
                                             Shifts
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="ambulance" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="ambulance" name="permission[]" id="ambulance" />
+                                        <label class="form-check-label" for="ambulance">
                                             Ambulance
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="equipments" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="equipments" name="permission[]" id="equipments" />
+                                        <label class="form-check-label" for="equipments">
                                             Equipments
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="staff_type" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="staff_type" name="permission[]" id="staff_type" />
+                                        <label class="form-check-label" for="staff_type">
                                             Staff Type
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="states" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="states" name="permission[]" id="states" />
+                                        <label class="form-check-label" for="states">
                                             States
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="cities" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="cities" name="permission[]" id="cities" />
+                                        <label class="form-check-label" for="cities">
                                             Cities
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="area" name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="area" name="permission[]" id="area" />
+                                        <label class="form-check-label" for="area">
                                             Area
                                         </label>
                                     </div>

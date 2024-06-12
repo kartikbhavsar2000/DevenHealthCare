@@ -77,7 +77,7 @@
                                     <option value=""></option>
                                     @if(!empty($states))
                                         @foreach($states as $state)
-                                            <option value="{{$state->id}}">{{$state->name}}</option>
+                                            <option value="{{$state->id}}" @if(old('state') == $state->id) selected @endif>{{$state->name}}</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -124,53 +124,66 @@
 
 @section('javascript')
 <script>
-function selectState() {
-    var id = $('#State').val();
-    $.ajax({
-        url:"{{route('get_cities_by_state')}}",
-        method:"POST",
-        data:{'id':id,_token:"{{ csrf_token() }}"},
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success:function(result)
-        {
-            var cities = result.data;
-            var citySelect = $('#City');
-            citySelect.empty().append('<option value=""></option>');
-            cities.forEach(function(city) {
-                citySelect.append('<option value="' + city.id + '">' + city.name + '</option>');
-            });
-            citySelect.val(null).trigger('change');
-            $('#Area').val(null).trigger('change');
-            
-        }
-    }); 
-}
+selectState();
 
-function selectCity() {
-    var id = $('#City').val();
-    $.ajax({
-        url: "{{route('get_areas_by_city')}}",
-        method: "POST",
-        data: {
-            'id': id,
-            _token: "{{ csrf_token() }}"
-        },
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(result) {
-            var areas = result.data;
-            var areaSelect = $('#Area');
-            areaSelect.empty().append('<option value=""></option>');
-            areas.forEach(function(area) {
-                areaSelect.append('<option value="' + area.id + '">' + area.name + '</option>');
-            });
-            areaSelect.val(null).trigger('change');
-        }
-    });
-}
+function selectState() {
+        var id = $('#State').val();
+        $.ajax({
+            url:"{{route('get_cities_by_state')}}",
+            method:"POST",
+            data:{'id':id,_token:"{{ csrf_token() }}"},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success:function(result)
+            {
+                var cities = result.data;
+                var citySelect = $('#City');
+                var cityyy = '{{old("city")}}';
+                
+                citySelect.empty().append('<option value=""></option>');
+                cities.forEach(function(city) {
+                    if(cityyy == city.id){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    citySelect.append('<option value="' + city.id + '" ' + selected + '>' + city.name + '</option>');
+                });
+                selectCity();
+            }
+        }); 
+    }
+    
+    function selectCity() {
+        var id = $('#City').val();
+        $.ajax({
+            url: "{{route('get_areas_by_city')}}",
+            method: "POST",
+            data: {
+                'id': id,
+                _token: "{{ csrf_token() }}"
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(result) {
+                var areas = result.data;
+                var areaSelect = $('#Area');
+                var areaaa = '{{old("area")}}';
+                console.log();
+                areaSelect.empty().append('<option value=""></option>');
+                areas.forEach(function(area) {
+                    if(areaaa == area.id){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    areaSelect.append('<option value="' + area.id + '" ' + selected + '>' + area.name + '</option>');
+                });
+            }
+        });
+    }
 $('#State').select2({
     placeholder: 'Select a state'
 });

@@ -240,9 +240,12 @@ class MenuController extends Controller
             'password' => 'required|min:6|required_with:password_confirmation|same:password_confirmation',
             'password_confirmation' => 'required|min:6'
         ],[
+            'doj.required' => "The date of joining field is required.",
             'f_name.required' => "The first name field is required.",
             'acc_no.required' => "The account number field is required.",
             'mobile.min' => "Please enter valid contact number.",
+            'mobile.required' => "The contact number field is required.",
+            'mobile2.min' => "Please enter valid alternet contact number.",
             'day_cost.digits_between' => "The amount for cost price is too big.",
             'day_cost.numeric' => "Please enter valid amount.",
             'night_cost.digits_between' => "The amount for cost price is too big.",
@@ -305,9 +308,12 @@ class MenuController extends Controller
             'night_cost' => 'nullable|numeric|min:0|digits_between:1,12',
             'full_cost' => 'nullable|numeric|min:0|digits_between:1,12',
         ],[
+            'doj.required' => "The date of joining field is required.",
             'f_name.required' => "The first name field is required.",
             'acc_no.required' => "The account number field is required.",
             'mobile.min' => "Please enter valid contact number.",
+            'mobile.required' => "The contact number field is required.",
+            'mobile2.min' => "Please enter valid alternet contact number.",
             'day_cost.digits_between' => "The amount for cost price is too big.",
             'day_cost.numeric' => "Please enter valid amount.",
             'night_cost.digits_between' => "The amount for cost price is too big.",
@@ -411,6 +417,10 @@ class MenuController extends Controller
         ],[
             'mobile1.min' => "Please enter valid contact number.",
             'mobile2.min' => "Please enter valid contact number.",
+            'mobile1.numeric' => "Please enter valid contact number.",
+            'mobile2.numeric' => "Please enter valid contact number.",
+            'mobile1.required' => "The contact number 1 field is required.",
+            'mobile2.required' => "The contact number 2 field is required.",
         ]);
 
         $data = new Corporate();
@@ -437,6 +447,10 @@ class MenuController extends Controller
         ],[
             'mobile1.min' => "Please enter valid contact number.",
             'mobile2.min' => "Please enter valid contact number.",
+            'mobile1.numeric' => "Please enter valid contact number.",
+            'mobile2.numeric' => "Please enter valid contact number.",
+            'mobile1.required' => "The contact number 1 field is required.",
+            'mobile2.required' => "The contact number 2 field is required.",
         ]);
 
         $data = Corporate::find($request->id);
@@ -522,8 +536,12 @@ class MenuController extends Controller
             'night_cost' => 'nullable|numeric|min:0|digits_between:1,12',
             'full_cost' => 'nullable|numeric|min:0|digits_between:1,12',
         ],[
+            'doj.required' => "The date of joining field is required.",
+            'name.required' => "The full name field is required.",
             'acc_no.required' => "The account number field is required.",
             'mobile.min' => "Please enter valid contact number.",
+            'mobile.required' => "The contact number field is required.",
+            'mobile.numeric' => "Please enter valid contact number.",
             'day_cost.digits_between' => "The amount for cost price is too big.",
             'day_cost.numeric' => "Please enter valid amount.",
             'night_cost.digits_between' => "The amount for cost price is too big.",
@@ -580,8 +598,12 @@ class MenuController extends Controller
             'night_cost' => 'nullable|numeric|min:0|digits_between:1,12',
             'full_cost' => 'nullable|numeric|min:0|digits_between:1,12',
         ],[
+            'doj.required' => "The date of joining field is required.",
+            'name.required' => "The full name field is required.",
             'acc_no.required' => "The account number field is required.",
             'mobile.min' => "Please enter valid contact number.",
+            'mobile.required' => "The contact number field is required.",
+            'mobile.numeric' => "Please enter valid contact number.",
             'day_cost.digits_between' => "The amount for cost price is too big.",
             'day_cost.numeric' => "Please enter valid amount.",
             'night_cost.digits_between' => "The amount for cost price is too big.",

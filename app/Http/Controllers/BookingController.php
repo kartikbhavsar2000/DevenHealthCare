@@ -48,7 +48,7 @@ class BookingController extends Controller
             $equipments = Equipment::orderBy('id',"DESC")->get();
             $ambulance = Ambulance::first();
             $hospitals = Hospital::orderBy('id',"DESC")->get();
-            $corporates = Corporate::orderBy('id',"DESC")->get();
+            $corporates = Corporate::with('state')->with('city')->with('area')->orderBy('id',"DESC")->get();
             $states = State::where('status',1)->orderBy('name','asc')->get();
             $data = [
                 'shifts' => $shifts,

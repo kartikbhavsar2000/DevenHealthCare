@@ -41,6 +41,7 @@
                         <h6 ><i class="ri-information-2-line ri-24px"></i> Patient Details :</h6>
                         <div class="row mx-5">
                             <div class="col-2">
+                                <p class="text-nowrap mb-2"><i class="ri-user-line ri-20px me-2"></i>Hospital</p>
                                 <p class="text-nowrap mb-2"><i class="ri-user-line ri-20px me-2"></i>Full Name</p>
                                 <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Mobile</p>
                                 <p class="text-nowrap mb-2"><i class="ri-mail-line ri-20px me-2"></i>Email</p>
@@ -48,11 +49,12 @@
                                 <p class="text-nowrap mb-0"><i class="ri-calendar-schedule-line ri-20px me-2"></i>Age</p>
                             </div>
                             <div class="col-4">
-                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->name ?? ""}}</p>
-                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile ?? ""}}</p>
-                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->email ?? ""}}</p>
-                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{date('d/m/Y',strtotime($booking->customer_details->dob)) ?? ""}}</p>
-                                <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->customer_details->age ?? ""}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->h_type ?? "-"}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->name ?? "-"}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile ?? "-"}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->email ?? "-"}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{date('d/m/Y',strtotime($booking->customer_details->dob)) ?? "-"}}</p>
+                                <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->customer_details->age ?? "-"}}</p>
                             </div>
                             <div class="col-2">
                                 <p class="text-nowrap mb-2"><i class="ri-men-line ri-20px me-2"></i>Gender</p>
@@ -62,11 +64,11 @@
                                 <p class="text-nowrap mb-0"><i class="ri-compass-line ri-20px me-2"></i>Area</p>
                             </div>
                             <div class="col-4">
-                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->gender ?? ""}}</p>
-                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->address ?? ""}}</p>
-                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->state ?? ""}}</p>
-                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->city ?? ""}}</p>
-                                <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->area ?? ""}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->gender ?? "-"}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->address ?? "-"}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->state ?? "-"}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->city ?? "-"}}</p>
+                                <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->area ?? "-"}}</p>
                             </div>
                         </div>
                         @endif
@@ -77,13 +79,19 @@
                                 <p class="text-nowrap mb-2"><i class="ri-building-line ri-20px me-2"></i>Corporate Name</p>
                                 <p class="text-nowrap mb-2"><i class="ri-map-pin-line ri-20px me-2"></i>Address</p>
                                 <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Contact Number 1</p>
-                                <p class="text-nowrap mb-0"><i class="ri-phone-line ri-20px me-2"></i>Contact Number 2</p>
+                                <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Contact Number 2</p>
+                                <p class="text-nowrap mb-2"><i class="ri-road-map-line ri-20px me-2"></i>State</p>
+                                <p class="text-nowrap mb-2"><i class="ri-building-line ri-20px me-2 ms-50"></i>City</p>
+                                <p class="text-nowrap mb-0"><i class="ri-compass-line ri-20px me-2"></i>Area</p>
                             </div>
                             <div class="col-4">
-                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->name ?? ""}}</p>
-                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->address ?? ""}}</p>
-                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile1 ?? ""}}</p>
-                                <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->customer_details->mobile2 ?? ""}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->name ?? "-"}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->address ?? "-"}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile1 ?? "-"}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile2 ?? "-"}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->state ?? "-"}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->city ?? "-"}}</p>
+                                <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->area ?? "-"}}</p>
                             </div>
                         </div>
                         @endif

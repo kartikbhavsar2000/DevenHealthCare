@@ -76,6 +76,7 @@
                                     <h6>Patient Details :</h6>
                                     <div class="d-flex flex-wrap row-gap-2">
                                         <div class="me-12">
+                                            <p class="text-nowrap mb-2"><i class="ri-hospital-line ri-20px me-2"></i>Hospital : <span id="P-HType"></span></p>
                                             <p class="text-nowrap mb-2"><i class="ri-user-line ri-20px me-2"></i>Full Name : <span id="P-Name"></span></p>
                                             <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Mobile : <span id="P-Mobile"></span></p>
                                             <p class="text-nowrap mb-2"><i class="ri-mail-line ri-20px me-2"></i>Email : <span id="P-Email"></span></p>
@@ -122,7 +123,12 @@
                                             <p class="text-nowrap mb-2"><i class="ri-hospital-line ri-20px me-2"></i>Corporate Name : <span id="H-Name"></span></p>
                                             <p class="text-nowrap mb-2"><i class="ri-map-pin-2-line ri-20px me-2 ms-50"></i>Address : <span id="H-Address"></span></p>
                                             <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Contact Number 1 : <span id="H-Mobile1"></span></p>
-                                            <p class="text-nowrap mb-0"><i class="ri-phone-line ri-20px me-2"></i>Contact Number 2 : <span id="H-Mobile2"></span></p>
+                                            <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Contact Number 2 : <span id="H-Mobile2"></span></p>
+                                        </div>
+                                        <div class="me-12">
+                                            <p class="text-nowrap mb-2"><i class="ri-road-map-line ri-20px me-2"></i>State : <span id="H-State"></span></p>
+                                            <p class="text-nowrap mb-2"><i class="ri-building-line ri-20px me-2 ms-50"></i>City: <span id="H-City"></span></p>
+                                            <p class="text-nowrap mb-0"><i class="ri-compass-line ri-20px me-2"></i>Area : <span id="H-Area"></span></p>
                                         </div>
                                     </div>
                                 </div>
@@ -147,7 +153,7 @@
                             </div>
                             <div class="mb-2 col-lg-6 col-xl-6 col-12 mb-0">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" name="end_date" placeholder="Month DD, YYYY" id="BookingEndDate" readonly/>
+                                    <input type="text" class="form-control" name="end_date" placeholder="Month DD, YYYY" id="BookingEndDate" readonly disabled/>
                                     <label for="BookingEndDate">End Date</label>
                                 </div>
                                 @error('end_date')
@@ -540,8 +546,8 @@
                                     <label class="form-label">Gender <span class="text-danger">*</span></label>
                                     <select class="select2 form-select mb-1" name="gender" id="Gender">
                                         <option></option>
-                                        <option value="Male">Male</option>
-                                        <option value="Female">Female</option>
+                                        <option value="Male" @if(old('gender') == "Male") selected @endif>Male</option>
+                                        <option value="Female" @if(old('gender') == "Female") selected @endif>Female</option>
                                     </select>
                                     @error('gender')
                                         <span class="text-danger">{{$message}}</span>
@@ -582,7 +588,7 @@
                                         <option value=""></option>
                                         @if(!empty($data['states']))
                                             @foreach($data['states'] as $state)
-                                                <option value="{{$state->id}}">{{$state->name}}</option>
+                                                <option value="{{$state->id}}" @if(old('state') == $state->id) selected @endif>{{$state->name}}</option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -656,15 +662,6 @@
                             </div>
                             <div class="col-6 mb-3">
                                 <div class="mb-4">
-                                    <label class="form-label">Address<span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control mb-1" value="{{old('address')}}" name="address" placeholder="Enter address"/>
-                                    @error('address')
-                                        <span class="text-danger">{{$message}}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-6 mb-3">
-                                <div class="mb-4">
                                     <label class="form-label">Contact Number 1<span class="text-danger">*</span></label>
                                     <input type="text" minlength="7" maxlength="10" class="form-control mb-1" value="{{old('mobile1')}}" name="mobile1"  placeholder="Enter contact number 1"/>
                                     @error('mobile1')
@@ -677,6 +674,53 @@
                                     <label class="form-label">Contact Number 2<span class="text-danger">*</span></label>
                                     <input type="text" minlength="7" maxlength="10" class="form-control mb-1" value="{{old('mobile2')}}" name="mobile2"  placeholder="Enter contact number 2"/>
                                     @error('mobile2')
+                                        <span class="text-danger">{{$message}}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="mb-4">
+                                    <label class="form-label">Address<span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control mb-1" value="{{old('address')}}" name="address" placeholder="Enter address"/>
+                                    @error('address')
+                                        <span class="text-danger">{{$message}}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-4 mb-3">
+                                <div class="mb-4">
+                                    <label class="form-label">State<span class="text-danger">*</span></label>
+                                    <select class="form-control mb-1" name="state" id="State2" onchange="selectState2()">
+                                        <option value=""></option>
+                                        @if(!empty($data['states']))
+                                            @foreach($data['states'] as $state)
+                                                <option value="{{$state->id}}" @if(old('state') == $state->id) selected @endif>{{$state->name}}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    @error('state')
+                                        <span class="text-danger">{{$message}}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-4 mb-3">
+                                <div class="mb-4">
+                                    <label class="form-label">City<span class="text-danger">*</span></label>
+                                    <select class="form-control mb-1" name="city" id="City2" onchange="selectCity2()">
+                                        <option value=""></option>
+                                    </select>
+                                    @error('city')
+                                        <span class="text-danger">{{$message}}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-4 mb-3">
+                                <div class="mb-4">
+                                    <label class="form-label">Area<span class="text-danger">*</span></label>
+                                    <select class="form-control mb-1" name="area" id="Area2">
+                                        <option value=""></option>
+                                    </select>
+                                    @error('area')
                                         <span class="text-danger">{{$message}}</span>
                                     @enderror
                                 </div>
@@ -760,6 +804,8 @@ $(function () {
 
 <script>
     checkHospitalType();
+    selectState();
+    selectState2();
     function checkHospitalType(){
         $('#Hospital-Select-2').val(null).trigger("change"); 
         var value = $('input[name="h_type"]:checked').val();
@@ -1058,16 +1104,17 @@ $(function () {
         if (data) {
             $('#customerId').val(data.id || 0);
 
-            $('#P-Name').text(data.name || '');
-            $('#P-Mobile').text(data.mobile || '');
-            $('#P-Email').text(data.email || '');
-            $('#P-DOB').text(data.dob || '');
-            $('#P-Age').text(data.age || '');
-            $('#P-Gender').text(data.gender || '');
-            $('#P-Address').text(data.address || '');
-            $('#P-State').text((data.state && data.state.name) || '');
-            $('#P-City').text((data.city && data.city.name) || '');
-            $('#P-Area').text((data.area && data.area.name) || '');
+            $('#P-HType').text(data.h_type || '-');
+            $('#P-Name').text(data.name || '-');
+            $('#P-Mobile').text(data.mobile || '-');
+            $('#P-Email').text(data.email || '-');
+            $('#P-DOB').text(data.dob || '-');
+            $('#P-Age').text(data.age || '-');
+            $('#P-Gender').text(data.gender || '-');
+            $('#P-Address').text(data.address || '-');
+            $('#P-State').text((data.state && data.state.name) || '-');
+            $('#P-City').text((data.city && data.city.name) || '-');
+            $('#P-Area').text((data.area && data.area.name) || '-');
 
             $('#PatientDetails').removeClass('d-none');
         } else {
@@ -1078,14 +1125,17 @@ $(function () {
     function showCorporateDetails(thiss) {
         var select = $(thiss);
         var data = select.find(':selected').data('details');
-
+        console.log(data);
         if (data) {
             $('#customerId').val(data.id || 0);
 
-            $('#H-Name').text(data.name || '');
-            $('#H-Address').text(data.address || '');
-            $('#H-Mobile1').text(data.mobile1 || '');
-            $('#H-Mobile2').text(data.mobile2 || '');
+            $('#H-Name').text(data.name || '-');
+            $('#H-Address').text(data.address || '-');
+            $('#H-Mobile1').text(data.mobile1 || '-');
+            $('#H-Mobile2').text(data.mobile2 || '-');
+            $('#H-State').text((data.state && data.state.name) || '-');
+            $('#H-City').text((data.city && data.city.name) || '-');
+            $('#H-Area').text((data.area && data.area.name) || '-');
 
             $('#CorporateDetails').removeClass('d-none');
         } else {
@@ -1106,16 +1156,50 @@ $(function () {
             {
                 var cities = result.data;
                 var citySelect = $('#City');
+                var cityyy = '{{old("city")}}';
+                
                 citySelect.empty().append('<option value=""></option>');
                 cities.forEach(function(city) {
-                    citySelect.append('<option value="' + city.id + '">' + city.name + '</option>');
+                    if(cityyy == city.id){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    citySelect.append('<option value="' + city.id + '" ' + selected + '>' + city.name + '</option>');
+                    selectCity();
                 });
-                citySelect.val(null).trigger('change');
-                $('#Area').val(null).trigger('change');
-                
             }
         }); 
     }
+    function selectState2() {
+        var id = $('#State2').val();
+        $.ajax({
+            url:"{{route('get_cities_by_state')}}",
+            method:"POST",
+            data:{'id':id,_token:"{{ csrf_token() }}"},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success:function(result)
+            {
+                var cities = result.data;
+                var citySelect = $('#City2');
+                var cityyy = '{{old("city")}}';
+                
+                citySelect.empty().append('<option value=""></option>');
+                cities.forEach(function(city) {
+                    if(cityyy == city.id){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    citySelect.append('<option value="' + city.id + '" ' + selected + '>' + city.name + '</option>');
+                    selectCity2();
+                });
+            }
+        }); 
+    }
+    
     function selectCity() {
         var id = $('#City').val();
         $.ajax({
@@ -1131,11 +1215,46 @@ $(function () {
             success: function(result) {
                 var areas = result.data;
                 var areaSelect = $('#Area');
+                var areaaa = '{{old("area")}}';
+                console.log();
                 areaSelect.empty().append('<option value=""></option>');
                 areas.forEach(function(area) {
-                    areaSelect.append('<option value="' + area.id + '">' + area.name + '</option>');
+                    if(areaaa == area.id){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    areaSelect.append('<option value="' + area.id + '" ' + selected + '>' + area.name + '</option>');
                 });
-                areaSelect.val(null).trigger('change');
+            }
+        });
+    }
+    function selectCity2() {
+        var id = $('#City2').val();
+        $.ajax({
+            url: "{{route('get_areas_by_city')}}",
+            method: "POST",
+            data: {
+                'id': id,
+                _token: "{{ csrf_token() }}"
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(result) {
+                var areas = result.data;
+                var areaSelect = $('#Area2');
+                var areaaa = '{{old("area")}}';
+                console.log();
+                areaSelect.empty().append('<option value=""></option>');
+                areas.forEach(function(area) {
+                    if(areaaa == area.id){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    areaSelect.append('<option value="' + area.id + '" ' + selected + '>' + area.name + '</option>');
+                });
             }
         });
     }
@@ -1195,6 +1314,18 @@ $(function () {
         placeholder: 'Select a area',
         dropdownParent: $('#addPatientModal')
     });
+    $('#State2').select2({
+        placeholder: 'Select a state',
+        dropdownParent: $('#addCorporateModal')
+    });
+    $('#City2').select2({
+        placeholder: 'Select a city',
+        dropdownParent: $('#addCorporateModal')
+    });
+    $('#Area2').select2({
+        placeholder: 'Select a area',
+        dropdownParent: $('#addCorporateModal')
+    });
     $('#dob').flatpickr({
         altInput: true,
         altFormat: 'd-m-Y',
@@ -1208,12 +1339,16 @@ $(function () {
         minDate: new Date(),
         maxDate: new Date(new Date().setMonth(new Date().getMonth() + 2))
     });
-    $('#BookingEndDate').flatpickr({
-        altInput: true,
-        altFormat: 'd-m-Y',
-        dateFormat: 'Y-m-d',
-        minDate: new Date(),
-        maxDate: new Date(new Date().setMonth(new Date().getMonth() + 2))
+    $('#BookingStartDate').on('change', function(){
+        var mindate = $('#BookingStartDate').val();
+        $('#BookingEndDate').attr('disabled',false)
+        $('#BookingEndDate').flatpickr({
+            altInput: true,
+            altFormat: 'd-m-Y',
+            dateFormat: 'Y-m-d',
+            minDate: mindate,
+            maxDate: new Date(new Date().setMonth(new Date().getMonth() + 2))
+        });
     });
 </script>
 @endsection

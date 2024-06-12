@@ -56,6 +56,7 @@
                             <h6 ><i class="ri-information-2-line ri-24px"></i> Patient Details :</h6>
                             <div class="row mx-5">
                                 <div class="col-2">
+                                    <p class="text-nowrap mb-2"><i class="ri-hospital-line ri-20px me-2"></i>Hospital</p>
                                     <p class="text-nowrap mb-2"><i class="ri-user-line ri-20px me-2"></i>Full Name</p>
                                     <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Mobile</p>
                                     <p class="text-nowrap mb-2"><i class="ri-mail-line ri-20px me-2"></i>Email</p>
@@ -63,11 +64,12 @@
                                     <p class="text-nowrap mb-0"><i class="ri-calendar-schedule-line ri-20px me-2"></i>Age</p>
                                 </div>
                                 <div class="col-4">
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->name ?? ""}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile ?? ""}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->email ?? ""}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{date('d/m/Y',strtotime($booking->customer_details->dob)) ?? ""}}</p>
-                                    <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->customer_details->age ?? ""}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->h_type ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->name ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->email ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{date('d/m/Y',strtotime($booking->customer_details->dob)) ?? "-"}}</p>
+                                    <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->customer_details->age ?? "-"}}</p>
                                 </div>
                                 <div class="col-2">
                                     <p class="text-nowrap mb-2"><i class="ri-men-line ri-20px me-2"></i>Gender</p>
@@ -77,11 +79,11 @@
                                     <p class="text-nowrap mb-0"><i class="ri-compass-line ri-20px me-2"></i>Area</p>
                                 </div>
                                 <div class="col-4">
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->gender ?? ""}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->address ?? ""}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->state ?? ""}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->city ?? ""}}</p>
-                                    <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->area ?? ""}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->gender ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->address ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->state ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->city ?? "-"}}</p>
+                                    <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->area ?? "-"}}</p>
                                 </div>
                             </div>
                             @endif
@@ -92,13 +94,19 @@
                                     <p class="text-nowrap mb-2"><i class="ri-building-line ri-20px me-2"></i>Corporate Name</p>
                                     <p class="text-nowrap mb-2"><i class="ri-map-pin-line ri-20px me-2"></i>Address</p>
                                     <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Contact Number 1</p>
-                                    <p class="text-nowrap mb-0"><i class="ri-phone-line ri-20px me-2"></i>Contact Number 2</p>
+                                    <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Contact Number 2</p>
+                                    <p class="text-nowrap mb-2"><i class="ri-road-map-line ri-20px me-2"></i>State</p>
+                                    <p class="text-nowrap mb-2"><i class="ri-building-line ri-20px me-2 ms-50"></i>City</p>
+                                    <p class="text-nowrap mb-0"><i class="ri-compass-line ri-20px me-2"></i>Area</p>
                                 </div>
                                 <div class="col-4">
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->name ?? ""}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->address ?? ""}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile1 ?? ""}}</p>
-                                    <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->customer_details->mobile2 ?? ""}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->name ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->address ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile1 ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile2 ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->state ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->city ?? "-"}}</p>
+                                    <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->area ?? "-"}}</p>
                                 </div>
                             </div>
                             @endif
@@ -109,15 +117,15 @@
                             <div class="mb-2 col-lg-6 col-xl-6 col-12 mb-0">
                                 <div class="form-floating form-floating-outline">
                                     <input type="text" class="form-control d-none" name="booking_id" value="{{$booking->id}}"/>
-                                    <input type="text" class="form-control Date" value="{{$booking->start_date}}" id="BookingStartDate" disabled/>
-                                    <label for="BookingStartDate">Start Date</label>
+                                    <input type="text" class="form-control Date" value="{{$booking->start_date}}"  disabled/>
+                                    <label>Start Date</label>
                                 </div>
                                
                             </div>
                             <div class="mb-2 col-lg-6 col-xl-6 col-12 mb-0">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control Date" value="{{$booking->end_date}}" id="BookingEndDate" disabled/>
-                                    <label for="BookingEndDate">End Date</label>
+                                    <input type="text" class="form-control Date" value="{{$booking->end_date}}" disabled/>
+                                    <label>End Date</label>
                                 </div>
                             </div>
                         </div>
@@ -136,7 +144,7 @@
                                         <div class="row">
                                             <div class="mb-2 col-lg-6 col-xl-6 col-12 mb-0">
                                                 <div class="form-floating form-floating-outline">
-                                                    <input type="text" class="form-control Date" name="start_date" value="" placeholder="DD-MM-YYYY" required/>
+                                                    <input type="text" class="form-control StartDate" name="start_date" id="BookingStartDate" value="" placeholder="DD-MM-YYYY" readonly/>
                                                     <label for="BookingStartDate">Start Date</label>
                                                 </div>
                                                 @error('start_date')
@@ -145,7 +153,7 @@
                                             </div>
                                             <div class="mb-2 col-lg-6 col-xl-6 col-12 mb-0">
                                                 <div class="form-floating form-floating-outline">
-                                                    <input type="text" class="form-control Date" name="end_date" value="" placeholder="DD-MM-YYYY" required/>
+                                                    <input type="text" class="form-control EndDate" name="end_date" id="BookingEndDate" value="" placeholder="DD-MM-YYYY" readonly disabled/>
                                                     <label for="BookingEndDate">End Date</label>
                                                 </div>
                                                 @error('end_date')
@@ -721,6 +729,24 @@
             dateFormat: 'Y-m-d',
             minDate: start_date,
             maxDate: end_date
+        });
+        $('#BookingStartDate').flatpickr({
+            altInput: true,
+            altFormat: 'd-m-Y',
+            dateFormat: 'Y-m-d',
+            minDate: start_date,
+            maxDate: end_date
+        });
+        $('#BookingStartDate').on('change', function(){
+            var mindate = $('#BookingStartDate').val();
+            $('#BookingEndDate').attr('disabled',false)
+            $('#BookingEndDate').flatpickr({
+                altInput: true,
+                altFormat: 'd-m-Y',
+                dateFormat: 'Y-m-d',
+                minDate: mindate,
+                maxDate: end_date
+            });
         });
     });
 </script>

@@ -50,25 +50,38 @@
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="bookings" @if(in_array('bookings',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="bookings" @if(in_array('bookings',$permissions)) checked @endif name="permission[]" id="bookings" />
+                                        <label class="form-check-label" for="bookings">
                                             Create Booking
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="assign_bookings" @if(in_array('assign_bookings',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="assign_bookings" @if(in_array('assign_bookings',$permissions)) checked @endif name="permission[]" id="assign_bookings" />
+                                        <label class="form-check-label" for="assign_bookings">
                                             Assign Booking
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="staff_attendance" @if(in_array('staff_attendance',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="staff_attendance" @if(in_array('staff_attendance',$permissions)) checked @endif name="permission[]" id="staff_attendance" />
+                                        <label class="form-check-label" for="staff_attendance">
                                             Staff Attendance
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <label class="mb-2"><b>Payments</b></label>
+                            <div class="row">
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="advance_salary" @if(in_array('advance_salary',$permissions)) checked @endif name="permission[]" id="advance_salary" />
+                                        <label class="form-check-label" for="advance_salary">
+                                            Advance Salary
                                         </label>
                                     </div>
                                 </div>
@@ -79,32 +92,32 @@
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="staff" @if(in_array('staff',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="staff" @if(in_array('staff',$permissions)) checked @endif name="permission[]" id="staff" />
+                                        <label class="form-check-label" for="staff">
                                             Staff
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="doctors" @if(in_array('doctors',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="doctors" @if(in_array('doctors',$permissions)) checked @endif name="permission[]" id="doctors" />
+                                        <label class="form-check-label" for="doctors">
                                             Doctors
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="patients" @if(in_array('patients',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="patients" @if(in_array('patients',$permissions)) checked @endif name="permission[]" id="patients" />
+                                        <label class="form-check-label" for="patients">
                                             Patients
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="corporates" @if(in_array('corporates',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="corporates" @if(in_array('corporates',$permissions)) checked @endif name="permission[]" id="corporates" />
+                                        <label class="form-check-label" for="corporates">
                                             Corporates
                                         </label>
                                     </div>
@@ -116,16 +129,16 @@
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="users" @if(in_array('users',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="users" @if(in_array('users',$permissions)) checked @endif name="permission[]" id="users" />
+                                        <label class="form-check-label" for="users">
                                             Users
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="roles" @if(in_array('roles',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="roles" @if(in_array('roles',$permissions)) checked @endif name="permission[]" id="roles" />
+                                        <label class="form-check-label" for="roles">
                                             Roles
                                         </label>
                                     </div>
@@ -137,64 +150,64 @@
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="hospitals" @if(in_array('hospitals',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="hospitals" @if(in_array('hospitals',$permissions)) checked @endif name="permission[]" id="hospitals" />
+                                        <label class="form-check-label" for="hospitals">
                                             Hospitals
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="shifts" @if(in_array('shifts',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="shifts" @if(in_array('shifts',$permissions)) checked @endif name="permission[]" id="shifts" />
+                                        <label class="form-check-label" for="shifts">
                                             Shifts
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="equipments" @if(in_array('equipments',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="equipments" @if(in_array('equipments',$permissions)) checked @endif name="permission[]" id="equipments" />
+                                        <label class="form-check-label" for="equipments">
                                             Equipments
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="ambulance" @if(in_array('ambulance',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="ambulance" @if(in_array('ambulance',$permissions)) checked @endif name="permission[]" id="ambulance" />
+                                        <label class="form-check-label" for="ambulance">
                                             Ambulance
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="staff_type" @if(in_array('staff_type',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="staff_type" @if(in_array('staff_type',$permissions)) checked @endif name="permission[]" id="staff_type" />
+                                        <label class="form-check-label" for="staff_type">
                                             Staff Type
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="states" @if(in_array('states',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="states" @if(in_array('states',$permissions)) checked @endif name="permission[]" id="states" />
+                                        <label class="form-check-label" for="states">
                                             States
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="cities" @if(in_array('cities',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="cities" @if(in_array('cities',$permissions)) checked @endif name="permission[]" id="cities" />
+                                        <label class="form-check-label" for="cities">
                                             Cities
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="area" @if(in_array('area',$permissions)) checked @endif name="permission[]" id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" type="checkbox" value="area" @if(in_array('area',$permissions)) checked @endif name="permission[]" id="area" />
+                                        <label class="form-check-label" for="area">
                                             Area
                                         </label>
                                     </div>

@@ -54,7 +54,7 @@
                         </div>
                         <div class="col-sm-9 mb-3 d-none OthersCheck">
                             <div class="mb-4">
-                                <label class="form-label">Select Hospital Type <span class="text-danger">*</span></label>
+                                <label class="form-label">Select Hospital <span class="text-danger">*</span></label>
                                 <select id="Hospital-Select" class="select2 form-select" name="h_other_type">
                                     <option></option>
                                     @if(!empty($hospitals))
@@ -80,7 +80,7 @@
                         </div>
                         <div class="col-4 mb-3">
                             <div class="mb-4">
-                                <label class="form-label">Email Address<span class="text-danger">*</span></label>
+                                <label class="form-label">Email Address</label>
                                 <input type="email" class="form-control mb-1" value="{{old('email')}}" name="email"  placeholder="Enter email address"/>
                                 @error('email')
                                     <span class="text-danger">{{$message}}</span>
@@ -101,8 +101,8 @@
                                 <label class="form-label">Gender <span class="text-danger">*</span></label>
                                 <select class="form-control mb-1" name="gender" id="Gender">
                                     <option></option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
+                                    <option value="Male" @if(old('gender') == "Male") selected @endif>Male</option>
+                                    <option value="Female" @if(old('gender') == "Female") selected @endif>Female</option>
                                 </select>
                                 @error('gender')
                                     <span class="text-danger">{{$message}}</span>
@@ -111,7 +111,7 @@
                         </div>
                         <div class="col-4 mb-3">
                             <div class="mb-4">
-                                <label class="form-label">Date Of Birth<span class="text-danger">*</span></label>
+                                <label class="form-label">Date Of Birth</label>
                                 <input type="text" class="form-control mb-1" value="{{old('dob')}}"  name="dob" placeholder="Month DD, YYYY" id="dob" readonly />
                                 @error('dob')
                                     <span class="text-danger">{{$message}}</span>
@@ -143,7 +143,7 @@
                                     <option value=""></option>
                                     @if(!empty($states))
                                         @foreach($states as $state)
-                                            <option value="{{$state->id}}">{{$state->name}}</option>
+                                            <option value="{{$state->id}}" @if(old('state') == $state->id) selected @endif>{{$state->name}}</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -200,6 +200,7 @@
 @section('javascript')
 <script>
     checkHospitalType();
+    selectState();
     function checkHospitalType(){
         $('#Hospital-Select').val(null).trigger("change"); 
         var value = $('input[name="h_type"]:checked').val();
@@ -222,13 +223,18 @@
             {
                 var cities = result.data;
                 var citySelect = $('#City');
+                var cityyy = '{{old("city")}}';
+                
                 citySelect.empty().append('<option value=""></option>');
                 cities.forEach(function(city) {
-                    citySelect.append('<option value="' + city.id + '">' + city.name + '</option>');
+                    if(cityyy == city.id){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    citySelect.append('<option value="' + city.id + '" ' + selected + '>' + city.name + '</option>');
                 });
-                citySelect.val(null).trigger('change');
-                $('#Area').val(null).trigger('change');
-                
+                selectCity();
             }
         }); 
     }
@@ -248,11 +254,17 @@
             success: function(result) {
                 var areas = result.data;
                 var areaSelect = $('#Area');
+                var areaaa = '{{old("area")}}';
+                console.log();
                 areaSelect.empty().append('<option value=""></option>');
                 areas.forEach(function(area) {
-                    areaSelect.append('<option value="' + area.id + '">' + area.name + '</option>');
+                    if(areaaa == area.id){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    areaSelect.append('<option value="' + area.id + '" ' + selected + '>' + area.name + '</option>');
                 });
-                areaSelect.val(null).trigger('change');
             }
         });
     }

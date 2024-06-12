@@ -170,6 +170,19 @@
                         </a>
                     </li>
                     @endif
+                    @if(in_array('advance_salary',$permissions))
+                    <li class="menu-header mt-5">
+                        <span class="menu-header-text">Payments</span>
+                    </li>
+                    @endif
+                    @if(in_array('advance_salary',$permissions))
+                    <li class="menu-item  @if (Route::currentRouteName() == 'advance_salary') active @endif">
+                        <a href="{{route('advance_salary')}}" class="menu-link">
+                            <i class="menu-icon tf-icons ri-money-rupee-circle-line"></i>
+                            <div>Advance Salary</div>
+                        </a>
+                    </li>
+                    @endif
                     @if(in_array('staff',$permissions) || in_array('doctors',$permissions)|| in_array('patients',$permissions) || in_array('corporates',$permissions))
                     <li class="menu-header mt-5">
                         <span class="menu-header-text">Menus</span>

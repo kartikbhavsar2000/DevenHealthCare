@@ -36,8 +36,8 @@
                     <div class="row">
                         <div class="col-6 mb-3">
                             <div class="mb-4">
-                                <label class="form-label">User Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control mb-1" value="{{old('name')}}" name="name"  placeholder="Enter user name"/>
+                                <label class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control mb-1" value="{{old('name')}}" name="name"  placeholder="Enter name of the user"/>
                                 @error('name')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
@@ -74,6 +74,7 @@
                             <div class="mb-4">
                                 <label class="form-label">User Role <span class="text-danger">*</span></label>
                                 <select class="form-control mb-1" id="Rolee" name="role">
+                                    <option></option>
                                     @foreach($roles as $role)
                                         <option value="{{$role->id}}">{{$role->name}}</option>
                                     @endforeach

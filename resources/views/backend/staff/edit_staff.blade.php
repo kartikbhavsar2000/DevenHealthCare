@@ -135,11 +135,6 @@
                                 <label class="form-label">City<span class="text-danger">*</span></label>
                                 <select class="form-control mb-1" name="city" id="City" onchange="selectCity()">
                                     <option value=""></option>
-                                    @if(!empty($cities))
-                                        @foreach($cities as $city)
-                                            <option value="{{$city->id}}" class="d-none" @if($data->city == $city->id) selected @endif data-state-id="{{$city->state_id}}">{{$city->name}}</option>
-                                        @endforeach
-                                    @endif
                                 </select>
                                 @error('city')
                                     <span class="text-danger">{{$message}}</span>
@@ -151,11 +146,6 @@
                                 <label class="form-label">Area<span class="text-danger">*</span></label>
                                 <select class="form-control mb-1" name="area" id="Area">
                                     <option value=""></option>
-                                    @if(!empty($area))
-                                        @foreach($area as $ar)
-                                            <option value="{{$ar->id}}" class="d-none" @if($data->area == $ar->id) selected @endif data-city-id="{{$ar->city_id}}">{{$ar->name}}</option>
-                                        @endforeach
-                                    @endif
                                 </select>
                                 @error('area')
                                     <span class="text-danger">{{$message}}</span>
@@ -346,7 +336,7 @@
 
 @section('javascript')
 <script>
-
+    selectState();
     function selectState() {
         var id = $('#State').val();
         $.ajax({
@@ -360,13 +350,18 @@
             {
                 var cities = result.data;
                 var citySelect = $('#City');
+                var cityyy = '{{$data->city}}';
+                console.log("City : " + cityyy);
                 citySelect.empty().append('<option value=""></option>');
                 cities.forEach(function(city) {
-                    citySelect.append('<option value="' + city.id + '">' + city.name + '</option>');
+                    if(cityyy == city.id){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    citySelect.append('<option value="' + city.id + '" ' + selected + '>' + city.name + '</option>');
                 });
-                citySelect.val(null).trigger('change');
-                $('#Area').val(null).trigger('change');
-                
+                selectCity();
             }
         }); 
     }
@@ -386,11 +381,17 @@
             success: function(result) {
                 var areas = result.data;
                 var areaSelect = $('#Area');
+                var areaaa = '{{$data->area}}';
+                console.log("Area : " + areaaa);
                 areaSelect.empty().append('<option value=""></option>');
                 areas.forEach(function(area) {
-                    areaSelect.append('<option value="' + area.id + '">' + area.name + '</option>');
+                    if(areaaa == area.id){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    areaSelect.append('<option value="' + area.id + '" ' + selected + '>' + area.name + '</option>');
                 });
-                areaSelect.val(null).trigger('change');
             }
         });
     }

@@ -77,7 +77,7 @@
                                     <option value=""></option>
                                     @if(!empty($states))
                                         @foreach($states as $state)
-                                            <option value="{{$state->id}}">{{$state->name}}</option>
+                                            <option value="{{$state->id}}" @if(old('state') == $state->id) selected @endif>{{$state->name}}</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -113,8 +113,8 @@
                                 <label class="form-label">Gender <span class="text-danger">*</span></label>
                                 <select class="form-control mb-1" name="gender" id="Gender">
                                     <option></option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
+                                    <option value="Male" @if(old('gender') == "Male") selected @endif>Male</option>
+                                    <option value="Female" @if(old('gender') == "Female") selected @endif>Female</option>
                                 </select>
                                 @error('gender')
                                     <span class="text-danger">{{$message}}</span>
@@ -293,6 +293,7 @@
 
 @section('javascript')
 <script>
+    selectState();
 
     function selectState() {
         var id = $('#State').val();
@@ -307,13 +308,18 @@
             {
                 var cities = result.data;
                 var citySelect = $('#City');
+                var cityyy = '{{old("city")}}';
+                
                 citySelect.empty().append('<option value=""></option>');
                 cities.forEach(function(city) {
-                    citySelect.append('<option value="' + city.id + '">' + city.name + '</option>');
+                    if(cityyy == city.id){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    citySelect.append('<option value="' + city.id + '" ' + selected + '>' + city.name + '</option>');
                 });
-                citySelect.val(null).trigger('change');
-                $('#Area').val(null).trigger('change');
-                
+                selectCity();
             }
         }); 
     }
@@ -333,11 +339,17 @@
             success: function(result) {
                 var areas = result.data;
                 var areaSelect = $('#Area');
+                var areaaa = '{{old("area")}}';
+                console.log();
                 areaSelect.empty().append('<option value=""></option>');
                 areas.forEach(function(area) {
-                    areaSelect.append('<option value="' + area.id + '">' + area.name + '</option>');
+                    if(areaaa == area.id){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    areaSelect.append('<option value="' + area.id + '" ' + selected + '>' + area.name + '</option>');
                 });
-                areaSelect.val(null).trigger('change');
             }
         });
     }

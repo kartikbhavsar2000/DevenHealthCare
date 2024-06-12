@@ -68,7 +68,7 @@
                                     <option></option>
                                     @if(!empty($staff_type))
                                         @foreach($staff_type as $data)
-                                            <option value="{{$data->id}}">{{$data->title}}</option>
+                                            <option value="{{$data->id}}" @if(old('type') == $data->id) selected @endif>{{$data->title}}</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -147,7 +147,7 @@
                                     <option value=""></option>
                                     @if(!empty($states))
                                         @foreach($states as $state)
-                                            <option value="{{$state->id}}">{{$state->name}}</option>
+                                            <option value="{{$state->id}}" @if(old('state') == $state->id) selected @endif>{{$state->name}}</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -183,8 +183,8 @@
                                 <label class="form-label">Gender <span class="text-danger">*</span></label>
                                 <select class="form-control mb-1" name="gender" id="Gender">
                                     <option></option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
+                                    <option value="Male" @if(old('gender') == "Male") selected @endif>Male</option>
+                                    <option value="Female" @if(old('gender') == "Female") selected @endif>Female</option>
                                 </select>
                                 @error('gender')
                                     <span class="text-danger">{{$message}}</span>
@@ -384,54 +384,66 @@
 
 @section('javascript')
 <script>
+    selectState();
 
-function selectState() {
-    var id = $('#State').val();
-    $.ajax({
-        url:"{{route('get_cities_by_state')}}",
-        method:"POST",
-        data:{'id':id,_token:"{{ csrf_token() }}"},
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success:function(result)
-        {
-            var cities = result.data;
-            var citySelect = $('#City');
-            citySelect.empty().append('<option value=""></option>');
-            cities.forEach(function(city) {
-                citySelect.append('<option value="' + city.id + '">' + city.name + '</option>');
-            });
-            citySelect.val(null).trigger('change');
-            $('#Area').val(null).trigger('change');
-            
-        }
-    }); 
-}
-
-function selectCity() {
-    var id = $('#City').val();
-    $.ajax({
-        url: "{{route('get_areas_by_city')}}",
-        method: "POST",
-        data: {
-            'id': id,
-            _token: "{{ csrf_token() }}"
-        },
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(result) {
-            var areas = result.data;
-            var areaSelect = $('#Area');
-            areaSelect.empty().append('<option value=""></option>');
-            areas.forEach(function(area) {
-                areaSelect.append('<option value="' + area.id + '">' + area.name + '</option>');
-            });
-            areaSelect.val(null).trigger('change');
-        }
-    });
-}
+    function selectState() {
+        var id = $('#State').val();
+        $.ajax({
+            url:"{{route('get_cities_by_state')}}",
+            method:"POST",
+            data:{'id':id,_token:"{{ csrf_token() }}"},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success:function(result)
+            {
+                var cities = result.data;
+                var citySelect = $('#City');
+                var cityyy = '{{old("city")}}';
+                
+                citySelect.empty().append('<option value=""></option>');
+                cities.forEach(function(city) {
+                    if(cityyy == city.id){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    citySelect.append('<option value="' + city.id + '" ' + selected + '>' + city.name + '</option>');
+                });
+                selectCity();
+            }
+        }); 
+    }
+    
+    function selectCity() {
+        var id = $('#City').val();
+        $.ajax({
+            url: "{{route('get_areas_by_city')}}",
+            method: "POST",
+            data: {
+                'id': id,
+                _token: "{{ csrf_token() }}"
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(result) {
+                var areas = result.data;
+                var areaSelect = $('#Area');
+                var areaaa = '{{old("area")}}';
+                console.log();
+                areaSelect.empty().append('<option value=""></option>');
+                areas.forEach(function(area) {
+                    if(areaaa == area.id){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    areaSelect.append('<option value="' + area.id + '" ' + selected + '>' + area.name + '</option>');
+                });
+            }
+        });
+    }
 
 </script>
 <script>

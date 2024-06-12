@@ -57,8 +57,12 @@ class MasterController extends Controller
             'mobile1' => 'required|numeric|min:7',
             'mobile2' => 'required|numeric|min:7',
         ],[
-            'mobile1.min' => "Please enter valid contact number.",
-            'mobile2.min' => "Please enter valid contact number.",
+            'mobile1.required' => "The contact number 1 field is required.",
+            'mobile2.required' => "The contact number 2 field is required.",
+            'mobile1.numeric' => "Please enter valid contact number 1.",
+            'mobile2.numeric' => "Please enter valid contact number 2.",
+            'mobile1.min' => "Please enter valid contact number 1.",
+            'mobile2.min' => "Please enter valid contact number 2.",
         ]);
 
         $data = new Hospital();
@@ -77,8 +81,12 @@ class MasterController extends Controller
             'mobile1' => 'required|numeric|min:7',
             'mobile2' => 'required|numeric|min:7',
         ],[
-            'mobile1.min' => "Please enter valid contact number.",
-            'mobile2.min' => "Please enter valid contact number.",
+            'mobile1.required' => "The contact number 1 field is required.",
+            'mobile2.required' => "The contact number 2 field is required.",
+            'mobile1.numeric' => "Please enter valid contact number 1.",
+            'mobile2.numeric' => "Please enter valid contact number 2.",
+            'mobile1.min' => "Please enter valid contact number 1.",
+            'mobile2.min' => "Please enter valid contact number 2.",
         ]);
 
         $data = Hospital::find($request->id);
@@ -235,12 +243,12 @@ class MasterController extends Controller
     {
         $request->validate([
             'name' => 'required|max:255',
-            'day_cost' => 'nullable|numeric|min:0|digits_between:1,12',
-            'day_sell' => 'nullable|numeric|min:0|digits_between:1,12',
-            'night_cost' => 'nullable|numeric|min:0|digits_between:1,12',
-            'night_sell' => 'nullable|numeric|min:0|digits_between:1,12',
-            'full_cost' => 'nullable|numeric|min:0|digits_between:1,12',
-            'full_sell' => 'nullable|numeric|min:0|digits_between:1,12',
+            'day_cost' => 'required|numeric|min:0|digits_between:1,12',
+            'day_sell' => 'required|numeric|min:0|digits_between:1,12',
+            'night_cost' => 'required|numeric|min:0|digits_between:1,12',
+            'night_sell' => 'required|numeric|min:0|digits_between:1,12',
+            'full_cost' => 'required|numeric|min:0|digits_between:1,12',
+            'full_sell' => 'required|numeric|min:0|digits_between:1,12',
         ],[
             'day_cost.digits_between' => "The amount for cost price is too big.",
             'day_sell.digits_between' => "The amount for sell price is too big.",
@@ -253,7 +261,13 @@ class MasterController extends Controller
             'full_cost.digits_between' => "The amount for cost price is too big.",
             'full_sell.digits_between' => "The amount for sell price is too big.",
             'full_cost.numeric' => "Please enter valid amount.",
-            'full_sell.numeric' => "Please enter valid amount."
+            'full_sell.numeric' => "Please enter valid amount.",
+            'day_cost.required' => "This field is required.",
+            'day_sell.required' => "This field is required.",
+            'night_cost.required' => "This field is required.",
+            'night_sell.required' => "This field is required.",
+            'full_cost.required' => "This field is required.",
+            'full_sell.required' => "This field is required.",
         ]);
 
         $data = Ambulance::find($request->id);

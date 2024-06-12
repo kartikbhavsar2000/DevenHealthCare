@@ -166,4 +166,11 @@ Route::group(['middleware' => ['admin']], function() {
     Route::post('/delete_doctor', [App\Http\Controllers\MenuController::class, 'delete_doctor'])->name('delete_doctor');
     Route::post('/create_doctor', [App\Http\Controllers\MenuController::class, 'create_doctor'])->name('create_doctor');
     Route::post('/update_doctor', [App\Http\Controllers\MenuController::class, 'update_doctor'])->name('update_doctor');
+
+    Route::get('/advance_salary', [App\Http\Controllers\PaymentController::class, 'advance_salary'])->name('advance_salary');
+    Route::get('/get_advance_salary_list', [App\Http\Controllers\PaymentController::class, 'get_advance_salary_list'])->name('get_advance_salary_list');
+    Route::get('/add_advance_salary', [App\Http\Controllers\PaymentController::class, 'add_advance_salary'])->name('add_advance_salary');
+    Route::get('/edit_advance_salary/{id}', [App\Http\Controllers\PaymentController::class, 'edit_advance_salary'])->name('edit_advance_salary');
+    Route::post('/create_advance_salary', [App\Http\Controllers\PaymentController::class, 'create_advance_salary'])->name('create_advance_salary');
+    Route::post('/update_advance_salary', [App\Http\Controllers\PaymentController::class, 'update_advance_salary'])->name('update_advance_salary');
 });

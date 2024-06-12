@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+
 @if(session()->has('success'))
     <div class="alert alert-success d-flex align-items-center p-3 mt-4" role="alert">
         <span>{{ session()->get('success') }}</span>
@@ -25,42 +26,46 @@
     <div class="col-12">
         <div class="card py-5">
             <div class="mx-5">
-                <h5 class="mb-0">Edit User</h5>
+                <h5 class="mb-0">Edit Advance Salary</h5>
             </div>
             <hr>
-            <form id="Form" action="{{route('update_user')}}" method="POST">
+            <form id="Form" action="{{route('update_advance_salary')}}" method="POST">
                 @csrf
                 <div class="card-body py-0">
                     <div class="row">
                         <div class="col-6 mb-3">
                             <div class="mb-4">
-                                <label class="form-label">Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control d-none" value="{{$data->id}}" name="id"/>
-                                <input type="text" class="form-control mb-1" value="{{$data->name}}" name="name"  placeholder="Enter name of the user"/>
-                                @error('name')
-                                    <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <div class="mb-4">
-                                <label class="form-label">Email Address <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control mb-1" value="{{$data->email}}" name="email"  placeholder="Enter email"/>
-                                @error('email')
-                                    <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <div class="mb-4">
-                                <label class="form-label">User Role <span class="text-danger">*</span></label>
-                                <select class="form-control mb-1" name="role" id="Rolee">
-                                    <option></option>
-                                    @foreach($roles as $role)
-                                        <option value="{{$role->id}}" @if($data->role_id == $role->id) selected @endif>{{$role->name}}</option>
-                                    @endforeach
+                                <label class="form-label">Select Staff <span class="text-danger">*</span></label>
+                                <select class="form-control mb-1" name="staff_id" id="StaffId">
+                                    <option value=""></option>
+                                    @if(!empty($staff))
+                                        @foreach($staff as $st)
+                                            <option value="{{$st->id}}" @if($data->staff_id == $st->id) selected @endif>{{$st->f_name ?? ""}} {{$st->m_name ?? ""}} {{$st->l_name ?? ""}} - {{$st->staff_id ?? ""}}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
-                                @error('role')
+                                @error('staff_id')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="mb-4">
+                                <label class="form-label">Amount <span class="text-danger">*</span></label>
+                                <div class="input-group mb-1">
+                                    <span class="input-group-text">₹</span>
+                                    <input type="text" value="{{$data->amount ?? ""}}" name="amount" placeholder="00"  class="form-control"/>
+                                </div>
+                                @error('amount')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div class="mb-4">
+                                <label class="form-label">Description <span class="text-danger">*</span></label>
+                                <textarea type="text" name="description"  class="form-control">{{$data->description ?? ""}}</textarea> 
+                                @error('description')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
                             </div>
@@ -70,7 +75,7 @@
                 <hr>
                 <div class="card-footer">
                     <button type="submit" id="Submit" class="btn btn-flex btn-primary h-40px fs-7 fw-bold me-1">Submit</button>
-                    <a href="{{route('users')}}" class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body h-40px fs-7 fw-bold">Back</a>
+                    <a href="{{route('advance_salary')}}" class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body h-40px fs-7 fw-bold">Back</a>
                 </div>
             </form>
         </div>
@@ -81,8 +86,8 @@
 
 @section('javascript')
 <script>
-    $('#Rolee').select2({
-        placeholder: 'Select a role'
+    $('#StaffId').select2({
+        placeholder: 'Select a staff'
     });
 </script>
 @endsection

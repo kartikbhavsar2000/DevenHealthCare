@@ -668,7 +668,7 @@
             tooltip: {
                 y: {
                     formatter: function (val) {
-                        return val + " staff"
+                        return val
                     }
                 }
             }
@@ -853,7 +853,7 @@
             tooltip: {
                 y: {
                     formatter: function (val) {
-                        return val + " staff"
+                        return val
                     }
                 }
             }
@@ -945,7 +945,7 @@
             tooltip: {
                 y: {
                     formatter: function (val) {
-                        return val + " bookings"
+                        return val
                     }
                 }
             }
