@@ -34,16 +34,27 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+    public function invoice()
+    {
+        return view('backend.pdf.invoice');
+    }
     public function index()
     {   
         $staff_type = StaffType::orderBy('id',"ASC")->get();
-        $bookings = Booking::with('bookingAssigns')->orderBy('id',"DESC")->get();
+        $bookings = Booking::with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
         foreach($bookings as $booking){
             $customer_details = $booking->customerDetails();
             $customer_details->state = State::find($customer_details->state);
             $customer_details->city = City::find($customer_details->city);
             $customer_details->area = Area::find($customer_details->area);
             $booking->customer_details = $customer_details;
+
+            foreach($booking->bookingDetails as $details){
+                $shift = Shifts::find($details->shift);
+                if($shift){
+                    $details->shift_name = $shift->name;
+                }
+            }
 
             $staff_data = [];
             $doctor_data = [];

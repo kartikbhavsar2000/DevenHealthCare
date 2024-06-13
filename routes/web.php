@@ -25,6 +25,7 @@ Route::get('/clear-config-cache', function () {
 Route::group(['middleware' => ['admin']], function() {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
     Route::get('/analytics', [App\Http\Controllers\HomeController::class, 'analytics'])->name('analytics');
+    Route::get('/invoice', [App\Http\Controllers\HomeController::class, 'invoice'])->name('invoice');
 
     Route::get('/get_staff_booking_chart_data', [App\Http\Controllers\HomeController::class, 'get_staff_booking_chart_data'])->name('get_staff_booking_chart_data');
     Route::get('/area_wise_booking_chart', [App\Http\Controllers\HomeController::class, 'area_wise_booking_chart'])->name('area_wise_booking_chart');

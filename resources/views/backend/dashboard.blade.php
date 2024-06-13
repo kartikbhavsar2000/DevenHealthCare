@@ -22,7 +22,12 @@
     text-align: center!important;
   }
   .nav .nav-link:not(.active):hover {
-      color: #4cb7e5;
+      color: #ffffff!important;
+  }
+  .nav-tabs .nav-link.active, .nav-tabs .nav-link.active:hover, .nav-tabs .nav-link.active:focus {
+      background: #ffffff!important;
+      color: #4cb7e5!important;
+      border:5px solid #4cb7e5;
   }
 </style>
 @endsection
@@ -57,7 +62,7 @@
             @if(!empty($dates))
               @foreach($dates as $key => $date)
                 <li class="nav-item" role="presentation">
-                  <button type="button" style="height: 60px;" class="nav-link d-flex flex-column gap-1 waves-effect  @if($key == 0)active @endif" role="tab" data-bs-toggle="tab" data-bs-target="#navs-card-{{$key}}" aria-controls="navs-profile-{{$key}}" aria-selected="@if($key == 0) true @else false @endif" @if($key != 0) tabindex="-1" @endif>{{date('M d', strtotime($date))}}</button>
+                  <button type="button" style="height: 60px; background: #4cb7e5; color:#c5eeff; border:2px solid #4cb7e5;" class="nav-link d-flex flex-column gap-1 waves-effect  @if($key == 0)active @endif" role="tab" data-bs-toggle="tab" data-bs-target="#navs-card-{{$key}}" aria-controls="navs-profile-{{$key}}" aria-selected="@if($key == 0) true @else false @endif" @if($key != 0) tabindex="-1" @endif>{{date('M d', strtotime($date))}}</button>
                 </li>
               @endforeach
             @endif
@@ -72,7 +77,7 @@
                 <table class="kt_datatable table table-row-bordered table-row-gray-300" style="margin-bottom: 0px!important">
                   <thead>
                       <tr>
-                        <th style="border-bottom:1px solid #4cb7e5;">Customer Name</th>
+                        <th style="border:1px solid #4cb7e5; background:#c5eeff;">Customer Name</th>
                         @if(!empty($staff_type))
                           @foreach($staff_type as $st)
                             <th style="border-bottom:1px solid #dfdfe2;">{{$st->title}}</th>
@@ -482,6 +487,73 @@
               : <span id="cust_Area">-</span>
             </div>
           </div>
+          <h5 class="modal-title my-4">Booking Details</h5>
+          <div class="col-4">
+            <div class="mt-1">
+              Booking Id
+            </div>
+            <div class="mt-1">
+              Type
+            </div>
+            <div class="mt-1">
+              Start Date
+            </div>
+            <div class="mt-1">
+              End Date
+            </div>
+            <div class="mt-1">
+              Total
+            </div>
+          </div>
+          <div class="col-8">
+            <div class="mt-1">
+              : <span id="cust_BookingId">-</span>
+            </div>
+            <div class="mt-1">
+              : <span id="cust_BookingType">-</span>
+            </div>
+            <div class="mt-1">
+              : <span id="cust_BookingStart">-</span>
+            </div>
+            <div class="mt-1">
+              : <span id="cust_BookingEnd">-</span>
+            </div>
+            <div class="mt-1">
+              : <span id="cust_BookingTotal">-</span>
+            </div>
+          </div>
+          <div class="col-12 mt-5">
+            <table class="kt_datatable table table-row-bordered table-row-gray-300" style="margin-bottom: 0px!important">
+              <thead>
+                <tr>
+                  <th>Sr No.</th>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Shift</th>
+                  <th>Qnt</th>
+                  <th>Rate</th>
+                </tr>
+              </thead>
+              <tbody id="cust_BookingData">
+                {{-- <tr>
+                  <td>1</td>
+                  <td>Staff</td>
+                  <td>Nurse</td>
+                  <td>Day Shift</td>
+                  <td>1</td>
+                  <td>500</td>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Staff</td>
+                  <td>Caretaker</td>
+                  <td>Day Shift</td>
+                  <td>1</td>
+                  <td>800</td>
+                </tr> --}}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -743,6 +815,39 @@
       $('#cust_State').text(data.customer_details.state.name || '');
       $('#cust_City').text(data.customer_details.city.name || '');
       $('#cust_Area').text(data.customer_details.area.name || '');
+
+      $('#cust_BookingId').text(data.unique_id || '');
+      $('#cust_BookingType').text(data.booking_type || '');
+      $('#cust_BookingStart').text(data.start_date || '');
+      $('#cust_BookingEnd').text(data.end_date || '');
+      $('#cust_BookingTotal').text(data.total || '');
+
+      var bookingData = "";
+      $.each(data.booking_details, function(index, item) {
+          var srno = index + 1;
+          var type = "-";
+          if(item.type == 1){
+              type = "Staff";
+          } else if(item.type == 2){
+              type = "Equipment";
+          } else if(item.type == 3){
+              type = "Doctor";
+          } else if(item.type == 4){
+              type = "Ambulance";
+          }
+
+          bookingData += `<tr>
+                              <td>`+ srno +`</td>
+                              <td>`+ (item.name ?? "-") +`</td>
+                              <td>`+ type +`</td>
+                              <td>`+ (item.shift_name ?? "-") +`</td>
+                              <td>`+ (item.qnt ?? "-") +`</td>
+                              <td>`+ (item.sell_rate ?? "-") +`</td>
+                          </tr>`;
+      });
+      $('#cust_BookingData').html(bookingData);
+
+      
       $('#customerDetailsCanvas').modal('show');
     }else{
       $('#corp_Name').text((data.customer_details.name || ''));

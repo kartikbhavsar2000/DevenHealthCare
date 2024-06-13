@@ -144,7 +144,7 @@
                         <div class="row mb-4">
                             <div class="mb-2 col-lg-6 col-xl-6 col-12 mb-0">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" name="start_date" placeholder="Month DD, YYYY" id="BookingStartDate" readonly/>
+                                    <input type="text" class="form-control" name="start_date" placeholder="DD-MM-YYYY" id="BookingStartDate" readonly/>
                                     <label for="BookingStartDate">Start Date</label>
                                 </div>
                                 @error('start_date')
@@ -153,7 +153,7 @@
                             </div>
                             <div class="mb-2 col-lg-6 col-xl-6 col-12 mb-0">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" name="end_date" placeholder="Month DD, YYYY" id="BookingEndDate" readonly disabled/>
+                                    <input type="text" class="form-control" name="end_date" placeholder="DD-MM-YYYY" id="BookingEndDate" readonly/>
                                     <label for="BookingEndDate">End Date</label>
                                 </div>
                                 @error('end_date')
@@ -263,7 +263,7 @@
                             <div data-repeater-list="equipment_data">
                                 <div data-repeater-item>
                                     <div class="row">
-                                        <div class="mb-2 col-lg-6 col-xl-6 col-12 mb-0">
+                                        <div class="mb-2 col-lg-4 col-xl-4 col-12 mb-0">
                                             <div class="form-floating form-floating-outline">
                                                 <select class="EquipmentSelect select2 form-select equipment-select" name="equipment_name" onchange="addEquipmentRate(this)">
                                                     <option disabled selected>Select equipment</option>
@@ -292,7 +292,17 @@
                                                     <option value="9">9</option>
                                                     <option value="10">10</option>
                                                 </select>
-                                                <label for="EquipmentQnt">Quantity</label>
+                                                <label for="EquipmentQnt">Quantity / Rental Days</label>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
+                                            <div class="form-floating form-floating-outline mb-6">
+                                                <select class="form-select equipment-days-qnt-input" disabled id="EquipmentDaysQnt" name="equipment_days_qnt">
+                                                    <option disabled selected>Select quantity</option>
+                                                    <option value="Sale">Sale</option>
+                                                    <option value="Rent">Rent</option>
+                                                </select>
+                                                <label for="EquipmentDaysQnt">Rate Type</label>
                                             </div>
                                         </div>
                                         <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
@@ -324,13 +334,13 @@
                             <div data-repeater-list="doctor_data">
                                 <div data-repeater-item>
                                     <div class="row">
-                                        <div class="mb-2 col-lg-4 col-xl-4 col-12 mb-0">
+                                        <div class="mb-2 col-lg-3 col-xl-3 col-12 mb-0">
                                             <div class="form-floating form-floating-outline">
                                                 <input type="text" class="form-control DoctorSelect" name="doctor_name" value="Doctor" readonly>
                                                 <label for="form-repeater-1-1">Type</label>
                                             </div>
                                         </div>
-                                        <div class="mb-2 col-lg-4 col-xl-4 col-12 mb-0">
+                                        <div class="mb-2 col-lg-3 col-xl-3 col-12 mb-0">
                                             <div class="form-floating form-floating-outline">
                                                 <select class="ShiftSelect select2 form-select" name="doctor_shift" onchange="ShowItemsInTable()">
                                                     <option disabled selected>Select shift</option>
@@ -341,6 +351,12 @@
                                                     @endif
                                                 </select>
                                                 <label for="form-repeater-1-3">Shift</label>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
+                                            <div class="form-floating form-floating-outline">
+                                                <input type="text" class="form-control mb-1 Doc_Date" value="{{old('date')}}" onchange="ShowItemsInTable()" name="date" placeholder="DD-MM-YYYY" readonly />
+                                                <label for="form-repeater-1-3">Date</label>
                                             </div>
                                         </div>
                                         <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
@@ -375,13 +391,13 @@
                             <div data-repeater-list="ambulance_data">
                                 <div data-repeater-item>
                                     <div class="row">
-                                        <div class="mb-2 col-lg-4 col-xl-4 col-12 mb-0">
+                                        <div class="mb-2 col-lg-3 col-xl-3 col-12 mb-0">
                                             <div class="form-floating form-floating-outline">
                                                 <input type="text" class="form-control" name="ambulance_name" value="Ambulance" readonly>
                                                 <label for="form-repeater-1-1">Type</label>
                                             </div>
                                         </div>
-                                        <div class="mb-2 col-lg-4 col-xl-4 col-12 mb-0">
+                                        <div class="mb-2 col-lg-3 col-xl-3 col-12 mb-0">
                                             <div class="form-floating form-floating-outline">
                                                 <select class="ShiftSelect select2 form-select" name="ambulance_shift" onchange="ShowItemsInTable()">
                                                     <option disabled selected>Select shift</option>
@@ -392,6 +408,12 @@
                                                     @endif
                                                 </select>
                                                 <label for="form-repeater-1-3">Shift</label>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
+                                            <div class="form-floating form-floating-outline">
+                                                <input type="text" class="form-control mb-1 Amb_Date" value="{{old('amb_date')}}" onchange="ShowItemsInTable()" name="amb_date" placeholder="DD-MM-YYYY" readonly />
+                                                <label for="form-repeater-1-3">Date</label>
                                             </div>
                                         </div>
                                         <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
@@ -420,7 +442,7 @@
                                     <th class="w-50 sorting_disabled" rowspan="1" colspan="1" style="width: 416px;" aria-label="products">
                                         products</th>
                                     <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 95px;" aria-label="price">price</th>
-                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 76px;" aria-label="qty">qty</th>
+                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 76px;" aria-label="qty">Days/qty</th>
                                     <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 112px;" aria-label="total">total</th>
                                 </tr>
                             </thead>
@@ -557,7 +579,7 @@
                             <div class="col-4 mb-3">
                                 <div class="mb-4">
                                     <label class="form-label">Date Of Birth</label>
-                                    <input type="text" class="form-control mb-1" value="{{old('dob')}}"  name="dob" placeholder="Month DD, YYYY" id="dob" readonly />
+                                    <input type="text" class="form-control mb-1" value="{{old('dob')}}"  name="dob" placeholder="DD-MM-YYYY" id="dob" readonly />
                                     @error('dob')
                                         <span class="text-danger">{{$message}}</span>
                                     @enderror
@@ -867,6 +889,7 @@ $(function () {
         for (var k = 0; k < doctor_rates.length; k++) {
             var repeaterItem = $(doctor_rates[k]).closest('[data-repeater-item]');
             var staffShift = repeaterItem.find('.ShiftSelect :selected').text();
+            var doctorDate = repeaterItem.find('.Doc_Date').val();
             var doctorRate = repeaterItem.find('.doctor-rate-input').val() || "00";
 
             if (staffShift === "Select shift" || staffShift === "") {
@@ -875,9 +898,15 @@ $(function () {
                 staffShift = `<span style="font-size:12px;">` + staffShift + `</span>`;
             }
 
+            if (doctorDate === "") {
+                doctorDate = "";
+            } else {
+                doctorDate = `<span style="font-size:12px;">` + doctorDate + `</span>`;
+            }
+
             if(doctorchecked.prop('checked') == true){
                 tableData += `<tr>
-                                <td>Doctor<br>`+staffShift+`</td>
+                                <td>Doctor<br>`+doctorDate+` `+staffShift+`</td>
                                 <td>`+doctorRate+`</td>
                                 <td>1</td>
                                 <td>`+doctorRate+`</td>
@@ -963,6 +992,21 @@ $(function () {
                 }
         });
         clonedItem.appendTo("#ShowCopiedDoctor");
+
+        var mindate = $('#BookingStartDate').val();
+        var maxdate = $('#BookingEndDate').val();
+        if(mindate && maxdate){
+            var formattedMindate = formatDateToDMY(mindate);
+            var formattedMaxdate = formatDateToDMY(maxdate);
+            $('.Doc_Date').flatpickr({
+                altInput: false,
+                altFormat: 'd-m-Y',
+                dateFormat: 'd-m-Y',
+                minDate: formattedMindate,
+                maxDate: formattedMaxdate
+            });
+        }
+
         changeBillingRate();
     }
 
@@ -1091,9 +1135,12 @@ $(function () {
         var repeaterItem = select.closest('[data-repeater-item]');
         var rateInput = repeaterItem.find('.equipment-rate-input');
         var qutInput = repeaterItem.find('.equipment-qnt-input');
+        var daysqutInput = repeaterItem.find('.equipment-days-qnt-input');
         rateInput.val(rate);
         qutInput.val(1);
+        daysqutInput.val("Sale");
         qutInput.prop("disabled", false);
+        daysqutInput.prop("disabled", false);
         rateInput.prop("readonly", false);
         changeBillingRate();
     }
@@ -1262,6 +1309,11 @@ $(function () {
         sessionStorage.removeItem("bookingType");
         sessionStorage.setItem("bookingType", type);
     }
+    function formatDateToDMY(dateStr) {
+        // Assuming the input date is in Y-m-d format
+        var dateParts = dateStr.split('-');
+        return dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
+    }
     $(document).ready(function() {
         var value = sessionStorage.getItem("bookingType");
         if(value == "Patient"){
@@ -1341,14 +1393,57 @@ $(function () {
     });
     $('#BookingStartDate').on('change', function(){
         var mindate = $('#BookingStartDate').val();
-        $('#BookingEndDate').attr('disabled',false)
-        $('#BookingEndDate').flatpickr({
-            altInput: true,
-            altFormat: 'd-m-Y',
-            dateFormat: 'Y-m-d',
-            minDate: mindate,
-            maxDate: new Date(new Date().setMonth(new Date().getMonth() + 2))
-        });
+        if(mindate){
+            $('#BookingEndDate').flatpickr({
+                altInput: true,
+                altFormat: 'd-m-Y',
+                dateFormat: 'Y-m-d',
+                minDate: mindate,
+                maxDate: new Date(new Date().setMonth(new Date().getMonth() + 2))
+            });
+            var maxdate = $('#BookingEndDate').val();
+            if(mindate && maxdate){
+                var formattedMindate = formatDateToDMY(mindate);
+                var formattedMaxdate = formatDateToDMY(maxdate);
+                $('.Doc_Date').flatpickr({
+                    altInput: false,
+                    altFormat: 'd-m-Y',
+                    dateFormat: 'd-m-Y',
+                    minDate: formattedMindate,
+                    maxDate: formattedMaxdate
+                });
+                $('.Amb_Date').flatpickr({
+                    altInput: false,
+                    altFormat: 'd-m-Y',
+                    dateFormat: 'd-m-Y',
+                    minDate: formattedMindate,
+                    maxDate: formattedMaxdate
+                });
+            }
+        }
     });
+    $('#BookingEndDate').on('change', function(){
+        var mindate = $('#BookingStartDate').val();
+        var maxdate = $('#BookingEndDate').val();
+        if(mindate && maxdate){
+            var formattedMindate = formatDateToDMY(mindate);
+            var formattedMaxdate = formatDateToDMY(maxdate);
+            $('.Doc_Date').flatpickr({
+                altInput: false,
+                altFormat: 'd-m-Y',
+                dateFormat: 'd-m-Y',
+                minDate: formattedMindate,
+                maxDate: formattedMaxdate
+            });
+            $('.Amb_Date').flatpickr({
+                altInput: false,
+                altFormat: 'd-m-Y',
+                dateFormat: 'd-m-Y',
+                minDate: formattedMindate,
+                maxDate: formattedMaxdate
+            });
+        }
+    });
+        
 </script>
 @endsection

@@ -199,7 +199,7 @@ class BookingController extends Controller
                 if($request->is_doctor){
                     if(!empty($request->doctor_data)){
                         foreach($request->doctor_data as $doctor){
-                            if (!empty($doctor['doctor_shift']) && !empty($doctor['doctor_rate']) && isset($doctor['doctor_name'])) {
+                            if (!empty($doctor) && isset($doctor['doctor_shift']) && isset($doctor['doctor_rate']) && isset($doctor['doctor_name']) && isset($doctor['date'])) {
                                 $booking_details = new BookingDetails();
                                 $booking_details->booking_id = $booking->id;
                                 $booking_details->type = 3;
@@ -208,15 +208,18 @@ class BookingController extends Controller
                                 $booking_details->name = $doctor['doctor_name'];
                                 $booking_details->qnt = 1;
                                 $booking_details->save();
-                                foreach($all_dates as $date){
-                                    $booking_assign = new BookingAssign();
-                                    $booking_assign->booking_id = $booking->id;
-                                    $booking_assign->type = "Doctor";
-                                    $booking_assign->shift = $doctor['doctor_shift'];
-                                    $booking_assign->sell_rate = $doctor['doctor_rate'];
-                                    $booking_assign->date = $date;
-                                    $booking_assign->save();
-                                }
+
+                                $booking_assign = new BookingAssign();
+                                $booking_assign->booking_id = $booking->id;
+                                $booking_assign->type = "Doctor";
+                                $booking_assign->shift = $doctor['doctor_shift'];
+                                $booking_assign->sell_rate = $doctor['doctor_rate'];
+
+                                $timestamp = strtotime($doctor['date']);
+                                $booking_assign->date = date('Y-m-d', $timestamp);
+
+                                $booking_assign->save();
+
                                 $doctor_rate[] = $doctor['doctor_rate'];
                             }
                         }
@@ -246,6 +249,11 @@ class BookingController extends Controller
             $equipment_rate_sum = 0;
             $doctor_rate_sum = 0;
             $ambulance_rate_sum = 0;
+
+            if(empty($staff_rate) && empty($equipment_rate) && empty($doctor_rate) && empty($ambulance_rate)){
+                $booking->forceDelete();
+                return redirect()->back()->with('error','Please fill in all fields');
+            }
 
             if(!empty($staff_rate)){
                 $staff_rate_sum = array_sum($staff_rate);
