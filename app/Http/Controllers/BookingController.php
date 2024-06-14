@@ -116,18 +116,6 @@ class BookingController extends Controller
             $booking = new Booking();
             $booking->booking_type = $request->booking_type;
             $booking->customer_id = $request->customer_id;
-            // if($request->is_staff){
-            //     $booking->is_staff = 1;
-            // }
-            // if($request->is_equipment){
-            //     $booking->is_equipment = 1;
-            // }
-            // if($request->is_doctor){
-            //     $booking->is_doctor = 1;
-            // }
-            // if($request->is_ambulance){
-            //     $booking->is_ambulance = 1;
-            // }
             $booking->start_date = $request->start_date;
             $booking->end_date = $request->end_date;
             $booking->sub_total = $request->sub_total;
@@ -250,13 +238,26 @@ class BookingController extends Controller
             $doctor_rate_sum = 0;
             $ambulance_rate_sum = 0;
 
+            if($request->is_staff && empty($staff_rate)){
+                return redirect()->back()->with('error','Please fill in all fields');
+            }
+            if($request->is_equipment && empty($equipment_rate)){
+                return redirect()->back()->with('error','Please fill in all fields');
+            }
+            if($request->is_doctor && empty($doctor_rate)){
+                return redirect()->back()->with('error','Please fill in all fields');
+            }
+            if($request->is_ambulance && empty($ambulance_rate)){
+                return redirect()->back()->with('error','Please fill in all fields');
+            }
             if(empty($staff_rate) && empty($equipment_rate) && empty($doctor_rate) && empty($ambulance_rate)){
                 $booking->forceDelete();
                 return redirect()->back()->with('error','Please fill in all fields');
             }
-
             if(!empty($staff_rate)){
-                $staff_rate_sum = array_sum($staff_rate);
+                foreach($all_dates as $date){
+                    $staff_rate_sum += array_sum($staff_rate);
+                }
                 $booking->is_staff = 1;
             }
             if(!empty($equipment_rate)){
@@ -271,6 +272,7 @@ class BookingController extends Controller
                 $ambulance_rate_sum = array_sum($ambulance_rate);
                 $booking->is_ambulance = 1;
             }
+
             $total = $staff_rate_sum + $equipment_rate_sum + $doctor_rate_sum + $ambulance_rate_sum;
             $booking->sub_total = $total;
             $booking->total = $total;
@@ -466,17 +468,44 @@ class BookingController extends Controller
             return redirect()->back()->with('error','Data Not Found.');
         }
     }
-    // public function check_staff_availability(Request $request)
-    // {
-    //     $staffType = StaffType::find($request->type);
-    //     $booking_assign = BookingAssign::whereNotNull('staff_id')->where(['type'=>$staffType->title,'shift'=>$request->shift,'date'=>$request->date])->pluck('staff_id');
-    //     if(empty($booking_assign)){
-    //         $staffs = Staff::where('type',$request->type)->orderBy('id',"DESC")->get();
-    //     }else{
-    //         $staffs = Staff::whereNotIn('id', $booking_assign)->where('type',$request->type)->orderBy('id', "DESC")->get();
-    //     }
-    //     return $staffs;
-    // }
+    public function add_assign_single_doctor(Request $request)
+    {
+        $booking = Booking::find($request->booking_id);
+        if($booking){
+            $booking_details = new BookingDetails();
+            $booking_details->booking_id = $booking->id;
+            $booking_details->type = 3;
+            $booking_details->shift = $request->shift;
+            $booking_details->sell_rate = $request->sell_rate;
+            $booking_details->name = $request->staff_type;
+            $booking_details->qnt = 1;
+            $booking_details->save();
+    
+            $booking_assign = new BookingAssign();
+            $booking_assign->booking_id = $booking->id;
+            $booking_assign->type = $request->staff_type;
+            $booking_assign->shift = $request->shift;
+            $booking_assign->sell_rate = $request->sell_rate;
+            $booking_assign->cost_rate = $request->cost_rate;
+            $booking_assign->staff_id = $request->staff_id;
+    
+            $timestamp = strtotime($request->date);
+            $booking_assign->date = date('Y-m-d', $timestamp);
+    
+            $booking_assign->save();
+
+            $sub_total = $booking->sub_total + $request->sell_rate;
+            $total = $booking->total + $request->sell_rate;
+
+            $booking->sub_total = $sub_total;
+            $booking->total = $total;
+            $booking->update();
+    
+            return redirect()->back()->with('success','Doctor Added & Assign Successfully.');
+        }else{
+            return redirect()->back()->with('error','Data Not Found.');
+        }
+    }
     public function check_staff_availability(Request $request)
     {
         $staffType = StaffType::find($request->type);

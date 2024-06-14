@@ -47,6 +47,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::post('/store_assign_booking/{id}', [App\Http\Controllers\BookingController::class, 'store_assign_booking'])->name('store_assign_booking');
     Route::post('/assign_single_staff', [App\Http\Controllers\BookingController::class, 'assign_single_staff'])->name('assign_single_staff');
     Route::post('/assign_single_doctor', [App\Http\Controllers\BookingController::class, 'assign_single_doctor'])->name('assign_single_doctor');
+    Route::post('/add_assign_single_doctor', [App\Http\Controllers\BookingController::class, 'add_assign_single_doctor'])->name('add_assign_single_doctor');
     Route::post('/check_staff_availability', [App\Http\Controllers\BookingController::class, 'check_staff_availability'])->name('check_staff_availability');
     Route::post('/check_doctor_availability', [App\Http\Controllers\BookingController::class, 'check_doctor_availability'])->name('check_doctor_availability');
 

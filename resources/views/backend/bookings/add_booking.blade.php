@@ -144,7 +144,7 @@
                         <div class="row mb-4">
                             <div class="mb-2 col-lg-6 col-xl-6 col-12 mb-0">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" name="start_date" placeholder="DD-MM-YYYY" id="BookingStartDate" readonly/>
+                                    <input type="text" class="form-control" name="start_date" placeholder="DD-MM-YYYY" id="BookingStartDate" readonly onchange="changeBillingRate()"/>
                                     <label for="BookingStartDate">Start Date</label>
                                 </div>
                                 @error('start_date')
@@ -153,7 +153,7 @@
                             </div>
                             <div class="mb-2 col-lg-6 col-xl-6 col-12 mb-0">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" name="end_date" placeholder="DD-MM-YYYY" id="BookingEndDate" readonly/>
+                                    <input type="text" class="form-control" name="end_date" placeholder="DD-MM-YYYY" id="BookingEndDate" readonly onchange="changeBillingRate()"/>
                                     <label for="BookingEndDate">End Date</label>
                                 </div>
                                 @error('end_date')
@@ -263,13 +263,13 @@
                             <div data-repeater-list="equipment_data">
                                 <div data-repeater-item>
                                     <div class="row">
-                                        <div class="mb-2 col-lg-4 col-xl-4 col-12 mb-0">
+                                        <div class="mb-2 col-lg-6 col-xl-6 col-12 mb-0">
                                             <div class="form-floating form-floating-outline">
                                                 <select class="EquipmentSelect select2 form-select equipment-select" name="equipment_name" onchange="addEquipmentRate(this)">
                                                     <option disabled selected>Select equipment</option>
                                                     @if(!empty($data['equipments']))
                                                         @foreach($data['equipments'] as $equipment)
-                                                            <option value="{{$equipment->id}}" data-rate="{{$equipment->sell_price ?? 0}}">{{$equipment->name}}</option>
+                                                            <option value="{{$equipment->id}}" data-rate="{{$equipment->sell_price ?? 0}}" data-type="{{$equipment->type ?? ""}}">{{$equipment->name}}</option>
                                                         @endforeach
                                                     @endif
                                                 </select>
@@ -292,17 +292,7 @@
                                                     <option value="9">9</option>
                                                     <option value="10">10</option>
                                                 </select>
-                                                <label for="EquipmentQnt">Quantity / Rental Days</label>
-                                            </div>
-                                        </div>
-                                        <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
-                                            <div class="form-floating form-floating-outline mb-6">
-                                                <select class="form-select equipment-days-qnt-input" disabled id="EquipmentDaysQnt" name="equipment_days_qnt">
-                                                    <option disabled selected>Select quantity</option>
-                                                    <option value="Sale">Sale</option>
-                                                    <option value="Rent">Rent</option>
-                                                </select>
-                                                <label for="EquipmentDaysQnt">Rate Type</label>
+                                                <label for="EquipmentQnt" class="equipment-days-qnt-label">Quantity / Rental Days</label>
                                             </div>
                                         </div>
                                         <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
@@ -1061,7 +1051,19 @@ $(function () {
         }
         changeBillingRate();
     }
+    function getDates(startDate, endDate) {
+        var dates = [];
+        var currentDate = new Date(startDate);
+        while (currentDate <= endDate) {
+            dates.push(new Date(currentDate)); // Add a copy of the current date
+            currentDate.setDate(currentDate.getDate() + 1); // Increment the date by 1 day
+        }
+        return dates;
+    }
     function changeBillingRate() {
+        var BookingStartDate = $('#BookingStartDate').val();
+        var BookingEndDate = $('#BookingEndDate').val();
+
         var staff_rates = $('.staff-rate-input');
         var equipment_rates = $('.equipment-rate-input');
         var doctor_rates = $('.doctor-rate-input');
@@ -1072,8 +1074,20 @@ $(function () {
         var doctor_rate_total = 0;
         var ambulance_rate_total = 0;
 
+        if(BookingStartDate && BookingEndDate){
+            var startDate = new Date(BookingStartDate);
+            var endDate = new Date(BookingEndDate);
+
+            var allDates = getDates(startDate, endDate);
+        }else{
+            var today = new Date();
+            var allDates = getDates(today, today);
+        }
+
         for (var i = 0; i < staff_rates.length; i++) {
-            staff_rate_total += Number($(staff_rates[i]).val()) || 0;
+            allDates.forEach(function(date) {
+                staff_rate_total += Number($(staff_rates[i]).val()) || 0;
+            });
         }
         for (var j = 0; j < equipment_rates.length; j++) {
             equipment_rate_total += Number($(equipment_rates[j]).val()) || 0;
@@ -1132,15 +1146,21 @@ $(function () {
     function addEquipmentRate(thiss) {
         var select = $(thiss);
         var rate = select.find(':selected').data('rate');
+        var type = select.find(':selected').data('type');
         var repeaterItem = select.closest('[data-repeater-item]');
         var rateInput = repeaterItem.find('.equipment-rate-input');
         var qutInput = repeaterItem.find('.equipment-qnt-input');
-        var daysqutInput = repeaterItem.find('.equipment-days-qnt-input');
+        var daysqutLabel = repeaterItem.find('.equipment-days-qnt-label');
+        if(type == "Rent"){
+            var label = "Rental Days";
+        }else{
+            var label = "Quantity";
+        }
+        console.log(label);
+        daysqutLabel.text(label);
         rateInput.val(rate);
         qutInput.val(1);
-        daysqutInput.val("Sale");
         qutInput.prop("disabled", false);
-        daysqutInput.prop("disabled", false);
         rateInput.prop("readonly", false);
         changeBillingRate();
     }

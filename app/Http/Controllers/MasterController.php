@@ -178,6 +178,7 @@ class MasterController extends Controller
     {
         $request->validate([
             'name' => 'required|max:255',
+            'type' => 'required',
             'cost_price' => 'required|numeric|min:0|digits_between:1,12',
             'sell_price' => 'required|numeric|min:0|digits_between:1,12',
         ],[
@@ -189,6 +190,7 @@ class MasterController extends Controller
 
         $data = new Equipment();
         $data->name = $request->name;
+        $data->type = $request->type;
         $data->cost_price = $request->cost_price;
         $data->sell_price = $request->sell_price;
         $data->save();
@@ -198,6 +200,7 @@ class MasterController extends Controller
     {
         $request->validate([
             'name' => 'required|max:255',
+            'type' => 'required',
             'cost_price' => 'required|numeric|min:0|digits_between:1,12',
             'sell_price' => 'required|numeric|min:0|digits_between:1,12',
         ],[
@@ -210,6 +213,7 @@ class MasterController extends Controller
         $data = Equipment::find($request->id);
         if($data){
             $data->name = $request->name;
+            $data->type = $request->type;
             $data->cost_price = $request->cost_price;
             $data->sell_price = $request->sell_price;
             $data->update();

@@ -44,6 +44,7 @@
                         <tr>
                             <th>Sr No.</th>
                             <th>Name</th>
+                            <th>Type</th>
                             <th>Cost Price</th>
                             <th>Selling Price</th>
                             <th>Action</th>
@@ -70,7 +71,7 @@
             extend: 'excel',
             title: 'Equipments List',
             exportOptions: {
-                columns: [1,2,3]
+                columns: [1,2,3,4]
             }
         }],
         columnDefs: [{
@@ -114,6 +115,7 @@
                     return meta.row+1;
             }},
             { "data": "name" ,"defaultContent": "-"},
+            { "data": "type" ,"defaultContent": "-"},
             {
                 "data": "cost_price",
                 "render": function (data, type, row, meta) {
