@@ -828,6 +828,9 @@ $(function () {
         }
     }
     function ShowItemsInTable(){
+        var BookingStartDate = $('#BookingStartDate').val();
+        var BookingEndDate = $('#BookingEndDate').val();
+
         var staff_rates = $('.staff-rate-input');
         var equipment_rates = $('.equipment-rate-input');
         var doctor_rates = $('.doctor-rate-input');
@@ -840,6 +843,16 @@ $(function () {
 
         var tableData = '';
 
+        if(BookingStartDate && BookingEndDate){
+            var startDate = new Date(BookingStartDate);
+            var endDate = new Date(BookingEndDate);
+
+            var allDates = getDates(startDate, endDate);
+        }else{
+            var today = new Date();
+            var allDates = getDates(today, today);
+        }
+
         for (var i = 0; i < staff_rates.length; i++) {
             var repeaterItem = $(staff_rates[i]).closest('[data-repeater-item]');
             var staffType = repeaterItem.find('.StaffTypeSelect :selected').text() || "-";
@@ -851,13 +864,17 @@ $(function () {
             } else {
                 staffShift = `<span style="font-size:12px;">` + staffShift + `</span>`;
             }
+            var days = 0;
+            allDates.forEach(function(date) {
+                days++;
+            });
 
             if(staffchecked.prop('checked') == true){
                 tableData += `<tr>
                                 <td>`+staffType+`<br>`+staffShift+`</td>
                                 <td>`+staffRate+`</td>
-                                <td>1</td>
-                                <td>`+staffRate+`</td>
+                                <td>`+days+`</td>
+                                <td>`+staffRate * days+`</td>
                             </tr>`;
             }
         }

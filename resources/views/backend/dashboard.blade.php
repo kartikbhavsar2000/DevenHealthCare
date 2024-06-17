@@ -77,9 +77,9 @@
                 <table class="kt_datatable table table-row-bordered table-row-gray-300" style="margin-bottom: 0px!important">
                   <thead>
                       <tr>
-                        <th rowspan="2" style="border:1px solid #4cb7e5; background:#c5eeff; max-width:20%;">Customer Name</th>
-                        <th colspan="{{count($staff_type)}}" style="border-bottom:1px solid #dfdfe2; max-width:20%;">Staff</th>
-                        <th rowspan="2" style="border-bottom:1px solid #dfdfe2; max-width:20%;">Doctor</th>
+                        <th rowspan="2" style="border:1px solid #4cb7e5; background:#c5eeff;">Customer Name</th>
+                        <th colspan="{{count($staff_type)}}" style="border-bottom:1px solid #dfdfe2;">Staff</th>
+                        <th rowspan="2" style="border-bottom:1px solid #dfdfe2;">Doctor</th>
                       </tr>
                       <tr>
                         @if(!empty($staff_type))
@@ -124,6 +124,17 @@
                                             <div class="col-8 text-start">
                                                 {{$stf->staff_details->f_name}} {{$stf->staff_details->m_name}} {{$stf->staff_details->l_name}}<br>
                                                 <b style="font-size: 12px;"> {{$stf->shiftt->name}}</b>
+                                                @if($stf->att_marked == 0)
+                                                  <span class="badge bg-label-secondary" style="font-size: 10px;">Not Marked</span>
+                                                @else
+                                                  @if($stf->status == 0)
+                                                    <span class="badge bg-label-primary" style="font-size: 10px;">Marked</span>
+                                                  @elseif($stf->status == 1)
+                                                    <span class="badge bg-label-success" style="font-size: 10px;">Approved</span>
+                                                  @elseif($stf->status == 2)
+                                                    <span class="badge bg-label-danger" style="font-size: 10px;">Rejected</span>
+                                                  @endif
+                                                @endif
                                             </div>
                                             <div class="col-4">
                                               <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit Staff" data-bs-custom-class="tooltip-dark" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 10px;"><i class="ri-pencil-line"></i></button>
@@ -410,7 +421,7 @@
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="customerDetailsCanvasLabel"><i class="ri-wheelchair-line ri-22px me-2"></i>Patient Details</h5>
+        <h5 class="modal-title" id="customerDetailsCanvasLabel" style="color:#4cb7e5;"><i class="ri-wheelchair-line ri-22px me-2"></i>Patient Details</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -467,55 +478,55 @@
           </div>
           <div class="col-6">
             <div class="mt-1 row">
-              <div class="col-4">
+              <div class="col-2">
                 <b>Age</b>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 : <span id="cust_Age">-</span>
               </div>
             </div>
             <div class="mt-1 row">
-              <div class="col-4">
+              <div class="col-2">
                 <b>Gender</b>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 : <span id="cust_Gender">-</span>
               </div>
             </div>
             <div class="mt-1 row">
-              <div class="col-4">
+              <div class="col-2">
                 <b>Address</b>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 : <span id="cust_Address">-</span>
               </div>
             </div>
             <div class="mt-1 row">
-              <div class="col-4">
+              <div class="col-2">
                 <b>State</b>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 : <span id="cust_State">-</span>
               </div>
             </div>
             <div class="mt-1 row">
-              <div class="col-4">
+              <div class="col-2">
                 <b>City</b>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 : <span id="cust_City">-</span>
               </div>
             </div>
             <div class="mt-1 row">
-              <div class="col-4">
+              <div class="col-2">
                 <b>Area</b>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 : <span id="cust_Area">-</span>
               </div>
             </div>
           </div>
-          <h5 class="modal-title my-4"><i class="ri-calendar-schedule-line ri-22px me-2"></i>Booking Details</h5>
+          <h5 class="modal-title my-4" style="color:#4cb7e5;"><i class="ri-calendar-schedule-line ri-22px me-2"></i>Booking Details</h5>
           <div class="col-6">
             <div class="mt-1 row">
               <div class="col-4">
@@ -544,18 +555,18 @@
           </div>
           <div class="col-6">
             <div class="mt-1 row">
-              <div class="col-4">
+              <div class="col-2">
                 <b>Type</b>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 : <span id="cust_BookingType">-</span>
               </div>
             </div>
             <div class="mt-1 row">
-              <div class="col-4">
+              <div class="col-2">
                 <b>Total</b>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 : <span id="cust_BookingTotal">-</span>
               </div>
             </div>
@@ -568,7 +579,7 @@
                   <th>Name</th>
                   <th>Type</th>
                   <th>Shift</th>
-                  <th>Qnt</th>
+                  <th>Days/Qnt</th>
                   <th>Rate</th>
                 </tr>
               </thead>
@@ -585,7 +596,7 @@
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="corporationDetailsCanvasLabel"><i class="ri-building-line ri-22px me-2"></i>Corporation Details</h5>
+        <h5 class="modal-title" id="corporationDetailsCanvasLabel" style="color:#4cb7e5;"><i class="ri-building-line ri-22px me-2"></i>Corporation Details</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -626,31 +637,31 @@
           </div>
           <div class="col-6">
             <div class="mt-1 row">
-              <div class="col-4">
+              <div class="col-2">
                 <b>State</b>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 : <span id="corp_State">-</span>
               </div>
             </div>
             <div class="mt-1 row">
-              <div class="col-4">
+              <div class="col-2">
                 <b>City</b>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 : <span id="corp_City">-</span>
               </div>
             </div>
             <div class="mt-1 row">
-              <div class="col-4">
+              <div class="col-2">
                 <b>Area</b>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 : <span id="corp_Area">-</span>
               </div>
             </div>
           </div>
-          <h5 class="modal-title my-4"><i class="ri-calendar-schedule-line ri-22px me-2"></i>Booking Details</h5>
+          <h5 class="modal-title my-4" style="color:#4cb7e5;"><i class="ri-calendar-schedule-line ri-22px me-2"></i>Booking Details</h5>
           <div class="col-6">
             <div class="mt-1 row">
               <div class="col-4">
@@ -679,18 +690,18 @@
           </div>
           <div class="col-6">
             <div class="mt-1 row">
-              <div class="col-4">
+              <div class="col-2">
                 <b>Type</b>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 : <span id="corp_BookingType">-</span>
               </div>
             </div>
             <div class="mt-1 row">
-              <div class="col-4">
+              <div class="col-2">
                 <b>Total</b>
               </div>
-              <div class="col-8">
+              <div class="col-10">
                 : <span id="corp_BookingTotal">-</span>
               </div>
             </div>
@@ -703,7 +714,7 @@
                   <th>Name</th>
                   <th>Type</th>
                   <th>Shift</th>
-                  <th>Qnt</th>
+                  <th>Days/Qnt</th>
                   <th>Rate</th>
                 </tr>
               </thead>
@@ -1016,7 +1027,7 @@
                               <td>`+ type +`</td>
                               <td>`+ (item.shift_name ?? "-") +`</td>
                               <td>`+ (item.qnt ?? "-") +`</td>
-                              <td>`+ (item.sell_rate ?? "-") +`</td>
+                              <td>`+ (item.sell_rate * item.qnt ?? "-") +`</td>
                           </tr>`;
       });
       $('#cust_BookingData').html(bookingData);
@@ -1058,7 +1069,7 @@
                               <td>`+ type +`</td>
                               <td>`+ (item.shift_name ?? "-") +`</td>
                               <td>`+ (item.qnt ?? "-") +`</td>
-                              <td>`+ (item.sell_rate ?? "-") +`</td>
+                              <td>`+ (item.sell_rate * item.qnt ?? "-") +`</td>
                           </tr>`;
       });
       $('#corp_BookingData').html(bookingData);

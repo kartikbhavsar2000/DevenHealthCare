@@ -131,20 +131,17 @@
                         </div>
                         <hr>
                         <div class="form-repeater">
-                            <div class="mb-6 d-flex justify-content-between align-items-center pe-9">
+                            <div class="mb-6 d-none justify-content-between align-items-center pe-9">
                                 <h6 class="mb-0"><i class="ri-calendar-event-line ri-22px"></i> Assign Dates</h6>
-                                {{-- <p class="btn btn-icon btn-outline-primary waves-effect mb-0" data-repeater-create>
-                                    <i class="ri-add-line"></i>
-                                </p> --}}
                             </div>
                             <div data-repeater-list="data">
                                 <div data-repeater-item>
-                                    <hr class="mb-12">
-                                    <div class="">
+                                    <hr class="mb-12 d-none">
+                                    <div class="d-none">
                                         <div class="row">
                                             <div class="mb-2 col-lg-6 col-xl-6 col-12 mb-0">
                                                 <div class="form-floating form-floating-outline">
-                                                    <input type="text" class="form-control StartDate" name="start_date" id="BookingStartDate" value="" placeholder="DD-MM-YYYY" readonly/>
+                                                    <input type="text" class="form-control StartDate" name="start_date" id="BookingStartDate" value="{{$booking->start_date}}" placeholder="DD-MM-YYYY" readonly/>
                                                     <label for="BookingStartDate">Start Date</label>
                                                 </div>
                                                 @error('start_date')
@@ -153,7 +150,7 @@
                                             </div>
                                             <div class="mb-2 col-lg-6 col-xl-6 col-12 mb-0">
                                                 <div class="form-floating form-floating-outline">
-                                                    <input type="text" class="form-control EndDate" name="end_date" id="BookingEndDate" value="" placeholder="DD-MM-YYYY" readonly disabled/>
+                                                    <input type="text" class="form-control EndDate" name="end_date" id="BookingEndDate" value="{{$booking->end_date}}" placeholder="DD-MM-YYYY" readonly />
                                                     <label for="BookingEndDate">End Date</label>
                                                 </div>
                                                 @error('end_date')
@@ -171,7 +168,6 @@
                                         </div>
                                     </div>
                                     @if(!empty($staff_data))
-                                    <hr>
                                     <div class="form-repeater">
                                         <div class="mb-6 d-flex justify-content-between align-items-center pe-9">
                                             <h6 class="mb-0"><i class="ri-nurse-line ri-22px"></i>Assign Staff</h6>
@@ -233,10 +229,10 @@
                                                     </div>
                                                     <div class="mb-2 col-lg-3 col-xl-3 col-12">
                                                         <div class="form-floating form-floating-outline">
-                                                            <select class="StaffSelect select2 form-select" name="staff_id" onchange="changeStaffRate(this)">
-                                                                <option></option>
-                                                                @if(!empty($staffs))
-                                                                    @foreach($staffs as $st)
+                                                            <select class="StaffSelect select2 form-select" name="staff_id" onchange="changeStaffRate(this)" required>
+                                                                <option value="" selected disabled></option>
+                                                                @if(!empty($staff->staffs))
+                                                                    @foreach($staff->staffs as $st)
                                                                         @if($staff->staff_type == $st->type)
                                                                             <option value="{{$st->id}}" data-details="{{$st}}">{{$st->f_name}} {{$st->m_name}} {{$st->l_name}}</option>
                                                                         @endif
@@ -249,7 +245,7 @@
                                                         <div class="input-group input-group-merge">
                                                             <span class="input-group-text">₹</span>
                                                             <div class="form-floating form-floating-outline">
-                                                                <input type="text" class="form-control staff-rate-input" name="rate" value="00"  onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
+                                                                <input type="text" class="form-control staff-rate-input" name="rate" value="00" required onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
                                                             </div>
                                                         </div>
                                                     </div>

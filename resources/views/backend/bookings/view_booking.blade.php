@@ -299,7 +299,7 @@
                                     <th class="w-50 sorting_disabled" rowspan="1" colspan="1" style="width: 416px;" aria-label="products">
                                         products</th>
                                     <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 95px;" aria-label="price">price</th>
-                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 76px;" aria-label="qty">qty</th>
+                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 76px;" aria-label="qty">days/qty</th>
                                     <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 112px;" aria-label="total">total</th>
                                 </tr>
                             </thead>
@@ -320,7 +320,7 @@
                                             <td>{{ $staff->name ?? '' }}<br><span style="font-size: 12px;">{{ $shift }}</span></td>
                                             <td>₹{{ $staff->sell_rate ?? '00' }}</td>
                                             <td>{{ $staff->qnt ?? '1' }}</td>
-                                            <td>₹{{ $staff->sell_rate ?? '00' }}</td>
+                                            <td>₹{{ $staff->sell_rate * $staff->qnt ?? '00' }}</td>
                                         </tr>
                                     @endforeach
                                 @endif

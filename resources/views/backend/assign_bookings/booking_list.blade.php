@@ -25,6 +25,16 @@
         </button>
     </div>
 @endif
+@if(session()->has('bulk_error'))
+    @foreach(session()->get('bulk_error') as $error)
+    <div class="alert alert-danger d-flex align-items-center p-3 mt-4" role="alert">
+        <span>{{ $error }}</span>
+        <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+            <i class="ri-close-line text-danger"></i>
+        </button>
+    </div>
+    @endforeach
+@endif
 <div class="row">
     <div class="col-6 mb-5">
         <h4 class="mt-1 mb-1">Assign Bookings</h4>
@@ -158,9 +168,15 @@
             {
                 "data": "id",
                 "render": function (data, type, row, meta) {
-                    return type === 'display' ?
-                    '<a href="{{asset("/")}}assign_booking/' + data + '" class="btn btn-sm btn-text-warning rounded-pill waves-effect waves-light"><i class="ri-user-follow-line ri-20px pe-2"></i> Assign</a>' :
-                    data;
+                    if(row.status == 0){
+                        return type === 'display' ?
+                        '<a href="{{asset("/")}}assign_booking/' + data + '" class="btn btn-sm btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-user-follow-line ri-20px pe-2"></i> Assign</a>' :
+                        data;
+                    }else{
+                        return type === 'display' ?
+                        '<button class="badge rounded-pill bg-label-primary border-0 ms-2">Assigned</button>' :
+                        data;
+                    }
                 }
             },
         ],

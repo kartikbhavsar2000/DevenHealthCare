@@ -1,6 +1,7 @@
 @extends('backend.components.header')
 
 @section('css')
+<link rel="stylesheet" href="{{asset('public')}}/assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.css" />
 <style>
     #dt-length-0{
         margin-top: 25px;
@@ -32,6 +33,11 @@
     </div>
     <div class="col-6 mb-5 text-end pt-5 pe-5">
         <a id="exportLink" class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body h-40px fs-7 waves-effect waves-light me-2"><i class="ri-file-excel-line"></i> <span class="nav-text">Excel</span></a>
+        <div class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-primary h-40px fs-7 waves-effect waves-light p-0">
+            <div class="form-floating form-floating-outline">
+                <input type="text" id="PatientVsCorporationDaterange" class="p-2 rounded border-0 bg-primary text-white" readonly/>
+            </div>
+        </div>
     </div>
     <div class="col-12">
         <!-- Role Table -->
@@ -64,153 +70,189 @@
 
 
 @section('javascript')
+<script src="{{asset('public')}}/assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.js"></script>
 
 <script>
-    $('#kt_datatable').DataTable({
-        dom: `<'row'<'col-sm-12'lBtr>>
-			<'row'<'col-sm-12 col-md-8'i><'col-sm-12 col-md-4 d-flex justify-content-end align-items-center'p>>`,
-        pageLength: 10,
-        buttons: [{
-            extend: 'excel',
-            title: 'Bookings List',
-            exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,10]
-            }
-        }],
-        columnDefs: [{
-            "defaultContent": "-",
-            "targets": "_all",
-        }],
-        initComplete: function() {
-            var api = this.api();
-            var row = $('<tr>').appendTo($(api.table().header()));
-            api.columns().every(function() {
-                var column = this;
-                var title = $(column.header()).text(); // Get the title from the original header
-                var input = $('<input>', {
-                    type: 'text',
-                    placeholder: 'Search ' + title,
-                    class: 'form-control form-control-sm my-2'
-                }).appendTo($('<th>').appendTo(row));
+    document.addEventListener("DOMContentLoaded", function () {
+        $('#PatientVsCorporationDaterange').daterangepicker({
+            opens: 'left',
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            startDate: moment().startOf('day').format('DD/MM/YYYY'),
+            endDate: moment().endOf('day').format('DD/MM/YYYY')
+        }, function (start, end, label) {
+            fetchAttendanceData(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+        });
 
-                input.on('keyup change clear', function() {
-                    if (column.search() !== this.value) {
-                        column.search(this.value).draw();
-                    }
-                });
-            });
+        var table = $('#kt_datatable').DataTable({
+            dom: `<'row'<'col-sm-12'lBtr>>
+                <'row'<'col-sm-12 col-md-8'i><'col-sm-12 col-md-4 d-flex justify-content-end align-items-center'p>>`,
+            pageLength: 10,
+            buttons: [{
+                extend: 'excel',
+                title: 'Bookings List',
+                exportOptions: {
+                    columns: [1,2,3,4,5,6,7,8,10]
+                }
+            }],
+            columnDefs: [{
+                "defaultContent": "-",
+                "targets": "_all",
+            }],
+            initComplete: function() {
+                var api = this.api();
+                var row = $('<tr>').appendTo($(api.table().header()));
+                api.columns().every(function() {
+                    var column = this;
+                    var title = $(column.header()).text(); // Get the title from the original header
+                    var input = $('<input>', {
+                        type: 'text',
+                        placeholder: 'Search ' + title,
+                        class: 'form-control form-control-sm my-2'
+                    }).appendTo($('<th>').appendTo(row));
 
-            var $buttons = $('.dt-buttons').hide();
-            $('#exportLink').on('click', function() {
-                var btnClass = ".buttons-excel";
-                if (btnClass) $buttons.find(btnClass).click();
-            })
-        },
-        scrollX: true,
-        processing: true,
-        serverSide: false,
-        order: [
-            [0, "asc"]
-        ],
-        ajax: "{{asset("get_staff_attendance_list")}}",
-        columns:[
-            { "render": function(data, type, full, meta) {
-                    return meta.row+1;
-            }},
-            { "data": "booking.unique_id" ,"defaultContent": "-"},
-            { "data": "type" ,"defaultContent": "-"},
-            {
-                data: "id",
-                render: function (data, type, row, meta) {
-                    // Check if the proof image exists
-                    if(row.staff){
-                        const proof = row.att_proof ? 
-                        `<a href="{{asset('public/staff_attendance')}}/${row.att_proof}" target="_blank"><img src="{{asset('public/staff_attendance')}}/${row.att_proof}" loading="lazy" alt="Avatar" class="rounded-circle"></a>` : 
-                        `<span class="avatar-initial rounded-circle bg-label-danger">${row.staff.f_name.charAt(0)}</span>`;
-                    
-                        // Return the formatted HTML if the type is 'display'
-                        if (type === 'display') {
-                            return `
-                                <div class="d-flex justify-content-start align-items-center">
-                                    <div class="avatar-wrapper">
-                                        <div class="avatar me-2">${proof}</div>
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <span class="emp_name text-truncate text-heading fw-medium">${row.staff.f_name} ${row.staff.l_name}</span>
-                                        <small class="emp_post text-truncate">${row.staff.staff_id}</small>
-                                    </div>
-                                </div>`;
+                    input.on('keyup change clear', function() {
+                        if (column.search() !== this.value) {
+                            column.search(this.value).draw();
                         }
+                    });
+                });
+
+                var $buttons = $('.dt-buttons').hide();
+                $('#exportLink').on('click', function() {
+                    var btnClass = ".buttons-excel";
+                    if (btnClass) $buttons.find(btnClass).click();
+                })
+            },
+            scrollX: true,
+            processing: true,
+            serverSide: false,
+            order: [
+                [0, "asc"]
+            ],
+            ajax: "{{asset("get_staff_attendance_list")}}",
+            columns:[
+                { "render": function(data, type, full, meta) {
+                        return meta.row+1;
+                }},
+                { "data": "booking.unique_id" ,"defaultContent": "-"},
+                { "data": "type" ,"defaultContent": "-"},
+                {
+                    data: "id",
+                    render: function (data, type, row, meta) {
+                        // Check if the proof image exists
+                        if(row.staff){
+                            const proof = row.att_proof ? 
+                            `<a href="{{asset('public/staff_attendance')}}/${row.att_proof}" target="_blank"><img src="{{asset('public/staff_attendance')}}/${row.att_proof}" loading="lazy" alt="Avatar" class="rounded-circle"></a>` : 
+                            `<span class="avatar-initial rounded-circle bg-label-danger">${row.staff.f_name.charAt(0)}</span>`;
                         
-                        // Otherwise, return the raw data
-                        return data;
+                            // Return the formatted HTML if the type is 'display'
+                            if (type === 'display') {
+                                return `
+                                    <div class="d-flex justify-content-start align-items-center">
+                                        <div class="avatar-wrapper">
+                                            <div class="avatar me-2">${proof}</div>
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <span class="emp_name text-truncate text-heading fw-medium">${row.staff.f_name} ${row.staff.l_name}</span>
+                                            <small class="emp_post text-truncate">${row.staff.staff_id}</small>
+                                        </div>
+                                    </div>`;
+                            }
+                            
+                            // Otherwise, return the raw data
+                            return data;
+                        }else{
+                            return "-";
+                        }
+                    }
+                },
+                { "data": "shift.name" ,"defaultContent": "-"},
+                {"data": "date" , render : function ( data, type, row, meta ) {
+                    if(data){
+                        return type === 'display'  ?
+                        ''+ moment(new Date(data)).format("DD/MM/YYYY")  +'' :
+                        data;
                     }else{
                         return "-";
                     }
-                }
-            },
-            { "data": "shift.name" ,"defaultContent": "-"},
-            {"data": "date" , render : function ( data, type, row, meta ) {
-                if(data){
-                    return type === 'display'  ?
-                    ''+ moment(new Date(data)).format("DD/MM/YYYY")  +'' :
-                    data;
-                }else{
-                    return "-";
-                }
-            }},
-            {
-                data: "att_date_time",
-                render: function (data, type, row, meta) {
-                    if (data) {
+                }},
+                {
+                    data: "att_date_time",
+                    render: function (data, type, row, meta) {
+                        if (data) {
+                            return type === 'display' ?
+                                moment(new Date(data)).format("DD/MM/YYYY hh:mm A") :
+                                data;
+                        } else {
+                            return "-";
+                        }
+                    }
+                },
+                {"data": "cost_rate" , render : function ( data, type, row, meta ) {
+                    return "₹"+data;
+                }},
+                { "data": "rej_reason" ,"defaultContent": "-"},
+                {
+                    "data": "id",
+                    "render": function (data, type, row, meta) {
                         return type === 'display' ?
-                            moment(new Date(data)).format("DD/MM/YYYY hh:mm A") :
-                            data;
-                    } else {
-                        return "-";
+                        '<a href="https://www.google.com/maps/search/?api=1&query='+row.lat+','+row.lng+'" target="_blank" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-map-pin-line"></i></a>' :
+                        data;
+                    }
+                },
+                {
+                    data: "id",
+                    render: function (data, type, row, meta) {
+                        if (row.status == 0) {
+                            return type === 'display' ?
+                                `<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light" onclick="changeStatus('${row.id}', '1')">
+                                    <i class="ri-check-line"></i>
+                                </button>
+                                <button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light" onclick="changeStatus('${row.id}', '2')">
+                                    <i class="ri-close-line"></i>
+                                </button>` :
+                                data;
+                        } else if (row.status == 1) {
+                            return type === 'display' ?
+                                '<button class="badge rounded-pill bg-label-primary border-0">Approved</button>' :
+                                data;
+                        } else if (row.status == 2) {
+                            return type === 'display' ?
+                                '<button class="badge rounded-pill bg-label-secondary border-0">Rejected</button>' :
+                                data;
+                        } else {
+                            return "-";
+                        }
                     }
                 }
-            },
-            {"data": "cost_rate" , render : function ( data, type, row, meta ) {
-                return "₹"+data;
-            }},
-            { "data": "rej_reason" ,"defaultContent": "-"},
-            {
-                "data": "id",
-                "render": function (data, type, row, meta) {
-                    return type === 'display' ?
-                    '<a href="https://www.google.com/maps/search/?api=1&query='+row.lat+','+row.lng+'" target="_blank" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-map-pin-line"></i></a>' :
-                    data;
+            ],
+            
+        });
+
+        // Function to fetch and display attendance data
+        function fetchAttendanceData(startDate, endDate) {
+            $.ajax({
+                url: '{{route("get_staff_attendance_list")}}',
+                method: 'GET',
+                data: {
+                    start_date: startDate,
+                    end_date: endDate
+                },
+                success: function (response) {
+                    console.log('Received data:', response.data); // Log received data
+                    table.clear();
+                    table.rows.add(response.data); // Assuming `response.data` is an array of data rows
+                    table.draw();
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
                 }
-            },
-            {
-                data: "id",
-                render: function (data, type, row, meta) {
-                    if (row.status == 0) {
-                        return type === 'display' ?
-                            `<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light" onclick="changeStatus('${row.id}', '1')">
-                                <i class="ri-check-line"></i>
-                            </button>
-                            <button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light" onclick="changeStatus('${row.id}', '2')">
-                                <i class="ri-close-line"></i>
-                            </button>` :
-                            data;
-                    } else if (row.status == 1) {
-                        return type === 'display' ?
-                            '<button class="badge rounded-pill bg-label-primary border-0">Approved</button>' :
-                            data;
-                    } else if (row.status == 2) {
-                        return type === 'display' ?
-                            '<button class="badge rounded-pill bg-label-secondary border-0">Rejected</button>' :
-                            data;
-                    } else {
-                        return "-";
-                    }
-                }
-            }
-        ],
-        
+            });
+        }
     });
+    
 
     function changeStatus(id, status){
         if(status == 1){

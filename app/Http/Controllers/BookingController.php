@@ -148,7 +148,7 @@ class BookingController extends Controller
                                 $booking_details->shift = $staff['staff_shift'];
                                 $booking_details->sell_rate = $staff['staff_rate'];
                                 $booking_details->name = $staff_name;
-                                $booking_details->qnt = 1;
+                                $booking_details->qnt = count($all_dates);
                                 $booking_details->save();
                                 foreach($all_dates as $date){
                                     $booking_assign = new BookingAssign();
@@ -292,7 +292,7 @@ class BookingController extends Controller
     }
     public function get_assign_bookings_list()
     {   
-        $data = Booking::where('is_staff',1)->orWhere('is_doctor',1)->with('bookingDetails')->orderBy('id',"DESC")->get();
+        $data = Booking::where('is_staff',1)->with('bookingDetails')->orderBy('id',"DESC")->get();
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
@@ -340,6 +340,25 @@ class BookingController extends Controller
             foreach($booking->bookingDetails as $bookings){
                 if($bookings->type == 1){
                     $bookings->staff_type = StaffType::where('title',$bookings->name)->pluck('id')->first();
+                    if($bookings->shift == 3){
+                        $staff = Staff::where(function ($query) {
+                            $query->whereNotNull('full_cost')
+                                  ->where('full_cost', '>', 0);
+                        })->where('type',$bookings->staff_type)->orderBy('id',"DESC")->get();
+                    }elseif($bookings->shift == 2){
+                        $staff = Staff::where(function ($query) {
+                            $query->whereNotNull('night_cost')
+                                  ->where('night_cost', '>', 0);
+                        })->where('type',$bookings->staff_type)->orderBy('id',"DESC")->get();
+                    }elseif($bookings->shift == 1){
+                        $staff = Staff::where(function ($query) {
+                            $query->whereNotNull('day_cost')
+                                  ->where('day_cost', '>', 0);
+                        })->where('type',$bookings->staff_type)->orderBy('id',"DESC")->get();
+                    }else{
+                        $staff = Staff::where('type',$bookings->staff_type)->orderBy('id',"DESC")->get();
+                    }
+                    $bookings->staffs = $staff;
                     $staff_data[] = $bookings;
                 }
                 if($bookings->type == 2){
@@ -362,10 +381,10 @@ class BookingController extends Controller
     }
     public function store_assign_booking(Request $request,$id)
     {
-        $start_date = $request->data[0]['start_date'];
-        $end_date = $request->data[0]['end_date'];
+        if (isset($request->data[0]['start_date']) && isset($request->data[0]['end_date'])) {
+            $start_date = $request->data[0]['start_date'];
+            $end_date = $request->data[0]['end_date'];
 
-        if($start_date != null && $end_date != null){
             $all_dates = [];
             $current_date = strtotime($start_date);
             $end_timestamp = strtotime($end_date);
@@ -428,13 +447,22 @@ class BookingController extends Controller
                     }
                 }
             }
+            $bookss = Booking::find($id);
             if(!empty($error)){
-                return redirect()->back()->with('bulk_error', $error);
+                if($bookss){
+                    $bookss->status = 1;
+                    $bookss->update();
+                }
+                return redirect('assign_bookings')->with('bulk_error', $error);
             }else{
                 if(count($null_count) == count($request->staff_data)){
                     return redirect()->back()->with('error','Please Select Staff.');
                 }else{
-                    return redirect()->back()->with('success','Staff Assigned Successfully.');
+                    if($bookss){
+                        $bookss->status = 1;
+                        $bookss->update();
+                    }
+                    return redirect('assign_bookings')->with('success','Staff Assigned Successfully.');
                 }
             }
         }else{
@@ -523,9 +551,43 @@ class BookingController extends Controller
         $ids = $booking_assign->pluck('staff_id');
 
         if(empty($ids)){
-            $staffs = Staff::where('type',$request->type)->orderBy('id',"DESC")->get();
+            if($request->shift == 3){
+                $staffs = Staff::where(function ($query) {
+                    $query->whereNotNull('full_cost')
+                          ->where('full_cost', '>', 0);
+                })->where('type',$request->type)->orderBy('id',"DESC")->get();
+            }elseif($request->shift == 2){
+                $staffs = Staff::where(function ($query) {
+                    $query->whereNotNull('night_cost')
+                          ->where('night_cost', '>', 0);
+                })->where('type',$request->type)->orderBy('id',"DESC")->get();
+            }elseif($request->shift == 1){
+                $staffs = Staff::where(function ($query) {
+                    $query->whereNotNull('day_cost')
+                          ->where('day_cost', '>', 0);
+                })->where('type',$request->type)->orderBy('id',"DESC")->get();
+            }else{
+                $staffs = Staff::where('type',$request->type)->orderBy('id',"DESC")->get();
+            }
         }else{
-            $staffs = Staff::whereNotIn('id', $ids)->where('type',$request->type)->orderBy('id', "DESC")->get();
+            if($request->shift == 3){
+                $staffs = Staff::where(function ($query) {
+                    $query->whereNotNull('full_cost')
+                          ->where('full_cost', '>', 0);
+                })->whereNotIn('id', $ids)->where('type',$request->type)->orderBy('id', "DESC")->get();
+            }elseif($request->shift == 2){
+                $staffs = Staff::where(function ($query) {
+                    $query->whereNotNull('night_cost')
+                          ->where('night_cost', '>', 0);
+                })->whereNotIn('id', $ids)->where('type',$request->type)->orderBy('id', "DESC")->get();
+            }elseif($request->shift == 1){
+                $staffs = Staff::where(function ($query) {
+                    $query->whereNotNull('day_cost')
+                          ->where('day_cost', '>', 0);
+                })->whereNotIn('id', $ids)->where('type',$request->type)->orderBy('id', "DESC")->get();
+            }else{
+                $staffs = Staff::whereNotIn('id', $ids)->where('type',$request->type)->orderBy('id', "DESC")->get();
+            }
         }
 
         return $staffs;
@@ -534,10 +596,44 @@ class BookingController extends Controller
     {
         $booking_assign = BookingAssign::whereNotNull('staff_id')->where(['type'=>'Doctor','shift'=>$request->shift,'date'=>$request->date])->pluck('staff_id');
         if(empty($booking_assign)){
-            $doctors = Doctor::orderBy('id',"DESC")->get();
+            if($request->shift == 3){
+                $doctors = Doctor::where(function ($query) {
+                    $query->whereNotNull('full_cost')
+                          ->where('full_cost', '>', 0);
+                })->orderBy('id',"DESC")->get();
+            }elseif($request->shift == 2){
+                $doctors = Doctor::where(function ($query) {
+                    $query->whereNotNull('night_cost')
+                          ->where('night_cost', '>', 0);
+                })->orderBy('id',"DESC")->get();
+            }elseif($request->shift == 1){
+                $doctors = Doctor::where(function ($query) {
+                    $query->whereNotNull('day_cost')
+                          ->where('day_cost', '>', 0);
+                })->orderBy('id',"DESC")->get();
+            }else{
+                $doctors = Doctor::orderBy('id',"DESC")->get();
+            }
         }else{
             // $doctors = Doctor::whereNotIn('id', $booking_assign)->orderBy('id', "DESC")->get();
-            $doctors = Doctor::orderBy('id',"DESC")->get();
+            if($request->shift == 3){
+                $doctors = Doctor::where(function ($query) {
+                    $query->whereNotNull('full_cost')
+                          ->where('full_cost', '>', 0);
+                })->orderBy('id',"DESC")->get();
+            }elseif($request->shift == 2){
+                $doctors = Doctor::where(function ($query) {
+                    $query->whereNotNull('night_cost')
+                          ->where('night_cost', '>', 0);
+                })->orderBy('id',"DESC")->get();
+            }elseif($request->shift == 1){
+                $doctors = Doctor::where(function ($query) {
+                    $query->whereNotNull('day_cost')
+                          ->where('day_cost', '>', 0);
+                })->orderBy('id',"DESC")->get();
+            }else{
+                $doctors = Doctor::orderBy('id',"DESC")->get();
+            }
         }
         return $doctors;
     }
@@ -548,9 +644,20 @@ class BookingController extends Controller
         }
         abort(403);
     }
-    public function get_staff_attendance_list()
+    public function get_staff_attendance_list(Request $request)
     {   
-        $data = BookingAssign::where('att_marked',1)->with('booking')->with('staff')->with('shift')->orderBy('id',"DESC")->get();
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+        if($startDate && $endDate){
+            $data = BookingAssign::when($startDate === $endDate, function ($query) use ($startDate) {
+                return $query->whereDate('date', $startDate);
+            }, function ($query) use ($startDate, $endDate) {
+                return $query->whereBetween('date', [$startDate, $endDate]);
+            })->where('att_marked',1)->with('booking')->with('staff')->with('shift')->orderBy('id',"DESC")->get();
+        }else{
+            $date =  date('Y-m-d');
+            $data = BookingAssign::whereDate('date',$date)->where('att_marked',1)->with('booking')->with('staff')->with('shift')->orderBy('id',"DESC")->get();
+        }
         return response()->json(['data'=>$data]);
     }
     public function approve_reject_staff_attendance(Request $request)
