@@ -248,41 +248,26 @@ class MasterController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'day_cost' => 'required|numeric|min:0|digits_between:1,12',
-            'day_sell' => 'required|numeric|min:0|digits_between:1,12',
             'night_cost' => 'required|numeric|min:0|digits_between:1,12',
-            'night_sell' => 'required|numeric|min:0|digits_between:1,12',
             'full_cost' => 'required|numeric|min:0|digits_between:1,12',
-            'full_sell' => 'required|numeric|min:0|digits_between:1,12',
         ],[
             'day_cost.digits_between' => "The amount for cost price is too big.",
-            'day_sell.digits_between' => "The amount for sell price is too big.",
             'day_cost.numeric' => "Please enter valid amount.",
-            'day_sell.numeric' => "Please enter valid amount.",
             'night_cost.digits_between' => "The amount for cost price is too big.",
-            'night_sell.digits_between' => "The amount for sell price is too big.",
             'night_cost.numeric' => "Please enter valid amount.",
-            'night_sell.numeric' => "Please enter valid amount.",
             'full_cost.digits_between' => "The amount for cost price is too big.",
-            'full_sell.digits_between' => "The amount for sell price is too big.",
             'full_cost.numeric' => "Please enter valid amount.",
-            'full_sell.numeric' => "Please enter valid amount.",
             'day_cost.required' => "This field is required.",
-            'day_sell.required' => "This field is required.",
             'night_cost.required' => "This field is required.",
-            'night_sell.required' => "This field is required.",
             'full_cost.required' => "This field is required.",
-            'full_sell.required' => "This field is required.",
         ]);
 
         $data = Ambulance::find($request->id);
         if($data){
             $data->name = $request->name;
             $data->day_cost = $request->day_cost;
-            $data->day_sell = $request->day_sell;
             $data->night_cost = $request->night_cost;
-            $data->night_sell = $request->night_sell;
             $data->full_cost = $request->full_cost;
-            $data->full_sell = $request->full_sell;
             $data->update();
             return redirect('ambulance')->with('success','The Ambulance Updated Successfully');
         }else{

@@ -9,6 +9,7 @@ use App\Models\Staff;
 use App\Models\StaffType;
 use App\Models\Doctor;
 use App\Models\State;
+use App\Models\Equipment;
 use App\Models\City;
 use App\Models\Area;
 use App\Models\Booking;
@@ -16,6 +17,7 @@ use App\Models\Patient;
 use App\Models\Corporate;
 use App\Models\Hospital;
 use App\Models\BookingAssign;
+use App\Models\Ambulance;
 
 class HomeController extends Controller
 {
@@ -34,10 +36,6 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function invoice()
-    {
-        return view('backend.pdf.invoice');
-    }
     public function index()
     {   
         $staff_type = StaffType::orderBy('id',"ASC")->get();
@@ -84,7 +82,9 @@ class HomeController extends Controller
         $shifts = Shifts::orderBy('id',"DESC")->get();
         $staffs = Staff::orderBy('id',"DESC")->get();
         $doctors = Doctor::orderBy('id',"DESC")->get();
-        return view('backend.dashboard',['shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $bookings,'dates' => $dates]);
+        $equipments = Equipment::orderBy('id',"DESC")->get();
+        $ambulance = Ambulance::first();
+        return view('backend.dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $bookings,'dates' => $dates]);
     }
     public function analytics()
     {
@@ -168,7 +168,7 @@ class HomeController extends Controller
 
         foreach ($staffTypes as $type) {
             $totalStaff = Staff::where('type',$type->id)->count();
-            $unavailableCount = BookingAssign::where('staff_id','!=',null)->where(['type'=> $type->title])->whereDate('date', $date)->count();
+            $unavailableCount = BookingAssign::whereNotNull('staff_id')->where('type', $type->title)->whereDate('date', $date)->distinct('staff_id')->count('staff_id');
             $availableCount = $totalStaff - $unavailableCount;
 
             $availableSeries[] = $availableCount;

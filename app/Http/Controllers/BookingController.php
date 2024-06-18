@@ -23,6 +23,18 @@ use App\Models\BookingAssign;
 
 class BookingController extends Controller
 {
+    public function invoice($id)
+    {
+        $booking = Booking::with('bookingDetails')->find($id);
+        $booking->customer_details = $booking->customerDetails();
+        $booking->state = State::where('id',$booking->customer_details->state)->pluck('name')->first();
+        $booking->city = City::where('id',$booking->customer_details->city)->pluck('name')->first();
+        $booking->area = Area::where('id',$booking->customer_details->area)->pluck('name')->first();
+        foreach($booking->bookingDetails as $bookings){
+            
+        }
+        return view('backend.pdf.invoice',['booking' => $booking]);
+    }
     public function bookings()
     {
         if (in_array("bookings", Auth::user()->permissions())) {
@@ -58,6 +70,7 @@ class BookingController extends Controller
                 'hospitals' => $hospitals,
                 'corporates' => $corporates,
                 'states' => $states,
+                'ambulance' => $ambulance,
             ];
             return view('backend.bookings.add_booking',['data'=>$data]);
         }
@@ -424,7 +437,9 @@ class BookingController extends Controller
                                     // Staff is not available, retrieve their data
                                     $staff_data = Staff::find($staff['staff_id']);
                                     if ($staff_data) {
-                                        $error[] = $staff_data->f_name . " " . $staff_data->m_name . " " . $staff_data->l_name . " are not available on date " . $date;
+                                        $error_date = strtotime($date);
+                                        $error_date_formated = date('d/m/Y', $error_date);
+                                        $error[] = $staff_data->f_name . " " . $staff_data->m_name . " " . $staff_data->l_name . " is not available on date " . $error_date_formated;
                                     }
                                 } else {
                                     // No conflicting booking assignments, assign the staff to the booking
@@ -449,11 +464,15 @@ class BookingController extends Controller
             }
             $bookss = Booking::find($id);
             if(!empty($error)){
-                if($bookss){
-                    $bookss->status = 1;
-                    $bookss->update();
+                if(count($error) == count($request->staff_data) * count($all_dates)){
+                    return redirect()->back()->with('bulk_error', $error);
+                }else{
+                    if($bookss){
+                        $bookss->status = 1;
+                        $bookss->update();
+                    }
+                    return redirect('assign_bookings')->with('bulk_error', $error);
                 }
-                return redirect('assign_bookings')->with('bulk_error', $error);
             }else{
                 if(count($null_count) == count($request->staff_data)){
                     return redirect()->back()->with('error','Please Select Staff.');
@@ -530,6 +549,61 @@ class BookingController extends Controller
             $booking->update();
     
             return redirect()->back()->with('success','Doctor Added & Assign Successfully.');
+        }else{
+            return redirect()->back()->with('error','Data Not Found.');
+        }
+    }
+    public function add_single_equipment(Request $request)
+    {
+        $booking = Booking::find($request->booking_id);
+        if($booking){
+            if($request->name){
+                $equipment = Equipment::find($request->name);
+            }else{
+                $equipment = "";
+            }
+            $booking_details = new BookingDetails();
+            $booking_details->booking_id = $booking->id;
+            $booking_details->type = 2;
+            $booking_details->sell_rate = $request->sell_rate;
+            $booking_details->cost_rate = $request->cost_rate;
+            $booking_details->name = $equipment->name;
+            $booking_details->qnt = $request->qnt;
+            $booking_details->save();
+
+            $sub_total = $booking->sub_total + $request->sell_rate;
+            $total = $booking->total + $request->sell_rate;
+
+            $booking->sub_total = $sub_total;
+            $booking->total = $total;
+            $booking->update();
+    
+            return redirect()->back()->with('success','Equipment Added Successfully.');
+        }else{
+            return redirect()->back()->with('error','Data Not Found.');
+        }
+    }
+    public function add_single_ambulance(Request $request)
+    {
+        $booking = Booking::find($request->booking_id);
+        if($booking){
+            $booking_details = new BookingDetails();
+            $booking_details->booking_id = $booking->id;
+            $booking_details->type = 4;
+            $booking_details->sell_rate = $request->sell_rate;
+            $booking_details->name = $request->type;
+            $booking_details->shift = $request->shift;
+            $booking_details->qnt = 1;
+            $booking_details->save();
+
+            $sub_total = $booking->sub_total + $request->sell_rate;
+            $total = $booking->total + $request->sell_rate;
+
+            $booking->sub_total = $sub_total;
+            $booking->total = $total;
+            $booking->update();
+    
+            return redirect()->back()->with('success','Ambulance Added Successfully.');
         }else{
             return redirect()->back()->with('error','Data Not Found.');
         }

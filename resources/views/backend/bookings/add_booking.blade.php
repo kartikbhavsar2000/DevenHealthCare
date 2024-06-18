@@ -381,36 +381,36 @@
                             <div data-repeater-list="ambulance_data">
                                 <div data-repeater-item>
                                     <div class="row">
-                                        <div class="mb-2 col-lg-3 col-xl-3 col-12 mb-0">
+                                        <div class="mb-2 col-lg-4 col-xl-4 col-12 mb-0">
                                             <div class="form-floating form-floating-outline">
                                                 <input type="text" class="form-control" name="ambulance_name" value="Ambulance" readonly>
                                                 <label for="form-repeater-1-1">Type</label>
                                             </div>
                                         </div>
-                                        <div class="mb-2 col-lg-3 col-xl-3 col-12 mb-0">
+                                        <div class="mb-2 col-lg-4 col-xl-4 col-12 mb-0">
                                             <div class="form-floating form-floating-outline">
-                                                <select class="ShiftSelect select2 form-select" name="ambulance_shift" onchange="ShowItemsInTable()">
+                                                <select class="ShiftSelect select2 form-select" name="ambulance_shift" onchange="addAmbulanceRate(this)">
                                                     <option disabled selected>Select shift</option>
                                                     @if(!empty($data['shifts']))
                                                         @foreach($data['shifts'] as $shift)
-                                                            <option value="{{$shift->id}}">{{$shift->name}} ({{$shift->hours}} Hours)</option>
+                                                            <option value="{{$shift->id}}" data-details="{{$data['ambulance'] ?? ""}}">{{$shift->name}} ({{$shift->hours}} Hours)</option>
                                                         @endforeach
                                                     @endif
                                                 </select>
                                                 <label for="form-repeater-1-3">Shift</label>
                                             </div>
                                         </div>
-                                        <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
+                                        {{-- <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
                                             <div class="form-floating form-floating-outline">
                                                 <input type="text" class="form-control mb-1 Amb_Date" value="{{old('amb_date')}}" onchange="ShowItemsInTable()" name="amb_date" placeholder="DD-MM-YYYY" readonly />
                                                 <label for="form-repeater-1-3">Date</label>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                         <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
                                             <div class="input-group input-group-merge">
                                                 <span class="input-group-text">₹</span>
                                                 <div class="form-floating form-floating-outline">
-                                                    <input type="text" class="form-control ambulance-rate-input" name="ambulance_rate" placeholder="00" onkeyup="changeBillingRate()" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
+                                                    <input type="text" class="form-control ambulance-rate-input" name="ambulance_rate" placeholder="00" readonly onkeyup="changeBillingRate()" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
                                                     <label>Rate</label>
                                                 </div>
                                             </div>
@@ -1179,6 +1179,26 @@ $(function () {
         qutInput.val(1);
         qutInput.prop("disabled", false);
         rateInput.prop("readonly", false);
+        changeBillingRate();
+    }
+    function addAmbulanceRate(thiss) {
+        var select = $(thiss);
+        var data = select.find(':selected').data('details');
+        var repeaterItem = select.closest('[data-repeater-item]');
+        var rateInput = repeaterItem.find('.ambulance-rate-input');
+        var rate = 0;
+        if(data){
+            if(select.val() == 1){
+                rate = data.day_cost || 0;
+            }else if(select.val() == 2){
+                rate = data.night_cost || 0;
+            }else if(select.val() == 3){
+                rate = data.full_cost || 0;
+            }
+        }
+        rateInput.val(rate);
+        rateInput.prop("readonly", false);
+        ShowItemsInTable();
         changeBillingRate();
     }
     function showPatientDetails(thiss) {

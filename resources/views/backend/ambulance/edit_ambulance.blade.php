@@ -52,9 +52,9 @@
                                 <h6>Day Shift :</h6>
                             </div>
                         </div>
-                        <div class="col-5 mb-3">
+                        <div class="col-10 mb-3">
                             <div class="mb-4">
-                                <label class="form-label">Cost / Shift</label>
+                                <label class="form-label">Salary / Shift</label>
                                 <div class="input-group mb-5">
                                     <span class="input-group-text">₹</span>
                                     <input type="text" class="form-control" value="{{$data->day_cost}}" name="day_cost" placeholder="00">
@@ -64,26 +64,14 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-5 mb-3">
-                            <div class="mb-4">
-                                <label class="form-label">Customer Rate / Shift</label>
-                                <div class="input-group mb-5">
-                                    <span class="input-group-text">₹</span>
-                                    <input type="text" class="form-control" value="{{$data->day_sell}}" name="day_sell" placeholder="00">
-                                </div>
-                                @error('day_sell')
-                                    <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
-                        </div>
                         <div class="col-2 d-flex justify-content-start align-items-center">
                             <div class="px-5">
                                 <h6>Night Shift :</h6>
                             </div>
                         </div>
-                        <div class="col-5 mb-3">
+                        <div class="col-10 mb-3">
                             <div class="mb-4">
-                                <label class="form-label">Cost / Shift</label>
+                                <label class="form-label">Salary / Shift</label>
                                 <div class="input-group mb-5">
                                     <span class="input-group-text">₹</span>
                                     <input type="text" class="form-control" value="{{$data->night_cost}}" name="night_cost" placeholder="00">
@@ -93,43 +81,19 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-5 mb-3">
-                            <div class="mb-4">
-                                <label class="form-label">Customer Rate / Shift</label>
-                                <div class="input-group mb-5">
-                                    <span class="input-group-text">₹</span>
-                                    <input type="text" class="form-control" value="{{$data->night_sell}}" name="night_sell" placeholder="00">
-                                </div>
-                                @error('night_sell')
-                                    <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
-                        </div>
                         <div class="col-2 d-flex justify-content-start align-items-center">
                             <div class="px-5">
                                 <h6>Fullday Shift :</h6>
                             </div>
                         </div>
-                        <div class="col-5 mb-3">
+                        <div class="col-10 mb-3">
                             <div class="mb-4">
-                                <label class="form-label">Cost / Shift</label>
+                                <label class="form-label">Salary / Shift</label>
                                 <div class="input-group mb-5">
                                     <span class="input-group-text">₹</span>
                                     <input type="text" class="form-control" value="{{$data->full_cost}}" name="full_cost" placeholder="00">
                                 </div>
                                 @error('full_cost')
-                                    <span class="text-danger">{{$message}}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-5 mb-3">
-                            <div class="mb-4">
-                                <label class="form-label">Customer Rate / Shift</label>
-                                <div class="input-group mb-5">
-                                    <span class="input-group-text">₹</span>
-                                    <input type="text" class="form-control" value="{{$data->full_sell}}" name="full_sell" placeholder="00">
-                                </div>
-                                @error('full_sell')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
                             </div>

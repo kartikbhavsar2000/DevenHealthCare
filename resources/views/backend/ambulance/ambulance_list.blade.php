@@ -43,11 +43,8 @@
                             <th>Sr No.</th>
                             <th>Name</th>
                             <th>Day Shift Actual Cost</th>
-                            <th>Day Shift Charging Cost</th>
                             <th>Night Shift Actual Cost</th>
-                            <th>Night Shift Charging Cost</th>
                             <th>Fullday Shift Actual Cost</th>
-                            <th>Fullday Shift Charging Cost</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -72,7 +69,7 @@
             extend: 'excel',
             title: 'Ambulance',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7]
+                columns: [1,2,3,4]
             }
         }],
         columnDefs: [{
@@ -117,11 +114,8 @@
             }},
             { "data": "name" ,"defaultContent": "-"},
             { "data": "day_cost" ,"defaultContent": "-"},
-            { "data": "day_sell" ,"defaultContent": "-"},
             { "data": "night_cost" ,"defaultContent": "-"},
-            { "data": "night_sell" ,"defaultContent": "-"},
             { "data": "full_cost" ,"defaultContent": "-"},
-            { "data": "full_sell" ,"defaultContent": "-"},
             {
                 "data": "id",
                 "render": function (data, type, row, meta) {

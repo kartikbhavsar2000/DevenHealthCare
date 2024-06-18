@@ -25,7 +25,6 @@ Route::get('/clear-config-cache', function () {
 Route::group(['middleware' => ['admin']], function() {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
     Route::get('/analytics', [App\Http\Controllers\HomeController::class, 'analytics'])->name('analytics');
-    Route::get('/invoice', [App\Http\Controllers\HomeController::class, 'invoice'])->name('invoice');
 
     Route::get('/get_staff_booking_chart_data', [App\Http\Controllers\HomeController::class, 'get_staff_booking_chart_data'])->name('get_staff_booking_chart_data');
     Route::get('/area_wise_booking_chart', [App\Http\Controllers\HomeController::class, 'area_wise_booking_chart'])->name('area_wise_booking_chart');
@@ -41,6 +40,8 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/view_booking_details/{id}', [App\Http\Controllers\BookingController::class, 'view_booking_details'])->name('view_booking_details');
     Route::post('/create_booking', [App\Http\Controllers\BookingController::class, 'create_booking'])->name('create_booking');
 
+    Route::get('/invoice/{id}', [App\Http\Controllers\BookingController::class, 'invoice'])->name('invoice');
+
     Route::get('/assign_bookings', [App\Http\Controllers\BookingController::class, 'assign_bookings'])->name('assign_bookings');
     Route::get('/get_assign_bookings_list', [App\Http\Controllers\BookingController::class, 'get_assign_bookings_list'])->name('get_assign_bookings_list');
     Route::get('/assign_booking/{id}', [App\Http\Controllers\BookingController::class, 'assign_booking'])->name('assign_booking');
@@ -48,6 +49,8 @@ Route::group(['middleware' => ['admin']], function() {
     Route::post('/assign_single_staff', [App\Http\Controllers\BookingController::class, 'assign_single_staff'])->name('assign_single_staff');
     Route::post('/assign_single_doctor', [App\Http\Controllers\BookingController::class, 'assign_single_doctor'])->name('assign_single_doctor');
     Route::post('/add_assign_single_doctor', [App\Http\Controllers\BookingController::class, 'add_assign_single_doctor'])->name('add_assign_single_doctor');
+    Route::post('/add_single_equipment', [App\Http\Controllers\BookingController::class, 'add_single_equipment'])->name('add_single_equipment');
+    Route::post('/add_single_ambulance', [App\Http\Controllers\BookingController::class, 'add_single_ambulance'])->name('add_single_ambulance');
     Route::post('/check_staff_availability', [App\Http\Controllers\BookingController::class, 'check_staff_availability'])->name('check_staff_availability');
     Route::post('/check_doctor_availability', [App\Http\Controllers\BookingController::class, 'check_doctor_availability'])->name('check_doctor_availability');
 

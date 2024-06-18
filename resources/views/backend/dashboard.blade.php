@@ -77,9 +77,9 @@
                 <table class="kt_datatable table table-row-bordered table-row-gray-300" style="margin-bottom: 0px!important">
                   <thead>
                       <tr>
-                        <th rowspan="2" style="border:1px solid #4cb7e5; background:#c5eeff;">Customer Name</th>
+                        <th rowspan="2" style="border:1px solid #4cb7e5; background:#c5eeff; width:15%!important;">Customer Name</th>
                         <th colspan="{{count($staff_type)}}" style="border-bottom:1px solid #dfdfe2;">Staff</th>
-                        <th rowspan="2" style="border-bottom:1px solid #dfdfe2;">Doctor</th>
+                        <th rowspan="2" style="border-bottom:1px solid #dfdfe2; width:15%!important;">Doctor</th>
                       </tr>
                       <tr>
                         @if(!empty($staff_type))
@@ -94,25 +94,39 @@
                         @foreach($bookings as $booking)
                           @if($date >= date('Y-m-d', strtotime($booking->start_date)) && $date <= date('Y-m-d', strtotime($booking->end_date)))
                           <tr>
-                            <td style="background: #c5eeff;  border:1px solid #4cb7e5; text-align:center;">
-                              {{$booking->customer_details->name}}
-                              <b style="font-size: 12px;">
-                                @if($booking->booking_type == "Patient")
-                                  @if($booking->customer_details->h_type == "DHC")
-                                    (DHC)
-                                  @else
-                                    (HSP)
-                                  @endif
-                                @else
-                                  (CRP)
-                                @endif
-                                <br>{{$booking->unique_id}}<br>
-                                <button class="badge badge-center bg-primary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Customer Details" data-bs-custom-class="tooltip-dark" onclick="openCustomerDetailsModal('{{$booking}}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
-                              </b>
+                            <td style="background: #c5eeff;  border:1px solid #4cb7e5; text-align:center; width:15%!important;">
+                              <div class="row">
+                                <div class="col-12">
+                                  <div class="row">
+                                    <div class="col-8 text-start">
+                                      {{$booking->customer_details->name}}
+                                      <b style="font-size: 12px;">
+                                        @if($booking->booking_type == "Patient")
+                                          @if($booking->customer_details->h_type == "DHC")
+                                            (DHC)
+                                          @else
+                                            (HSP)
+                                          @endif
+                                        @else
+                                          (CRP)
+                                        @endif
+                                      </b>
+                                      <br><span style="font-size: 12px;">{{$booking->unique_id}}</span><br>
+                                    </div>
+                                    <div class="col-4 d-flex justify-content-center align-items-center">
+                                      <button class="badge badge-center bg-primary border-none" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Customer Details" data-bs-custom-class="tooltip-dark" onclick="openCustomerDetailsModal('{{$booking}}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-12 text-center mt-2">
+                                  <button class="badge badge-center bg-white border border-primary text-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Ambulance" data-bs-custom-class="tooltip-dark" onclick="addAmbulanceCanvas('{{$booking->id}}')" type="button" style="line-height: 10px;"><i class="ri-taxi-line"></i></button>
+                                  <button class="badge badge-center bg-white border border-primary text-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Equipments" data-bs-custom-class="tooltip-dark" onclick="addEquipmentsCanvas('{{$booking->id}}')" type="button" style="line-height: 10px;"><i class="ri-syringe-line"></i></button>
+                                </div>
+                              </div>
                             </td>
                             @if(!empty($staff_type))
                               @foreach($staff_type as $st)
-                                <td>
+                                <td  style="width:{{70 / count($staff_type)}}%!important;">
                                   @if(!empty($booking->staff_data))
                                     @php
                                       $staff_found = false;
@@ -172,7 +186,7 @@
                             @else
                               <td> __</td>
                             @endif
-                            <td>
+                            <td style="width:15%!important;">
                               @if(!empty($booking->doctor_data))
                                 @php
                                   $doctor_found = false;
@@ -939,11 +953,6 @@
           <div class="form-floating form-floating-outline">
             <select class="DoctorSelect2 select2 form-select" name="staff_id" id="Doctor2" required onchange="changeDoctorRate2()">
                 <option></option>
-                {{-- @if(!empty($doctors))
-                    @foreach($doctors as $doc)
-                      <option value="{{$doc->id}}" data-details="{{$doc}}">{{$doc->name}} - {{$doc->doctor_id}}</option>
-                    @endforeach
-                @endif --}}
             </select>
             <label>Select Doctor</label>
           </div>
@@ -955,6 +964,119 @@
                 <input type="text" class="form-control" name="cost_rate" placeholder="00" required id="DocAddCostRate" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
                 <label>Cost Rate</label>
             </div>
+          </div>
+        </div>
+        <div class="col-12 mt-8">
+          <button type="submit" class="btn btn-flex btn-primary h-40px fs-7 fw-bold me-1">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="AddEquipmentsCanvas" aria-labelledby="AddEquipmentsCanvasLabel">
+  <div class="offcanvas-header">
+    <h5 id="AddEquipmentsCanvasLabel">Add Equipment</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form action="{{route('add_single_equipment')}}" method="POST">
+      @csrf
+      <div class="row">
+        <div class="mb-2 col-12 mb-6">
+            <div class="form-floating form-floating-outline">
+                <input type="text" class="form-control d-none" name="booking_id" id="Equipment_Booking_Id" value="">
+                <select class="EquipmentSelect select2 form-select equipment-select" name="name" id="SelectEquipment" onchange="addEquipmentRate(this)" required>
+                  <option value="" disabled selected>Select equipment</option>
+                  @if(!empty($equipments))
+                      @foreach($equipments as $equipment)
+                          <option value="{{$equipment->id}}" data-rate="{{$equipment->sell_price ?? 0}}" data-type="{{$equipment->type ?? ""}}">{{$equipment->name}}</option>
+                      @endforeach
+                  @endif
+                </select>
+                <label for="form-repeater-1-1">Type</label>
+            </div>
+        </div>
+        <div class="col-12 mb-6">
+          <div class="input-group input-group-merge">
+            <span class="input-group-text">₹</span>
+            <div class="form-floating form-floating-outline">
+                <input type="text" class="form-control" name="cost_rate" id="Equipment_Cost_Price" readonly placeholder="00" required onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
+                <label>Cost Rate</label>
+            </div>
+          </div>
+        </div>
+        <div class="mb-2 col-12 mb-6">
+            <div class="form-floating form-floating-outline">
+                <select class="form-select equipment-qnt-input" id="EquipmentQnt" name="qnt" onchange="multiplyEquipmentRate(this)" required disabled>
+                    <option value="" disabled selected>Select quantity</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+                <label for="EquipmentQnt" id="Equipment_Label">Quantity / Rental Days</label>
+            </div>
+        </div>
+        <div class="col-12">
+          <div class="input-group input-group-merge">
+            <span class="input-group-text text-secondary">₹</span>
+            <div class="form-floating form-floating-outline">
+              <input type="text" class="form-control" name="sell_rate" id="Equipment_Sell_Price" value="" placeholder="00" readonly>
+              <label>Customer Rate</label>
+          </div>
+          </div>
+        </div>
+        <div class="col-12 mt-8">
+          <button type="submit" class="btn btn-flex btn-primary h-40px fs-7 fw-bold me-1">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="AddAmbulanceCanvas" aria-labelledby="AddAmbulanceCanvasLabel">
+  <div class="offcanvas-header">
+    <h5 id="AddAmbulanceCanvasLabel">Add Ambulance</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form action="{{route('add_single_ambulance')}}" method="POST">
+      @csrf
+      <div class="row">
+        <div class="col-12 mt-5">
+          <div class="form-floating form-floating-outline">
+            <input type="text" class="form-control d-none" name="booking_id" id="Ambulance_Booking_Id" value="">
+            <input type="text" class="form-control" name="type" value="Ambulance" readonly>
+            <label>Type</label>
+          </div>
+        </div>
+        <div class="col-12 mt-5">
+          <div class="form-floating form-floating-outline">
+            <select class="ShiftSelect3 select2 form-select" name="shift" required onchange="addAmbulanceRate(this)">
+                <option value="" disabled selected>Select shift</option>
+                @if(!empty($shifts))
+                    @foreach($shifts as $shift)
+                        <option value="{{$shift->id}}" data-details="{{$ambulance ?? ""}}">{{$shift->name}} ({{$shift->hours}} Hours)</option>
+                    @endforeach
+                @endif
+            </select>
+            <label>Shift</label>
+          </div>
+        </div>
+        <div class="col-12 mt-5">
+          <div class="input-group input-group-merge">
+            <span class="input-group-text text-secondary">₹</span>
+            <div class="form-floating form-floating-outline">
+              <input type="text" class="form-control" name="sell_rate" id="AmbulanceRate" readonly placeholder="00" required onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
+              <label>Customer Rate</label>
+          </div>
           </div>
         </div>
         <div class="col-12 mt-8">
@@ -1020,14 +1142,17 @@
           } else if(item.type == 4){
               type = "Ambulance";
           }
-
+          var rate = item.sell_rate;
+          if(item.type == 1){
+            rate *= item.qnt;
+          }
           bookingData += `<tr>
                               <td>`+ srno +`</td>
                               <td>`+ (item.name ?? "-") +`</td>
                               <td>`+ type +`</td>
                               <td>`+ (item.shift_name ?? "-") +`</td>
                               <td>`+ (item.qnt ?? "-") +`</td>
-                              <td>`+ (item.sell_rate * item.qnt ?? "-") +`</td>
+                              <td>`+ (rate ?? "-") +`</td>
                           </tr>`;
       });
       $('#cust_BookingData').html(bookingData);
@@ -1062,6 +1187,10 @@
           } else if(item.type == 4){
               type = "Ambulance";
           }
+          var rate = item.sell_rate;
+          if(item.type == 1){
+            rate *= item.qnt;
+          }
 
           bookingData += `<tr>
                               <td>`+ srno +`</td>
@@ -1069,7 +1198,7 @@
                               <td>`+ type +`</td>
                               <td>`+ (item.shift_name ?? "-") +`</td>
                               <td>`+ (item.qnt ?? "-") +`</td>
-                              <td>`+ (item.sell_rate * item.qnt ?? "-") +`</td>
+                              <td>`+ (rate ?? "-") +`</td>
                           </tr>`;
       });
       $('#corp_BookingData').html(bookingData);
@@ -1077,6 +1206,52 @@
 
       $('#corporationDetailsCanvas').modal('show');
     }
+  }
+  function addAmbulanceRate(thiss) {
+    var select = $(thiss);
+    var data = select.find(':selected').data('details');
+    var rateInput = $('#AmbulanceRate');
+    var rate = 0;
+    if(data){
+        if(select.val() == 1){
+            rate = data.day_cost || 0;
+        }else if(select.val() == 2){
+            rate = data.night_cost || 0;
+        }else if(select.val() == 3){
+            rate = data.full_cost || 0;
+        }
+    }
+    rateInput.val(rate);
+    rateInput.prop("readonly", false);
+  }
+  function multiplyEquipmentRate(thiss){
+    var select = $(thiss);
+    var qnt = select.find(':selected').val();
+    var selectInput = $('#SelectEquipment');
+    var oldrate = selectInput.find(':selected').data('rate');
+    var sellRateInput = $('#Equipment_Sell_Price');
+    var rate = parseInt(oldrate) * parseInt(qnt);
+    sellRateInput.val(rate);
+  }
+  function addEquipmentRate(thiss) {
+    var select = $(thiss);
+    var rate = select.find(':selected').data('rate');
+    var type = select.find(':selected').data('type');
+    var costRateInput = $('#Equipment_Cost_Price');
+    var sellRateInput = $('#Equipment_Sell_Price');
+    var qutInput = $('#EquipmentQnt');
+    if(type == "Rent"){
+        var label = "Rental Days";
+    }else{
+        var label = "Quantity";
+    }
+    console.log(label);
+    $('#Equipment_Label').text(label);
+    costRateInput.val(rate);
+    sellRateInput.val(rate);
+    qutInput.val(1);
+    qutInput.prop("disabled", false);
+    sellRateInput.prop("readonly", false);
   }
   function openStaffDetailsModal(staff) {
     var data = JSON.parse(staff);
@@ -1230,6 +1405,14 @@
 
     $('#AddAssignDoctorCanvas').offcanvas('show');
   }
+  function addEquipmentsCanvas(booking_id){
+    $('#Equipment_Booking_Id').val(booking_id);
+    $('#AddEquipmentsCanvas').offcanvas('show');
+  }
+  function addAmbulanceCanvas(booking_id){
+    $('#Ambulance_Booking_Id').val(booking_id);
+    $('#AddAmbulanceCanvas').offcanvas('show');
+  }
   function filterAndSetDoctor(thiss){
     var select = $(thiss);
     var date = $('#DocAddAssignDate').val();
@@ -1331,6 +1514,11 @@
   $('.ShiftSelect2').select2({
       placeholder: 'Select a shift',
       dropdownParent: $('#AddAssignDoctorCanvas'),
+      allowClear: true
+  });
+  $('.ShiftSelect3').select2({
+      placeholder: 'Select a shift',
+      dropdownParent: $('#AddAmbulanceCanvas'),
       allowClear: true
   });
   $('#AssignDate').flatpickr({
