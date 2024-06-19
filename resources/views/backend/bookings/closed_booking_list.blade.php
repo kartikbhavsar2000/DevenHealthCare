@@ -27,8 +27,8 @@
 @endif
 <div class="row">
     <div class="col-6 mb-5">
-        <h4 class="mt-1 mb-1">Active Bookings</h4>
-        <p class="mb-0"><a href="{{route('dashboard')}}">Home</a> / Active Bookings</p>
+        <h4 class="mt-1 mb-1">Closed Bookings</h4>
+        <p class="mb-0"><a href="{{route('dashboard')}}">Home</a> / Closed Bookings</p>
     </div>
     <div class="col-6 mb-5 text-end pt-5 pe-5">
         <a id="exportLink" class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body h-40px fs-7 waves-effect waves-light me-2"><i class="ri-file-excel-line"></i> <span class="nav-text">Excel</span></a>
@@ -76,7 +76,7 @@
         pageLength: 10,
         buttons: [{
             extend: 'excel',
-            title: 'Active Bookings List',
+            title: 'Closed Bookings List',
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12]
             }
@@ -116,7 +116,7 @@
         order: [
             [0, "asc"]
         ],
-        ajax: "{{asset("get_bookings_list")}}",
+        ajax: "{{asset("get_closed_bookings_list")}}",
         columns:[
             { "render": function(data, type, full, meta) {
                     return meta.row+1;

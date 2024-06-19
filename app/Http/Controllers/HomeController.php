@@ -38,72 +38,78 @@ class HomeController extends Controller
      */
     public function index()
     {   
-        $staff_type = StaffType::orderBy('id',"ASC")->get();
-        $bookings = Booking::with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
-        foreach($bookings as $booking){
-            $customer_details = $booking->customerDetails();
-            $customer_details->state = State::find($customer_details->state);
-            $customer_details->city = City::find($customer_details->city);
-            $customer_details->area = Area::find($customer_details->area);
-            $booking->customer_details = $customer_details;
+        if (in_array("dashboard", Auth::user()->permissions())) {
+            $staff_type = StaffType::orderBy('id',"ASC")->get();
+            $bookings = Booking::with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
+            foreach($bookings as $booking){
+                $customer_details = $booking->customerDetails();
+                $customer_details->state = State::find($customer_details->state);
+                $customer_details->city = City::find($customer_details->city);
+                $customer_details->area = Area::find($customer_details->area);
+                $booking->customer_details = $customer_details;
 
-            foreach($booking->bookingDetails as $details){
-                $shift = Shifts::find($details->shift);
-                if($shift){
-                    $details->shift_name = $shift->name;
+                foreach($booking->bookingDetails as $details){
+                    $shift = Shifts::find($details->shift);
+                    if($shift){
+                        $details->shift_name = $shift->name;
+                    }
                 }
+
+                $staff_data = [];
+                $doctor_data = [];
+                foreach($booking->bookingAssigns as $book){
+                    $book->shiftt = Shifts::find($book->shift);
+                    if($book->type == "Doctor"){
+                        $book->staff_details = Doctor::with('state')->with('city')->with('area')->find($book->staff_id);
+                        $doctor_data[] = $book;
+                    }else{
+                        $book->staff_details = Staff::with('types')->with('state')->with('city')->with('area')->find($book->staff_id);
+                        $staff_data[] = $book;
+                    }
+                }
+                $booking->staff_data = $staff_data;
+                $booking->doctor_data = $doctor_data;
             }
 
-            $staff_data = [];
-            $doctor_data = [];
-            foreach($booking->bookingAssigns as $book){
-                $book->shiftt = Shifts::find($book->shift);
-                if($book->type == "Doctor"){
-                    $book->staff_details = Doctor::with('state')->with('city')->with('area')->find($book->staff_id);
-                    $doctor_data[] = $book;
-                }else{
-                    $book->staff_details = Staff::with('types')->with('state')->with('city')->with('area')->find($book->staff_id);
-                    $staff_data[] = $book;
-                }
+            $dates = [];
+            $currentDate = new \DateTime();
+            $dates[] = $currentDate->format('Y-m-d');
+
+            for ($i = 1; $i <= 6; $i++) {
+                $nextDate = clone $currentDate;
+                $nextDate->add(new \DateInterval('P' . $i . 'D'));
+                $dates[] = $nextDate->format('Y-m-d');
             }
-            $booking->staff_data = $staff_data;
-            $booking->doctor_data = $doctor_data;
+            $shifts = Shifts::orderBy('id',"DESC")->get();
+            $staffs = Staff::orderBy('id',"DESC")->get();
+            $doctors = Doctor::orderBy('id',"DESC")->get();
+            $equipments = Equipment::orderBy('id',"DESC")->get();
+            $ambulance = Ambulance::first();
+            return view('backend.dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $bookings,'dates' => $dates]);
         }
-
-        $dates = [];
-        $currentDate = new \DateTime();
-        $dates[] = $currentDate->format('Y-m-d');
-
-        for ($i = 1; $i <= 6; $i++) {
-            $nextDate = clone $currentDate;
-            $nextDate->add(new \DateInterval('P' . $i . 'D'));
-            $dates[] = $nextDate->format('Y-m-d');
-        }
-        $shifts = Shifts::orderBy('id',"DESC")->get();
-        $staffs = Staff::orderBy('id',"DESC")->get();
-        $doctors = Doctor::orderBy('id',"DESC")->get();
-        $equipments = Equipment::orderBy('id',"DESC")->get();
-        $ambulance = Ambulance::first();
-        return view('backend.dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $bookings,'dates' => $dates]);
+        abort(403);
     }
     public function analytics()
     {
-        $staff_count = Staff::count();
-        $doctor_count = Doctor::count();
-        $patient_count = Patient::count();
-        $corporate_count = Corporate::count();
-        $booking_count = Booking::count();
-        $hospital_count = Hospital::count();
+        if (in_array("analytics", Auth::user()->permissions())) {
+            $staff_count = Staff::count();
+            $doctor_count = Doctor::count();
+            $patient_count = Patient::count();
+            $corporate_count = Corporate::count();
+            $booking_count = Booking::count();
+            $hospital_count = Hospital::count();
 
-        $data = [
-            'staff_count' => $staff_count,
-            'doctor_count' => $doctor_count,
-            'patient_count' => $patient_count,
-            'corporate_count' => $corporate_count,
-            'booking_count' => $booking_count,
-            'hospital_count' => $hospital_count,
-        ];
-        return view('backend.analytics',['data'=>$data]);
+            $data = [
+                'staff_count' => $staff_count,
+                'doctor_count' => $doctor_count,
+                'patient_count' => $patient_count,
+                'corporate_count' => $corporate_count,
+                'booking_count' => $booking_count,
+                'hospital_count' => $hospital_count,
+            ];
+            return view('backend.analytics',['data'=>$data]);
+        }
+        abort(403);
     }
     public function get_cities_by_state(Request $request)
     {

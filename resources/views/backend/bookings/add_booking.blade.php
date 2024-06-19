@@ -470,7 +470,7 @@
                 </div>
                 <div class="card-footer">
                     <button type="submit" id="Submit" class="btn btn-flex btn-primary h-40px fs-7 fw-bold me-1"  onclick="storeBookingType('Main')">Submit</button>
-                    <a href="{{route('bookings')}}" class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body h-40px fs-7 fw-bold">Back</a>
+                    {{-- <a href="{{route('bookings')}}" class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body h-40px fs-7 fw-bold">Back</a> --}}
                 </div>
             </form>
         </div>

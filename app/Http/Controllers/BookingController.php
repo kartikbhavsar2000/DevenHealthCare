@@ -30,10 +30,40 @@ class BookingController extends Controller
         $booking->state = State::where('id',$booking->customer_details->state)->pluck('name')->first();
         $booking->city = City::where('id',$booking->customer_details->city)->pluck('name')->first();
         $booking->area = Area::where('id',$booking->customer_details->area)->pluck('name')->first();
-        foreach($booking->bookingDetails as $bookings){
-            
+
+        foreach($booking->bookingDetails as $detail) {
+            $shift = Shifts::find($detail->shift);
+            $detail->shift_name = $shift ? " (".$shift->name.")" : "";
         }
-        return view('backend.pdf.invoice',['booking' => $booking]);
+        return view('backend.bookings.invoice',['booking' => $booking]);
+    }
+    public function print($id)
+    {
+        $booking = Booking::with('bookingDetails')->find($id);
+        $booking->customer_details = $booking->customerDetails();
+        $booking->state = State::where('id',$booking->customer_details->state)->pluck('name')->first();
+        $booking->city = City::where('id',$booking->customer_details->city)->pluck('name')->first();
+        $booking->area = Area::where('id',$booking->customer_details->area)->pluck('name')->first();
+
+        foreach($booking->bookingDetails as $detail) {
+            $shift = Shifts::find($detail->shift);
+            $detail->shift_name = $shift ? " (".$shift->name.")" : "";
+        }
+        return view('backend.pdf.print',['booking' => $booking]);
+    }
+    public function download($id)
+    {
+        $booking = Booking::with('bookingDetails')->find($id);
+        $booking->customer_details = $booking->customerDetails();
+        $booking->state = State::where('id',$booking->customer_details->state)->pluck('name')->first();
+        $booking->city = City::where('id',$booking->customer_details->city)->pluck('name')->first();
+        $booking->area = Area::where('id',$booking->customer_details->area)->pluck('name')->first();
+
+        foreach($booking->bookingDetails as $detail) {
+            $shift = Shifts::find($detail->shift);
+            $detail->shift_name = $shift ? " (".$shift->name.")" : "";
+        }
+        return view('backend.pdf.download',['booking' => $booking]);
     }
     public function bookings()
     {
@@ -44,7 +74,23 @@ class BookingController extends Controller
     }
     public function get_bookings_list()
     {   
-        $data = Booking::orderBy('id',"DESC")->get();
+        $data = Booking::with('added_by')->orderBy('id',"DESC")->get();
+        foreach($data as $da){
+            $customer_details = $da->customerDetails();
+            $da->customer_details = $customer_details;
+        }
+        return response()->json(['data'=>$data]);
+    }
+    public function closed_bookings()
+    {
+        if (in_array("closed_bookings", Auth::user()->permissions())) {
+            return view('backend.bookings.closed_booking_list');
+        }
+        abort(403);
+    }
+    public function get_closed_bookings_list()
+    {   
+        $data = Booking::with('added_by')->orderBy('id',"DESC")->get();
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
@@ -133,6 +179,7 @@ class BookingController extends Controller
             $booking->end_date = $request->end_date;
             $booking->sub_total = $request->sub_total;
             $booking->total = $request->total;
+            $booking->created_by = Auth::user()->id;
             $booking->save();
 
             $staff_rate = [];
@@ -305,7 +352,7 @@ class BookingController extends Controller
     }
     public function get_assign_bookings_list()
     {   
-        $data = Booking::where('is_staff',1)->with('bookingDetails')->orderBy('id',"DESC")->get();
+        $data = Booking::where('is_staff',1)->with('bookingDetails')->with('assign_by')->orderBy('id',"DESC")->get();
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
@@ -469,6 +516,7 @@ class BookingController extends Controller
                 }else{
                     if($bookss){
                         $bookss->status = 1;
+                        $bookss->assigned_by = Auth::user()->id;
                         $bookss->update();
                     }
                     return redirect('assign_bookings')->with('bulk_error', $error);
@@ -479,6 +527,7 @@ class BookingController extends Controller
                 }else{
                     if($bookss){
                         $bookss->status = 1;
+                        $bookss->assigned_by = Auth::user()->id;
                         $bookss->update();
                     }
                     return redirect('assign_bookings')->with('success','Staff Assigned Successfully.');
@@ -497,10 +546,21 @@ class BookingController extends Controller
             $booking_assign->cost_rate = $request->rate;
             $booking_assign->staff_id = $request->staff_id;
             $booking_assign->update();
+
+            $booking = Booking::find($booking_assign->booking_id);
+            $booking_assign_fetch = BookingAssign::where('type','!=',"Doctor")->whereNull('staff_id')->where('booking_id', $booking->id)->get();
+
+            if ($booking_assign_fetch->isEmpty()) {
+                $booking->status = 1;
+                $booking->assigned_by = Auth::user()->id;
+                $booking->update();
+            }
+
             return redirect()->back()->with('success','Staff Assigned Successfully.');
         }else{
             return redirect()->back()->with('error','Data Not Found.');
         }
+
     }
     public function assign_single_doctor(Request $request)
     {
@@ -510,6 +570,7 @@ class BookingController extends Controller
             $booking_assign->cost_rate = $request->rate;
             $booking_assign->staff_id = $request->staff_id;
             $booking_assign->update();
+
             return redirect()->back()->with('success','Doctor Assigned Successfully.');
         }else{
             return redirect()->back()->with('error','Data Not Found.');

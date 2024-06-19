@@ -42,13 +42,50 @@
                     <hr>
                     <div class="row">
                         <div class="col-12 mb-3">
+                            <label class="mb-2"><b>Dashboard</b></label>
+                            <div class="row">
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="dashboard" name="permission[]" id="dashboard" />
+                                        <label class="form-check-label" for="dashboard">
+                                            Dashboard
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="analytics" name="permission[]" id="analytics" />
+                                        <label class="form-check-label" for="analytics">
+                                            Analytics
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
                             <label class="mb-2"><b>Bookings</b></label>
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="create_booking" name="permission[]" id="create_booking" />
+                                        <label class="form-check-label" for="create_booking">
+                                            Create Booking
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
                                         <input class="form-check-input" type="checkbox" value="bookings" name="permission[]" id="bookings" />
                                         <label class="form-check-label" for="bookings">
-                                            Create Booking
+                                            Active Booking
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="closed_bookings" name="permission[]" id="closed_bookings" />
+                                        <label class="form-check-label" for="closed_bookings">
+                                            Closed Booking
                                         </label>
                                     </div>
                                 </div>
@@ -120,6 +157,7 @@
                                 </div>
                             </div>
                         </div>
+                        {{-- @if(Auth::user()->id == 1 && )
                         <div class="col-12 mb-3">
                             <label class="mb-2"><b>User Management</b></label>
                             <div class="row">
@@ -141,6 +179,7 @@
                                 </div>
                             </div>
                         </div>
+                        @endif --}}
                         <div class="col-12 mb-3">
                             <label class="mb-2"><b>Masters</b></label>
                             <div class="row">

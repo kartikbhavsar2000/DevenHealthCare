@@ -116,10 +116,18 @@
                 "data": "id",
                 "render": function (data, type, row, meta) {
                     return type === 'display' ?
-                    '<a href="{{asset("/")}}edit_staff_type/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-edit-box-line ri-20px"></i></a><button onClick="deleted('+data+')" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-delete-bin-7-line ri-20px"></i></button>' :
+                    '<button onClick="deleted('+data+')" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-delete-bin-7-line ri-20px"></i></button>' :
                     data;
                 }
             },
+            // {
+            //     "data": "id",
+            //     "render": function (data, type, row, meta) {
+            //         return type === 'display' ?
+            //         '<a href="{{asset("/")}}edit_staff_type/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-edit-box-line ri-20px"></i></a><button onClick="deleted('+data+')" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-delete-bin-7-line ri-20px"></i></button>' :
+            //         data;
+            //     }
+            // },
         ],
         
     });

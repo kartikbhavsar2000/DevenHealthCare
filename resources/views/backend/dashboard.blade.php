@@ -54,6 +54,9 @@
       <h4 class="mb-1">Dashboard</h4>
       <p class="mb-0"><a href="{{route('dashboard')}}">Home</a> / Dashboard</p>
   </div>
+  @php
+      $permissions = $permissions = Auth::user() ? Auth::user()->permissions() : [];
+  @endphp
   <div class="col-sm-12 col-lg-12">
     <div class="card text-center mb-4">
       <div class="card-header p-0">
@@ -118,10 +121,12 @@
                                     </div>
                                   </div>
                                 </div>
-                                <div class="col-12 text-center mt-2">
-                                  <button class="badge badge-center bg-white border border-primary text-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Ambulance" data-bs-custom-class="tooltip-dark" onclick="addAmbulanceCanvas('{{$booking->id}}')" type="button" style="line-height: 10px;"><i class="ri-taxi-line"></i></button>
-                                  <button class="badge badge-center bg-white border border-primary text-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Equipments" data-bs-custom-class="tooltip-dark" onclick="addEquipmentsCanvas('{{$booking->id}}')" type="button" style="line-height: 10px;"><i class="ri-syringe-line"></i></button>
-                                </div>
+                                @if(in_array('bookings',$permissions))
+                                  <div class="col-12 text-center mt-2">
+                                    <button class="badge badge-center bg-white border border-primary text-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Ambulance" data-bs-custom-class="tooltip-dark" onclick="addAmbulanceCanvas('{{$booking->id}}')" type="button" style="line-height: 10px;"><i class="ri-taxi-line"></i></button>
+                                    <button class="badge badge-center bg-white border border-primary text-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Equipments" data-bs-custom-class="tooltip-dark" onclick="addEquipmentsCanvas('{{$booking->id}}')" type="button" style="line-height: 10px;"><i class="ri-syringe-line"></i></button>
+                                  </div>
+                                @endif
                               </div>
                             </td>
                             @if(!empty($staff_type))
@@ -151,7 +156,9 @@
                                                 @endif
                                             </div>
                                             <div class="col-4">
-                                              <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit Staff" data-bs-custom-class="tooltip-dark" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 10px;"><i class="ri-pencil-line"></i></button>
+                                              @if(in_array('assign_bookings',$permissions))
+                                                <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit Staff" data-bs-custom-class="tooltip-dark" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 10px;"><i class="ri-pencil-line"></i></button>
+                                              @endif
                                               <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Staff Details" data-bs-custom-class="tooltip-dark" onclick="openStaffDetailsModal('{{$stf->staff_details}}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
                                             </div>
                                           </div>
@@ -166,7 +173,9 @@
                                               <b style="font-size: 12px;"> {{$stf->shiftt->name}}</b>
                                             </div>
                                             <div class="col-4">
-                                              <button class="badge badge-center bg-warning border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Assign Staff" data-bs-custom-class="tooltip-dark" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 0px;"><i class="ri-user-follow-line"></i></button>
+                                              @if(in_array('assign_bookings',$permissions))
+                                                <button class="badge badge-center bg-warning border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Assign Staff" data-bs-custom-class="tooltip-dark" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 0px;"><i class="ri-user-follow-line"></i></button>
+                                              @endif
                                             </div>
                                           </div>
                                           @php
@@ -202,7 +211,9 @@
                                           @php
                                               $staffDetailsJson = json_encode($dct->staff_details);
                                           @endphp
-                                          <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit Doctor" data-bs-custom-class="tooltip-dark" onclick="openDoctorAssignModal('{{$dct->id}}','{{date('Y-m-d', strtotime($dct->date))}}','Doctor', {{$dct->shiftt->id}}, {{$dct->sell_rate}})"  style="line-height: 10px;"><i class="ri-pencil-line"></i></button>
+                                          @if(in_array('assign_bookings',$permissions))
+                                            <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit Doctor" data-bs-custom-class="tooltip-dark" onclick="openDoctorAssignModal('{{$dct->id}}','{{date('Y-m-d', strtotime($dct->date))}}','Doctor', {{$dct->shiftt->id}}, {{$dct->sell_rate}})"  style="line-height: 10px;"><i class="ri-pencil-line"></i></button>
+                                          @endif
                                           <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Doctor Details" data-bs-custom-class="tooltip-dark" onclick="openDoctorDetailsModal('{{ addslashes($staffDetailsJson) }}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
                                         </div>
                                       </div>
@@ -217,7 +228,9 @@
                                           <b style="font-size: 12px;"> {{$dct->shiftt->name}}</b>
                                         </div>
                                         <div class="col-4">
-                                          <button class="badge badge-center bg-warning border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Assign Doctor" data-bs-custom-class="tooltip-dark" onclick="openDoctorAssignModal('{{$dct->id}}','{{date('Y-m-d', strtotime($dct->date))}}','Doctor', {{$dct->shiftt->id}}, {{$dct->sell_rate}})"  style="line-height: 0px;"><i class="ri-user-follow-line"></i></button>
+                                          @if(in_array('assign_bookings',$permissions))
+                                            <button class="badge badge-center bg-warning border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Assign Doctor" data-bs-custom-class="tooltip-dark" onclick="openDoctorAssignModal('{{$dct->id}}','{{date('Y-m-d', strtotime($dct->date))}}','Doctor', {{$dct->shiftt->id}}, {{$dct->sell_rate}})"  style="line-height: 0px;"><i class="ri-user-follow-line"></i></button>
+                                          @endif
                                         </div>
                                       </div>
                                       @php
@@ -227,9 +240,11 @@
                                   @endif
                                 @endforeach
                               @endif
-                              <div class="text-center mt-2 py-3" style="background:#c5eeff;">
-                                <button class="badge badge-center bg-primary border-none" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Doctor" data-bs-custom-class="tooltip-dark" onclick="openAddDoctorAssignModal('{{$booking->id}}','{{date('Y-m-d', strtotime($date))}}')" style="line-height: 0px;"><i class="ri-add-line"></i></button>
-                              </div>
+                              @if(in_array('assign_bookings',$permissions) && in_array('bookings',$permissions))
+                                <div class="text-center mt-2 py-3" style="background:#c5eeff;">
+                                  <button class="badge badge-center bg-primary border-none" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Doctor" data-bs-custom-class="tooltip-dark" onclick="openAddDoctorAssignModal('{{$booking->id}}','{{date('Y-m-d', strtotime($date))}}')" style="line-height: 0px;"><i class="ri-add-line"></i></button>
+                                </div>
+                              @endif
                             </td>
                           </tr>
                           @endif
@@ -1107,27 +1122,27 @@
     if(data.customer_details.dob){
       var date = moment(data.customer_details.dob).format('DD/MM/YYYY');
     }else{
-      var date = "";
+      var date = "-";
     }
     if(data.booking_type == "Patient"){
-      $('#cust_Id').text(data.customer_details.patient_id || '');
-      $('#cust_Type').text((data.customer_details.h_type || ''));
-      $('#cust_Name').text((data.customer_details.name || ''));
-      $('#cust_Email').text(data.customer_details.email || '');
-      $('#cust_Mobile').text(data.customer_details.mobile || '');
+      $('#cust_Id').text(data.customer_details.patient_id || '-');
+      $('#cust_Type').text((data.customer_details.h_type || '-'));
+      $('#cust_Name').text((data.customer_details.name || '-'));
+      $('#cust_Email').text(data.customer_details.email || '-');
+      $('#cust_Mobile').text(data.customer_details.mobile || '-');
       $('#cust_Dob').text(date);
-      $('#cust_Age').text(data.customer_details.age + " Years" || '');
-      $('#cust_Gender').text(data.customer_details.gender || '');
-      $('#cust_Address').text(data.customer_details.address || '');
-      $('#cust_State').text(data.customer_details.state.name || '');
-      $('#cust_City').text(data.customer_details.city.name || '');
-      $('#cust_Area').text(data.customer_details.area.name || '');
+      $('#cust_Age').text(data.customer_details.age + " Years" || '-');
+      $('#cust_Gender').text(data.customer_details.gender || '-');
+      $('#cust_Address').text(data.customer_details.address || '-');
+      $('#cust_State').text(data.customer_details.state.name || '-');
+      $('#cust_City').text(data.customer_details.city.name || '-');
+      $('#cust_Area').text(data.customer_details.area.name || '-');
 
-      $('#cust_BookingId').text(data.unique_id || '');
-      $('#cust_BookingType').text(data.booking_type || '');
-      $('#cust_BookingStart').text(data.start_date || '');
-      $('#cust_BookingEnd').text(data.end_date || '');
-      $('#cust_BookingTotal').text(data.total || '');
+      $('#cust_BookingId').text(data.unique_id || '-');
+      $('#cust_BookingType').text(data.booking_type || '-');
+      $('#cust_BookingStart').text(data.start_date || '-');
+      $('#cust_BookingEnd').text(data.end_date || '-');
+      $('#cust_BookingTotal').text(data.total || '-');
 
       var bookingData = "";
       $.each(data.booking_details, function(index, item) {
@@ -1160,19 +1175,19 @@
       
       $('#customerDetailsCanvas').modal('show');
     }else{
-      $('#corp_Name').text((data.customer_details.name || ''));
-      $('#corp_Mobile').text(data.customer_details.mobile1 || '');
-      $('#corp_Mobile2').text(data.customer_details.mobile2 || '');
-      $('#corp_Address').text(data.customer_details.address || '');
-      $('#corp_State').text(data.customer_details.state.name || '');
-      $('#corp_City').text(data.customer_details.city.name || '');
-      $('#corp_Area').text(data.customer_details.area.name || '');
+      $('#corp_Name').text((data.customer_details.name || '-'));
+      $('#corp_Mobile').text(data.customer_details.mobile1 || '-');
+      $('#corp_Mobile2').text(data.customer_details.mobile2 || '-');
+      $('#corp_Address').text(data.customer_details.address || '-');
+      $('#corp_State').text(data.customer_details.state.name || '-');
+      $('#corp_City').text(data.customer_details.city.name || '-');
+      $('#corp_Area').text(data.customer_details.area.name || '-');
 
-      $('#corp_BookingId').text(data.unique_id || '');
-      $('#corp_BookingType').text(data.booking_type || '');
-      $('#corp_BookingStart').text(data.start_date || '');
-      $('#corp_BookingEnd').text(data.end_date || '');
-      $('#corp_BookingTotal').text(data.total || '');
+      $('#corp_BookingId').text(data.unique_id || '-');
+      $('#corp_BookingType').text(data.booking_type || '-');
+      $('#corp_BookingStart').text(data.start_date || '-');
+      $('#corp_BookingEnd').text(data.end_date || '-');
+      $('#corp_BookingTotal').text(data.total || '-');
 
       var bookingData = "";
       $.each(data.booking_details, function(index, item) {
@@ -1258,26 +1273,26 @@
     if(data.dob){
       var date = moment(data.dob).format('DD/MM/YYYY');
     }else{
-      var date = "";
+      var date = "-";
     }
     if(data.age){
       var age = data.age + " Years"
     }else{
-      var age = "";
+      var age = "-";
     }
-    $('#st_Id').text(data.staff_id || '');
-    $('#st_Name').text((data.f_name || '') + ' ' + (data.m_name || '') + ' ' + (data.l_name || ''));
-    $('#st_Type').text(data.types.title || '');
-    $('#st_Email').text(data.email || '');
-    $('#st_Mobile').text(data.mobile || '');
-    $('#st_Mobile2').text(data.mobile2 || '');
+    $('#st_Id').text(data.staff_id || '-');
+    $('#st_Name').text((data.f_name || '-') + ' ' + (data.m_name || '') + ' ' + (data.l_name || ''));
+    $('#st_Type').text(data.types.title || '-');
+    $('#st_Email').text(data.email || '-');
+    $('#st_Mobile').text(data.mobile || '-');
+    $('#st_Mobile2').text(data.mobile2 || '-');
     $('#st_Dob').text(date);
     $('#st_Age').text(age);
-    $('#st_Gender').text(data.gender || '');
-    $('#st_Address').text(data.address || '');
-    $('#st_State').text(data.state.name || '');
-    $('#st_City').text(data.city.name || '');
-    $('#st_Area').text(data.area.name || '');
+    $('#st_Gender').text(data.gender || '-');
+    $('#st_Address').text(data.address || '-');
+    $('#st_State').text(data.state.name || '-');
+    $('#st_City').text(data.city.name || '-');
+    $('#st_Area').text(data.area.name || '-');
     $('#staffDetailsCanvas').modal('show');
   }
   function openDoctorDetailsModal(doctor) {
@@ -1285,25 +1300,25 @@
     if(data.dob){
       var date = moment(data.dob).format('DD/MM/YYYY');
     }else{
-      var date = "";
+      var date = "-";
     }
     if(data.age){
       var age = data.age + " Years"
     }else{
-      var age = "";
+      var age = "-";
     }
-    $('#doc_Name').text((data.name || ''));
-    $('#doc_Id').text(data.doctor_id || '');
+    $('#doc_Name').text((data.name || '-'));
+    $('#doc_Id').text(data.doctor_id || '-');
     $('#doc_Type').text('Doctor');
-    $('#doc_Email').text(data.email || '');
-    $('#doc_Mobile').text(data.mobile || '');
+    $('#doc_Email').text(data.email || '-');
+    $('#doc_Mobile').text(data.mobile || '-');
     $('#doc_Dob').text(date);
     $('#doc_Age').text(age);
-    $('#doc_Gender').text(data.gender || '');
-    $('#doc_Address').text(data.address || '');
-    $('#doc_State').text(data.state.name || '');
-    $('#doc_City').text(data.city.name || '');
-    $('#doc_Area').text(data.area.name || '');
+    $('#doc_Gender').text(data.gender || '-');
+    $('#doc_Address').text(data.address || '-');
+    $('#doc_State').text(data.state.name || '-');
+    $('#doc_City').text(data.city.name || '-');
+    $('#doc_Area').text(data.area.name || '-');
     $('#doctorDetailsCanvas').modal('show');
   }
   function changeStaffRate(){

@@ -46,13 +46,50 @@
                     <hr>
                     <div class="row">
                         <div class="col-12 mb-3">
+                            <label class="mb-2"><b>Dashboard</b></label>
+                            <div class="row">
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="dashboard" @if(in_array('dashboard',$permissions)) checked @endif name="permission[]" id="dashboard" />
+                                        <label class="form-check-label" for="dashboard">
+                                            Dashboard
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="analytics" @if(in_array('analytics',$permissions)) checked @endif name="permission[]" id="analytics" />
+                                        <label class="form-check-label" for="analytics">
+                                            Analytics
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
                             <label class="mb-2"><b>Bookings</b></label>
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="create_booking" @if(in_array('create_booking',$permissions)) checked @endif name="permission[]" id="create_booking" />
+                                        <label class="form-check-label" for="create_booking">
+                                            Create Booking
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
                                         <input class="form-check-input" type="checkbox" value="bookings" @if(in_array('bookings',$permissions)) checked @endif name="permission[]" id="bookings" />
                                         <label class="form-check-label" for="bookings">
-                                            Create Booking
+                                            Active Booking
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="closed_bookings" @if(in_array('closed_bookings',$permissions)) checked @endif name="permission[]" id="closed_bookings" />
+                                        <label class="form-check-label" for="closed_bookings">
+                                            Closed Booking
                                         </label>
                                     </div>
                                 </div>
@@ -124,12 +161,14 @@
                                 </div>
                             </div>
                         </div>
+                        @if(Auth::user()->id == 1 && $data->id == 1)
                         <div class="col-12 mb-3">
                             <label class="mb-2"><b>User Management</b></label>
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="users" @if(in_array('users',$permissions)) checked @endif name="permission[]" id="users" />
+                                        <input type="text" value="users" name="permission[]" class="d-none"/>
+                                        <input class="form-check-input" type="checkbox"  @if(in_array('users',$permissions)) checked @endif name="permission[]" id="users" disabled/>
                                         <label class="form-check-label" for="users">
                                             Users
                                         </label>
@@ -137,7 +176,8 @@
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="roles" @if(in_array('roles',$permissions)) checked @endif name="permission[]" id="roles" />
+                                        <input type="text" value="roles" name="permission[]" class="d-none"/>
+                                        <input class="form-check-input" type="checkbox" @if(in_array('roles',$permissions)) checked @endif name="permission[]" id="roles" disabled/>
                                         <label class="form-check-label" for="roles">
                                             Roles
                                         </label>
@@ -145,6 +185,7 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                         <div class="col-12 mb-3">
                             <label class="mb-2"><b>Masters</b></label>
                             <div class="row">

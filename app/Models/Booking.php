@@ -12,6 +12,14 @@ class Booking extends Model
 
     protected $table = "bookings";
 
+    public function added_by()
+    {
+        return $this->hasOne(User::class,'id','created_by');
+    }
+    public function assign_by()
+    {
+        return $this->hasOne(User::class,'id','assigned_by');
+    }
     public function bookingDetails()
     {
         return $this->hasMany(BookingDetails::class,'booking_id','id');

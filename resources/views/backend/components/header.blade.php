@@ -124,36 +124,62 @@
 
                 <div class="menu-inner-shadow"></div>
                 @php
-                $permissions = Auth::user()->permissions() ?? [];
+                    $permissions = $permissions = Auth::user() ? Auth::user()->permissions() : [];
                 @endphp
                 <ul class="menu-inner py-1">
                     <!-- Page -->
-
+                    @if(in_array('dashboard',$permissions))
                     <li class="menu-item  @if (Route::currentRouteName() == 'dashboard') active @endif">
                         <a href="{{route('dashboard')}}" class="menu-link">
                             <i class="menu-icon tf-icons ri-home-smile-line"></i>
                             <div>Dashboard</div>
                         </a>
                     </li>
+                    @endif
+                    @if(in_array('analytics',$permissions))
                     <li class="menu-item  @if (Route::currentRouteName() == 'analytics') active @endif">
                         <a href="{{route('analytics')}}" class="menu-link">
                             <i class="menu-icon tf-icons ri-line-chart-line"></i>
                             <div>Analytics</div>
                         </a>
                     </li>
+                    @endif
                     @if(in_array('bookings',$permissions) || in_array('assign_bookings',$permissions) || in_array('staff_attendance',$permissions))
                     <li class="menu-header mt-5">
                         <span class="menu-header-text">Bookings</span>
                     </li>
                     @endif
-                    @if(in_array('bookings',$permissions))
-                    <li class="menu-item  @if (Route::currentRouteName() == 'bookings') active @endif">
-                        <a href="{{route('bookings')}}" class="menu-link">
+                    @if(in_array('create_booking',$permissions))
+                    <li class="menu-item  @if (Route::currentRouteName() == 'add_booking') active @endif">
+                        <a href="{{route('add_booking')}}" class="menu-link">
                             <i class="menu-icon tf-icons ri-calendar-schedule-line"></i>
                             <div>Create Booking</div>
                         </a>
                     </li>
                     @endif
+                    <li
+                        class="menu-item @if (Route::currentRouteName() == 'bookings' || Route::currentRouteName() == 'closed_bookings') open @endif">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle waves-effect">
+                            <i class="menu-icon tf-icons ri-calendar-todo-line"></i>
+                            <div>Bookings</div>
+                        </a>
+                        <ul class="menu-sub">
+                            @if(in_array('bookings',$permissions))
+                            <li class="menu-item  @if (Route::currentRouteName() == 'bookings') active @endif">
+                                <a href="{{route('bookings')}}" class="menu-link">
+                                    <div>Active Bookings</div>
+                                </a>
+                            </li>
+                            @endif
+                            @if(in_array('closed_bookings',$permissions))
+                            <li class="menu-item  @if (Route::currentRouteName() == 'closed_bookings') active @endif">
+                                <a href="{{route('closed_bookings')}}" class="menu-link">
+                                    <div>Closed Bookings</div>
+                                </a>
+                            </li>
+                            @endif
+                        </ul>
+                    </li>
                     @if(in_array('assign_bookings',$permissions))
                     <li class="menu-item  @if (Route::currentRouteName() == 'assign_bookings') active @endif">
                         <a href="{{route('assign_bookings')}}" class="menu-link">
@@ -340,7 +366,7 @@
                                 <a class="nav-link dropdown-toggle hide-arrow"
                                     data-bs-toggle="dropdown">
                                     <div class="avatar avatar-online">
-                                        <span class="avatar-initial rounded-circle bg-danger" style="font-size: 26px;">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                                        <span class="avatar-initial rounded-circle bg-danger" style="font-size: 26px;">{{ substr(Auth::user() ? Auth::user()->name : "DHC", 0, 1) }}</span>
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
@@ -351,12 +377,12 @@
                                                     <div class="avatar avatar-online">
                                                         {{-- <img src="{{asset('public')}}/assets/img/avatars/1.png" alt
                                                             class="rounded-circle" /> --}}
-                                                            <span class="avatar-initial rounded-circle bg-danger" style="font-size: 26px;">{{ substr(Auth::user()->name, 0, 1) }}</span>
+                                                            <span class="avatar-initial rounded-circle bg-danger" style="font-size: 26px;">{{ substr(Auth::user() ? Auth::user()->name : "DHC", 0, 1) }}</span>
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <span class="fw-medium d-block">{{ Auth::user()->name }}</span>
-                                                    <small class="text-muted">{{ Auth::user()->role->name }}</small>
+                                                    <span class="fw-medium d-block">{{ Auth::user() ? Auth::user()->name : "DHC" }}</span>
+                                                    <small class="text-muted">{{ Auth::user() ? Auth::user()->role->name : "NA" }}</small>
                                                 </div>
                                             </div>
                                         </a>

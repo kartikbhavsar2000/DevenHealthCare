@@ -62,7 +62,7 @@
               <p class="mb-0">{{$booking->customer_details->email ?? ""}}</p>
             </div>
             <div>
-              <h6>Invoice</h6>
+              <h6>Booking & Invoice</h6>
               <table>
                 <tbody>
                     <tr>
@@ -72,6 +72,14 @@
                     <tr>
                          <td class="pe-4">Date Issues:</td>
                         <td>{{date('d/m/Y')}}</td>
+                    </tr>
+                    <tr>
+                        <td class="pe-4">Service Start Date:</td>
+                        <td>{{date('d/m/Y',strtotime($booking->start_date))}}</td>
+                    </tr>
+                    <tr>
+                      <td class="pe-4">Service End Date:</td>
+                      <td>{{date('d/m/Y',strtotime($booking->end_date))}}</td>
                     </tr>
                 </tbody>
               </table>
@@ -94,7 +102,7 @@
                 @foreach($booking->bookingDetails as $key => $detail)
                   <tr>
                     <td class="text-nowrap text-heading">{{$key+1}}</td>
-                    <td class="text-nowrap">{{$detail->name}}</td>
+                    <td class="text-nowrap"><b>{{$detail->name}}</b><span style="font-size: 12px;">{{$detail->shift_name}}</span></td>
                     <td>₹{{$detail->sell_rate ?? "0"}}</td>
                     <td>{{$detail->qnt}}</td>
                     @if($detail->type == 1)
@@ -138,8 +146,12 @@
       <div class="card">
         <div class="card-body">
           <div class="d-flex">
-            <a class="btn btn-outline-secondary d-grid w-100 me-4" onclick="printDiv();">Print</a>
-            <a href="#" class="btn btn-outline-secondary d-grid w-100"> Download </a>
+            {{-- <a class="btn btn-outline-secondary d-grid w-100 me-4" onclick="printDiv();">Print</a> --}}
+            <a href="{{route('print',$booking->id)}}" target="_blank" class="btn btn-danger d-grid w-100 me-4">Print</a>
+            <a href="{{route('download',$booking->id)}}" target="_blank" class="btn btn-outline-primary d-grid w-100"> Download </a>
+          </div>
+          <div class="d-flex">
+            <a href="{{route('bookings')}}" class="btn btn-outline-dark d-grid w-100 mt-5"> Back </a>
           </div>
         </div>
       </div>

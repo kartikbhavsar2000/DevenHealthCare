@@ -29,7 +29,7 @@
                     <h5 class="mb-0"><i class="ri-information-line fs-3"></i> Booking Details | {{$booking->unique_id}}</h5>
                 </div>
                 <div class="col-6 text-end p-0">
-                    <a href="{{route('bookings')}}" class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body h-40px fs-7 fw-bold waves-effect waves-light">Back</a>
+                    {{-- <a href="{{route('bookings')}}" class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body h-40px fs-7 fw-bold waves-effect waves-light">Back</a> --}}
                 </div>
             </div>
             <hr>
