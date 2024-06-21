@@ -89,7 +89,7 @@
                         </div>
                         <div class="col-4 mb-3">
                             <div class="mb-4">
-                                <label class="form-label">Contact Number <span class="text-danger">*</span></label>
+                                <label class="form-label">Contact Number</label>
                                 <input type="text" minlength="7" maxlength="10" class="form-control mb-1" value="{{old('mobile')}}" name="mobile"  placeholder="Enter contact number"/>
                                 @error('mobile')
                                     <span class="text-danger">{{$message}}</span>
@@ -120,7 +120,7 @@
                         </div>
                         <div class="col-4 mb-3">
                             <div class="mb-4">
-                                <label class="form-label">Age <span class="text-danger">*</span></label>
+                                <label class="form-label">Age</label>
                                 <input type="number" class="form-control mb-1" value="{{old('age')}}" name="age"  placeholder="Enter age"/>
                                 @error('age')
                                     <span class="text-danger">{{$message}}</span>
@@ -166,9 +166,12 @@
                         <div class="col-4 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Area<span class="text-danger">*</span></label>
-                                <select class="form-control mb-1" name="area" id="Area">
-                                    <option value=""></option>
-                                </select>
+                                <div class="d-flex">
+                                    <select class="form-control mb-1" name="area" id="Area">
+                                        <option value=""></option>
+                                    </select>
+                                    <a class="ms-2 btn btn-label-primary" onclick="openCenteredWindow('{{ route('add_area') }}', 'MyWindow', 600, 600);"><i class="ri-add-line"></i></a>
+                                </div>
                                 @error('area')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
@@ -201,6 +204,20 @@
 <script>
     checkHospitalType();
     selectState();
+    function openCenteredWindow(url, windowName, width, height) {
+        // Calculate the position of the window to be centered
+        var left = (screen.width - width) / 2;
+        var top = (screen.height - height) / 2;
+
+        // Define window options
+        var options = 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left;
+
+        // Open the window
+        window.open(url, windowName, options);
+
+        // Prevent the default behavior of the anchor tag
+        return false;
+    }
     function checkHospitalType(){
         $('#Hospital-Select').val(null).trigger("change"); 
         var value = $('input[name="h_type"]:checked').val();

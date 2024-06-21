@@ -20,6 +20,10 @@ class Booking extends Model
     {
         return $this->hasOne(User::class,'id','assigned_by');
     }
+    public function closed_by()
+    {
+        return $this->hasOne(User::class,'id','closed_by');
+    }
     public function bookingDetails()
     {
         return $this->hasMany(BookingDetails::class,'booking_id','id');

@@ -22,9 +22,16 @@
     </div>
 @endif
 <div class="row invoice-preview">
+  <div class="col-6 mb-5">
+      <h4 class="mt-1 mb-1">Invoice | {{$booking->unique_id ?? ""}}</h4>
+  </div>
+  <div class="col-6 mb-5 text-end pt-1 pe-5">
+      <button class="btn btn-danger waves-effect me-2" onclick="PrintInvoice()"><i class="ri-printer-line"></i>&nbsp; Print</button>
+      <button class="btn btn-dark waves-effect me-2" onclick="DownloadInvoice()"><i class="ri-download-2-line"></i>&nbsp; Download</button>
+  </div>
     <!-- Invoice -->
-    <div class="col-xl-9 col-md-8 col-12 mb-md-0 mb-6">
-      <div class="card invoice-preview-card p-sm-12 p-6"  id="DivIdToPrint">
+    <div class="col-12 mb-md-0 mb-6" id="invoiceContent">
+      <div class="card invoice-preview-card p-sm-12 p-6">
         <div class="card-body invoice-preview-header rounded-4 p-6" style="background-color: rgba(38, 43, 67, .06);">
           <div
             class="d-flex justify-content-between flex-xl-row flex-md-column flex-sm-row flex-column text-heading align-items-xl-center align-items-md-start align-items-sm-center flex-wrap gap-6">
@@ -139,52 +146,84 @@
         </div>
       </div>
     </div>
-    <!-- /Invoice -->
-
-    <!-- Invoice Actions -->
-    <div class="col-xl-3 col-md-4 col-12 invoice-actions">
-      <div class="card">
-        <div class="card-body">
-          <div class="d-flex">
-            {{-- <a class="btn btn-outline-secondary d-grid w-100 me-4" onclick="printDiv();">Print</a> --}}
-            <a href="{{route('print',$booking->id)}}" target="_blank" class="btn btn-danger d-grid w-100 me-4">Print</a>
-            <a href="{{route('download',$booking->id)}}" target="_blank" class="btn btn-outline-primary d-grid w-100"> Download </a>
-          </div>
-          <div class="d-flex">
-            <a href="{{route('bookings')}}" class="btn btn-outline-dark d-grid w-100 mt-5"> Back </a>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- /Invoice Actions -->
   </div>
 @endsection
 
 
 @section('javascript')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
 <script>
-  function printDiv() {
-    var printContents = $("#DivIdToPrint").html();
-    var originalContents = $('body').html();
-    var printWindow = window.open('', '', 'height=800,width=1000');
-    
-    // Collect all the styles from the current document
-    var styles = '';
-    $('link[rel="stylesheet"], style').each(function() {
-      styles += this.outerHTML;
-    });
+  function PrintInvoice() {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const padding = 0;
 
-    printWindow.document.write('<html><head><title>Print</title>');
-    printWindow.document.write(styles); // Append styles to the new document
-    printWindow.document.write('</head><body>');
-    printWindow.document.write(printContents);
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
+        html2canvas(document.querySelector("#invoiceContent")).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pageWidth = 210;
+            const pageHeight = 295;
+            const imgWidth = pageWidth - 2 * padding;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            let heightLeft = imgHeight;
+            let position = padding;
 
-    // Wait for the new window to load the content and then print
-    printWindow.onload = function() {
-      printWindow.print();
-    };
-  }
+            pdf.addImage(imgData, 'PNG', padding, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight + padding;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', padding, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            // Output PDF as blob
+            const blob = pdf.output('blob');
+
+            // Open print dialog for the PDF blob
+            const url = URL.createObjectURL(blob);
+            const iframe = document.createElement('iframe');
+            iframe.style.cssText = 'position:absolute;width:0px;height:0px;top:-10px;left:-10px;';
+            document.body.appendChild(iframe);
+            iframe.src = url;
+
+            // Wait for iframe to load PDF
+            iframe.onload = function() {
+                // Call print() after PDF is loaded
+                iframe.contentWindow.print();
+            };
+        });
+    }
+
+    function DownloadInvoice(){
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+
+        const padding = 0;
+
+        html2canvas(document.querySelector("#invoiceContent")).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pageWidth = 210; 
+            const pageHeight = 295;
+            const imgWidth = pageWidth - 2 * padding;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            let heightLeft = imgHeight;
+
+            let position = padding;
+
+            pdf.addImage(imgData, 'PNG', padding, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight + padding;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', padding, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+            var name = "{{$booking->unique_id}}" + ".pdf";
+            pdf.save(name);
+        });
+    }
 </script>
 @endsection

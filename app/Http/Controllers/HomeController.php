@@ -249,6 +249,47 @@ class HomeController extends Controller
 
         return response()->json($data);
     }
+    public function area_wise_patient_and_staff_chart(Request $request)
+    {
+        $staff_counts = [];
+        $patient_counts = [];
+        $areas = [];
+
+        // Retrieve all areas where status is 1
+        $areas = Area::where('status', 1)->get();
+
+        // Filter areas and calculate staff and patient counts
+        $filtered_areas = $areas->filter(function ($area) use (&$staff_counts, &$patient_counts) {
+            $staff_count = Staff::where('area', $area->id)->count();
+            $patient_count = Patient::where('area', $area->id)->count();
+
+            // Include the area only if there are staff or patients
+            if ($staff_count > 0 || $patient_count > 0) {
+                $staff_counts[] = $staff_count;
+                $patient_counts[] = $patient_count;
+                return true;
+            }
+
+            return false;
+        });
+
+        // Prepare data for the chart
+        $data = [
+            'series' => [
+                [
+                    'name' => 'Staff',
+                    'data' => $staff_counts
+                ],
+                [
+                    'name' => 'Patient',
+                    'data' => $patient_counts
+                ]
+            ],
+            'categories' => $filtered_areas->pluck('name') // Assuming 'name' is the field for area names
+        ];
+
+        return response()->json($data);
+    }
     public function patient_vs_corporation_chart(Request $request)
     {
         $all_dates = [];

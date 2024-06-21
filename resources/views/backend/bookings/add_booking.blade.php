@@ -595,7 +595,7 @@
                             </div>
                             <div class="col-4 mb-3">
                                 <div class="mb-4">
-                                    <label class="form-label">State<span class="text-danger">*</span></label>
+                                    <label class="form-label" for="State">State<span class="text-danger">*</span></label>
                                     <select class="form-control mb-1" name="state" id="State" onchange="selectState()">
                                         <option value=""></option>
                                         @if(!empty($data['states']))
@@ -611,7 +611,7 @@
                             </div>
                             <div class="col-4 mb-3">
                                 <div class="mb-4">
-                                    <label class="form-label">City<span class="text-danger">*</span></label>
+                                    <label class="form-label" for="City">City<span class="text-danger">*</span></label>
                                     <select class="form-control mb-1" name="city" id="City" onchange="selectCity()">
                                         <option value=""></option>
                                     </select>
@@ -1403,25 +1403,26 @@ $(function () {
     $('#Corporate-Select').select2({
         placeholder: 'Select a corporate'
     });
-    $('#Hospital-Select-2').select2({
-        placeholder: 'Select a hospital',
-        dropdownParent: $('#addPatientModal')
-    });
-    $('#Gender').select2({
-        placeholder: 'Select a gender',
-        dropdownParent: $('#addPatientModal')
-    });
+    var addPatientModal = $('#addPatientModal > .modal-dialog > .modal-content')
     $('#State').select2({
         placeholder: 'Select a state',
-        dropdownParent: $('#addPatientModal')
+        dropdownParent: addPatientModal
     });
     $('#City').select2({
         placeholder: 'Select a city',
-        dropdownParent: $('#addPatientModal')
+        dropdownParent: addPatientModal
     });
     $('#Area').select2({
         placeholder: 'Select a area',
-        dropdownParent: $('#addPatientModal')
+        dropdownParent: addPatientModal
+    });
+    $('#Hospital-Select-2').select2({
+        placeholder: 'Select a hospital',
+        dropdownParent: addPatientModal
+    });
+    $('#Gender').select2({
+        placeholder: 'Select a gender',
+        dropdownParent: addPatientModal
     });
     $('#State2').select2({
         placeholder: 'Select a state',

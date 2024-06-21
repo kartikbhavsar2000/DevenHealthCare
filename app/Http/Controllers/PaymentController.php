@@ -41,6 +41,7 @@ class PaymentController extends Controller
     }
     public function create_advance_salary(Request $request)
     {
+        // return $request;
         $request->validate([
             'staff_id' => 'required',
             'amount' => 'required|numeric|min:0|digits_between:1,12',

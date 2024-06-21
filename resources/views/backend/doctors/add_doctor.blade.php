@@ -100,9 +100,12 @@
                         <div class="col-4 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Area<span class="text-danger">*</span></label>
-                                <select class="form-control mb-1" name="area" id="Area">
-                                    <option value=""></option>
-                                </select>
+                                <div class="d-flex">
+                                    <select class="form-control mb-1" name="area" id="Area">
+                                        <option value=""></option>
+                                    </select>
+                                    <a class="ms-2 btn btn-label-primary" onclick="openCenteredWindow('{{ route('add_area') }}', 'MyWindow', 600, 600);"><i class="ri-add-line"></i></a>
+                                </div>
                                 @error('area')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
@@ -294,7 +297,20 @@
 @section('javascript')
 <script>
     selectState();
+    function openCenteredWindow(url, windowName, width, height) {
+        // Calculate the position of the window to be centered
+        var left = (screen.width - width) / 2;
+        var top = (screen.height - height) / 2;
 
+        // Define window options
+        var options = 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left;
+
+        // Open the window
+        window.open(url, windowName, options);
+
+        // Prevent the default behavior of the anchor tag
+        return false;
+    }
     function selectState() {
         var id = $('#State').val();
         $.ajax({

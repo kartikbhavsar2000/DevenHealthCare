@@ -89,7 +89,7 @@
                         </div>
                         <div class="col-3 mb-3">
                             <div class="mb-4">
-                                <label class="form-label">Contact Number <span class="text-danger">*</span></label>
+                                <label class="form-label">Contact Number</label>
                                 <input type="text" minlength="7" maxlength="10" class="form-control mb-1" value="{{$data->mobile}}" name="mobile"  placeholder="Enter contact number"/>
                                 @error('mobile')
                                     <span class="text-danger">{{$message}}</span>
@@ -233,7 +233,7 @@
                         <hr>
                         <div class="col-3 mb-3">
                             <div class="mb-4">
-                                <label class="form-label">Bank Name <span class="text-danger">*</span></label>
+                                <label class="form-label">Bank Name</label>
                                 <input type="text" class="form-control mb-1" value="{{$data->bank_name}}" name="bank_name" placeholder="Enter bank name">
                                 @error('bank_name')
                                     <span class="text-danger">{{$message}}</span>
@@ -242,7 +242,7 @@
                         </div>
                         <div class="col-3 mb-3">
                             <div class="mb-4">
-                                <label class="form-label">Account Number <span class="text-danger">*</span></label>
+                                <label class="form-label">Account Number</label>
                                 <input type="text" class="form-control mb-1" value="{{$data->acc_no}}" name="acc_no" placeholder="Enter account number">
                                 @error('acc_no')
                                     <span class="text-danger">{{$message}}</span>
@@ -251,7 +251,7 @@
                         </div>
                         <div class="col-3 mb-3">
                             <div class="mb-4">
-                                <label class="form-label">Branch <span class="text-danger">*</span></label>
+                                <label class="form-label">Branch</label>
                                 <input type="text" class="form-control mb-1" value="{{$data->branch}}" name="branch" placeholder="Enter branch">
                                 @error('branch')
                                     <span class="text-danger">{{$message}}</span>
@@ -260,7 +260,7 @@
                         </div>
                         <div class="col-3 mb-3">
                             <div class="mb-4">
-                                <label class="form-label">IFSC Code <span class="text-danger">*</span></label>
+                                <label class="form-label">IFSC Code</label>
                                 <input type="text" class="form-control mb-1" value="{{$data->ifsc_code}}" name="ifsc_code" placeholder="Enter IFSC code">
                                 @error('ifsc_code')
                                     <span class="text-danger">{{$message}}</span>

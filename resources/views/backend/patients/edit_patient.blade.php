@@ -92,7 +92,7 @@
                         </div>
                         <div class="col-4 mb-3">
                             <div class="mb-4">
-                                <label>Contact Number <span class="text-danger">*</span></label>
+                                <label>Contact Number</label>
                                 <input type="text" minlength="7" maxlength="10" class="form-control mb-1" value="{{$data->mobile}}" name="mobile"  placeholder="Enter contact number"/>
                                 @error('mobile')
                                     <span class="text-danger">{{$message}}</span>
@@ -123,7 +123,7 @@
                         </div>
                         <div class="col-4 mb-3">
                             <div class="mb-4">
-                                <label>Age <span class="text-danger">*</span></label>
+                                <label>Age</label>
                                 <input type="number" class="form-control mb-1" value="{{$data->age}}" name="age"  placeholder="Enter age"/>
                                 @error('age')
                                     <span class="text-danger">{{$message}}</span>

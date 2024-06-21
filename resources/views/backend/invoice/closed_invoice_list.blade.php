@@ -27,12 +27,11 @@
 @endif
 <div class="row">
     <div class="col-6 mb-5">
-        <h4 class="mt-1 mb-1">Closed Bookings</h4>
-        <p class="mb-0"><a href="{{route('dashboard')}}">Home</a> / Closed Bookings</p>
+        <h4 class="mt-1 mb-1">Closed Invoice</h4>
+        <p class="mb-0"><a href="{{route('dashboard')}}">Home</a> / Closed Invoice</p>
     </div>
     <div class="col-6 mb-5 text-end pt-5 pe-5">
         <a id="exportLink" class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body h-40px fs-7 waves-effect waves-light me-2"><i class="ri-file-excel-line"></i> <span class="nav-text">Excel</span></a>
-        {{-- <a href="{{route('add_booking')}}" class="btn btn-primary waves-effect waves-light"><i class="ri-add-line"></i> Create Booking</a> --}}
     </div>
     <div class="col-12">
         <!-- Role Table -->
@@ -45,10 +44,6 @@
                             <th>Booking ID</th>
                             <th>Type</th>
                             <th>Customer Name</th>
-                            <th>Staff</th>
-                            <th>Equipment</th>
-                            <th>Doctor</th>
-                            <th>Ambulance</th>
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Updated At</th>
@@ -76,9 +71,9 @@
         pageLength: 10,
         buttons: [{
             extend: 'excel',
-            title: 'Closed Bookings List',
+            title: 'Closed Invoice List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11,12]
+                columns: [1,2,3,4,5,6,7,8]
             }
         }],
         columnDefs: [{
@@ -116,7 +111,7 @@
         order: [
             [0, "asc"]
         ],
-        ajax: "{{asset("get_closed_bookings_list")}}",
+        ajax: "{{asset("get_closed_invoice_list")}}",
         columns:[
             { "render": function(data, type, full, meta) {
                     return meta.row+1;
@@ -124,34 +119,6 @@
             { "data": "unique_id" ,"defaultContent": "-"},
             { "data": "booking_type" ,"defaultContent": "-"},
             { "data": "customer_details.name" ,"defaultContent": "-"},
-            {"data": "is_staff" , render : function ( data, type, row, meta ) {
-                if(data == 1){
-                    return "<span class='badge rounded-pill bg-primary'>YES</span>";
-                }else{
-                    return "<span class='badge rounded-pill bg-dark'>NO</span>";
-                }
-            }},
-            {"data": "is_equipment" , render : function ( data, type, row, meta ) {
-                if(data == 1){
-                    return "<span class='badge rounded-pill bg-primary'>YES</span>";
-                }else{
-                    return "<span class='badge rounded-pill bg-dark'>NO</span>";
-                }
-            }},
-            {"data": "is_doctor" , render : function ( data, type, row, meta ) {
-                if(data == 1){
-                    return "<span class='badge rounded-pill bg-primary'>YES</span>";
-                }else{
-                    return "<span class='badge rounded-pill bg-dark'>NO</span>";
-                }
-            }},
-            {"data": "is_ambulance" , render : function ( data, type, row, meta ) {
-                if(data == 1){
-                    return "<span class='badge rounded-pill bg-primary'>YES</span>";
-                }else{
-                    return "<span class='badge rounded-pill bg-dark'>NO</span>";
-                }
-            }},
             {"data": "start_date" , render : function ( data, type, row, meta ) {
                 if(data){
                     return type === 'display'  ?
@@ -189,22 +156,22 @@
             {"data": "total" , render : function ( data, type, row, meta ) {
                 return "₹"+data;
             }},
-            {
-                "data": "id",
-                "render": function (data, type, row, meta) {
-                    return type === 'display' ?
-                    '<a href="{{asset("/")}}view_booking_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-information-2-line ri-20px"></i></a>' :
-                    data;
-                }
-            },
             // {
             //     "data": "id",
             //     "render": function (data, type, row, meta) {
             //         return type === 'display' ?
-            //         '<a href="{{asset("/")}}view_booking_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-information-2-line ri-20px"></i></a><a href="{{asset("/")}}invoice/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-file-list-3-line ri-20px"></i></a>' :
+            //         '<a href="{{asset("/")}}view_booking_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-information-2-line ri-20px"></i></a>' :
             //         data;
             //     }
             // },
+            {
+                "data": "id",
+                "render": function (data, type, row, meta) {
+                    return type === 'display' ?
+                    '<a href="{{asset("/")}}view_booking_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-information-2-line ri-20px"></i></a><a href="{{asset("/")}}generate_invoice/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-file-list-3-line ri-20px"></i></a>' :
+                    data;
+                }
+            },
         ],
         
     });

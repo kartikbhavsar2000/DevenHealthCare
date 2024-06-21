@@ -144,7 +144,7 @@
                         </a>
                     </li>
                     @endif
-                    @if(in_array('bookings',$permissions) || in_array('assign_bookings',$permissions) || in_array('staff_attendance',$permissions))
+                    @if(in_array('bookings',$permissions) || in_array('assign_bookings',$permissions) || in_array('staff_attendance',$permissions) || in_array('create_booking',$permissions) || in_array('closed_bookings',$permissions))
                     <li class="menu-header mt-5">
                         <span class="menu-header-text">Bookings</span>
                     </li>
@@ -157,8 +157,8 @@
                         </a>
                     </li>
                     @endif
-                    <li
-                        class="menu-item @if (Route::currentRouteName() == 'bookings' || Route::currentRouteName() == 'closed_bookings') open @endif">
+                    @if(in_array('bookings',$permissions) || in_array('closed_bookings',$permissions))
+                    <li class="menu-item @if (Route::currentRouteName() == 'bookings' || Route::currentRouteName() == 'closed_bookings') open @endif">
                         <a href="javascript:void(0);" class="menu-link menu-toggle waves-effect">
                             <i class="menu-icon tf-icons ri-calendar-todo-line"></i>
                             <div>Bookings</div>
@@ -180,6 +180,7 @@
                             @endif
                         </ul>
                     </li>
+                    @endif
                     @if(in_array('assign_bookings',$permissions))
                     <li class="menu-item  @if (Route::currentRouteName() == 'assign_bookings') active @endif">
                         <a href="{{route('assign_bookings')}}" class="menu-link">
@@ -194,6 +195,35 @@
                             <i class="menu-icon tf-icons ri-calendar-check-line"></i>
                             <div>Staff Attendance</div>
                         </a>
+                    </li>
+                    @endif
+                    @if(in_array('active_invoice',$permissions) || in_array('closed_invoice',$permissions))
+                    <li class="menu-header mt-5">
+                        <span class="menu-header-text">Invoice</span>
+                    </li>
+                    @endif
+                    @if(in_array('active_invoice',$permissions) || in_array('closed_invoice',$permissions))
+                    <li class="menu-item @if (Route::currentRouteName() == 'active_invoice' || Route::currentRouteName() == 'closed_invoice') open @endif">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle waves-effect">
+                            <i class="menu-icon tf-icons ri-file-list-3-line"></i>
+                            <div>Invoice</div>
+                        </a>
+                        <ul class="menu-sub">
+                            @if(in_array('active_invoice',$permissions))
+                            <li class="menu-item  @if (Route::currentRouteName() == 'active_invoice') active @endif">
+                                <a href="{{route('active_invoice')}}" class="menu-link">
+                                    <div>Active Invoice</div>
+                                </a>
+                            </li>
+                            @endif
+                            @if(in_array('closed_invoice',$permissions))
+                            <li class="menu-item  @if (Route::currentRouteName() == 'closed_invoice') active @endif">
+                                <a href="{{route('closed_invoice')}}" class="menu-link">
+                                    <div>Closed Invoice</div>
+                                </a>
+                            </li>
+                            @endif
+                        </ul>
                     </li>
                     @endif
                     @if(in_array('advance_salary',$permissions))

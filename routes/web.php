@@ -28,6 +28,7 @@ Route::group(['middleware' => ['admin']], function() {
 
     Route::get('/get_staff_booking_chart_data', [App\Http\Controllers\HomeController::class, 'get_staff_booking_chart_data'])->name('get_staff_booking_chart_data');
     Route::get('/area_wise_booking_chart', [App\Http\Controllers\HomeController::class, 'area_wise_booking_chart'])->name('area_wise_booking_chart');
+    Route::get('/area_wise_patient_and_staff_chart', [App\Http\Controllers\HomeController::class, 'area_wise_patient_and_staff_chart'])->name('area_wise_patient_and_staff_chart');
     Route::get('/available_and_occupied_staff', [App\Http\Controllers\HomeController::class, 'available_and_occupied_staff'])->name('available_and_occupied_staff');
     Route::get('/patient_vs_corporation_chart', [App\Http\Controllers\HomeController::class, 'patient_vs_corporation_chart'])->name('patient_vs_corporation_chart');
 
@@ -62,6 +63,16 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/staff_attendance', [App\Http\Controllers\BookingController::class, 'staff_attendance'])->name('staff_attendance');
     Route::get('/get_staff_attendance_list', [App\Http\Controllers\BookingController::class, 'get_staff_attendance_list'])->name('get_staff_attendance_list');
     Route::post('/approve_reject_staff_attendance', [App\Http\Controllers\BookingController::class, 'approve_reject_staff_attendance'])->name('approve_reject_staff_attendance');
+
+    Route::get('/active_invoice', [App\Http\Controllers\InvoiceController::class, 'active_invoice'])->name('active_invoice');
+    Route::get('/get_active_invoice_list', [App\Http\Controllers\InvoiceController::class, 'get_active_invoice_list'])->name('get_active_invoice_list');
+    Route::get('/generate_invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'generate_invoice'])->name('generate_invoice');
+    Route::post('/close_booking', [App\Http\Controllers\InvoiceController::class, 'close_booking'])->name('close_booking');
+    Route::post('/invoice_details_by_dates', [App\Http\Controllers\InvoiceController::class, 'invoice_details_by_dates'])->name('invoice_details_by_dates');
+    Route::post('/add_booking_payment', [App\Http\Controllers\InvoiceController::class, 'add_booking_payment'])->name('add_booking_payment');
+
+    Route::get('/closed_invoice', [App\Http\Controllers\InvoiceController::class, 'closed_invoice'])->name('closed_invoice');
+    Route::get('/get_closed_invoice_list', [App\Http\Controllers\InvoiceController::class, 'get_closed_invoice_list'])->name('get_closed_invoice_list');
 
     Route::get('/roles', [App\Http\Controllers\UserController::class, 'roles'])->name('roles');
     Route::get('/get_roles_list', [App\Http\Controllers\UserController::class, 'get_roles_list'])->name('get_roles_list');

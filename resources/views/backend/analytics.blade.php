@@ -88,27 +88,24 @@
         </div>
       </div>
   </div>
-  <!--/ Vehicles overview -->
-  <!-- Shipment statistics-->
   <div class="col-lg-6 col-xxl-6 order-3 order-xxl-1">
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between">
             <div>
-                <h5 class="card-title mb-0">Area Wise Bookings</h5>
+                <h5 class="card-title mb-0">Available & Unavailable Staff</h5>
             </div>
             <div class="dropdown d-none d-sm-flex">
-                <div class="form-floating form-floating-outline">
-                    <input type="text" id="AreaWiseBookingDaterange" class="form-control" />
-                    <label for="AreaWiseBookingDaterange">Date</label>
-                </div>
+                
             </div>
         </div>
         <div class="card-body">
-            <div id="barChart"></div>
+            <div id="hbarChart"></div>
         </div>
     </div>
   </div>
-  <div class="col-lg-6 col-xxl-6 order-3 order-xxl-1">
+  <!--/ Vehicles overview -->
+  <!-- Shipment statistics-->
+  <div class="col-lg-12 col-xxl-12 order-3 order-xxl-1">
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between">
             <div>
@@ -126,21 +123,44 @@
         </div>
     </div>
   </div>
-  <div class="col-lg-6 col-xxl-6 order-3 order-xxl-1">
+  <div class="col-lg-12 col-xxl-12 order-3 order-xxl-1">
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between">
             <div>
-                <h5 class="card-title mb-0">Available & Unavailable Staff</h5>
+                <h5 class="card-title mb-0">Area Wise Bookings</h5>
             </div>
             <div class="dropdown d-none d-sm-flex">
-                
+                <div class="form-floating form-floating-outline">
+                    <input type="text" id="AreaWiseBookingDaterange" class="form-control" />
+                    <label for="AreaWiseBookingDaterange">Date</label>
+                </div>
             </div>
         </div>
         <div class="card-body">
-            <div id="hbarChart"></div>
+            <div id="barChart"></div>
         </div>
     </div>
   </div>
+
+  <div class="col-lg-12 col-xxl-12 order-3 order-xxl-1">
+    <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <div>
+                <h5 class="card-title mb-0">Area Wise Patients & Staff</h5>
+            </div>
+            {{-- <div class="dropdown d-none d-sm-flex">
+                <div class="form-floating form-floating-outline">
+                    <input type="text" id="AreaWiseStaffAndPatientDaterange" class="form-control" />
+                    <label for="AreaWiseStaffAndPatientDaterange">Date</label>
+                </div>
+            </div> --}}
+        </div>
+        <div class="card-body">
+            <div id="barChart2"></div>
+        </div>
+    </div>
+  </div>
+  
   <!--/ Shipment statistics -->
   <!-- Delivery Performance -->
   <div class="col-lg-6 col-xxl-4 order-2 order-xxl-2">
@@ -596,7 +616,7 @@
             series: [],
             chart: {
                 type: 'donut',
-                height: 350
+                height: 365
             },
             labels: [],
             responsive: [{
@@ -956,6 +976,96 @@
 
         $.ajax({
             url: '{{ route("area_wise_booking_chart") }}',
+            method: 'GET',
+            data: {
+                start_date: moment().startOf('week').format('YYYY-MM-DD'),
+                end_date: moment().endOf('week').format('YYYY-MM-DD')
+            },
+            success: function (data) {
+                chart.updateOptions({
+                    series: data.series,
+                    xaxis: {
+                        categories: data.categories
+                    }
+                });
+            },
+            error: function (error) {
+                console.error('Error fetching chart data:', error);
+            }
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        $('#AreaWiseStaffAndPatientDaterange').daterangepicker({
+            opens: 'left',
+            locale: {
+                format: 'DD/MM/YYYY'
+            },
+            startDate: moment().startOf('week').format('DD/MM/YYYY'),
+            endDate: moment().endOf('week').format('DD/MM/YYYY')
+        }, function(start, end, label) {
+            $.ajax({
+                url: '{{ route("area_wise_booking_chart") }}',
+                method: 'GET',
+                data: {
+                    start_date: start.format('YYYY-MM-DD'),
+                    end_date: end.format('YYYY-MM-DD')
+                },
+                success: function (data) {
+                    chart.updateOptions({
+                        series: data.series,
+                        xaxis: {
+                            categories: data.categories
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.error('Error fetching chart data:', error);
+                }
+            });
+        });
+
+        var options = {
+            series: [],
+            chart: {
+                type: 'bar',
+                height: 335
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            xaxis: {
+                categories: []
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val
+                    }
+                }
+            }
+        };
+
+        var chart = new ApexCharts(document.querySelector("#barChart2"), options);
+        chart.render();
+
+        $.ajax({
+            url: '{{ route("area_wise_patient_and_staff_chart") }}',
             method: 'GET',
             data: {
                 start_date: moment().startOf('week').format('YYYY-MM-DD'),

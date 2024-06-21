@@ -74,7 +74,7 @@ class BookingController extends Controller
     }
     public function get_bookings_list()
     {   
-        $data = Booking::with('added_by')->orderBy('id',"DESC")->get();
+        $data = Booking::where('booking_status',0)->with('added_by')->orderBy('id',"DESC")->get();
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
@@ -90,7 +90,7 @@ class BookingController extends Controller
     }
     public function get_closed_bookings_list()
     {   
-        $data = Booking::with('added_by')->orderBy('id',"DESC")->get();
+        $data = Booking::where('booking_status',1)->with('closed_by')->orderBy('id',"DESC")->get();
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
@@ -179,6 +179,7 @@ class BookingController extends Controller
             $booking->end_date = $request->end_date;
             $booking->sub_total = $request->sub_total;
             $booking->total = $request->total;
+            $booking->pending_payment = $request->total;
             $booking->created_by = Auth::user()->id;
             $booking->save();
 
@@ -336,6 +337,7 @@ class BookingController extends Controller
             $total = $staff_rate_sum + $equipment_rate_sum + $doctor_rate_sum + $ambulance_rate_sum;
             $booking->sub_total = $total;
             $booking->total = $total;
+            $booking->pending_payment = $total;
             $booking->update();
 
             return redirect('bookings')->with('success','The Booking Created Successfully');
@@ -604,9 +606,11 @@ class BookingController extends Controller
 
             $sub_total = $booking->sub_total + $request->sell_rate;
             $total = $booking->total + $request->sell_rate;
+            $pending_payment = $booking->pending_payment + $request->sell_rate;
 
             $booking->sub_total = $sub_total;
             $booking->total = $total;
+            $booking->pending_payment = $pending_payment;
             $booking->update();
     
             return redirect()->back()->with('success','Doctor Added & Assign Successfully.');
@@ -634,9 +638,11 @@ class BookingController extends Controller
 
             $sub_total = $booking->sub_total + $request->sell_rate;
             $total = $booking->total + $request->sell_rate;
+            $pending_payment = $booking->pending_payment + $request->sell_rate;
 
             $booking->sub_total = $sub_total;
             $booking->total = $total;
+            $booking->pending_payment = $pending_payment;
             $booking->update();
     
             return redirect()->back()->with('success','Equipment Added Successfully.');
@@ -659,9 +665,11 @@ class BookingController extends Controller
 
             $sub_total = $booking->sub_total + $request->sell_rate;
             $total = $booking->total + $request->sell_rate;
-
+            $pending_payment = $booking->pending_payment + $request->sell_rate;
+            
             $booking->sub_total = $sub_total;
             $booking->total = $total;
+            $booking->pending_payment = $pending_payment;
             $booking->update();
     
             return redirect()->back()->with('success','Ambulance Added Successfully.');
