@@ -71,7 +71,7 @@
                             </div>
                         </div>
                         <hr class="mt-3">
-                        <div class="col-4 mb-3">
+                        <div class="col-6 mb-3">
                             <div class="mb-4">
                                 <label>Full Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control d-none" value="{{$data->id}}" name="id"/>
@@ -81,7 +81,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-4 mb-3">
+                        <div class="col-6 mb-3">
                             <div class="mb-4">
                                 <label>Email Address</label>
                                 <input type="email" class="form-control mb-1" value="{{$data->email}}" name="email"  placeholder="Enter email address"/>
@@ -90,11 +90,20 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-4 mb-3">
+                        <div class="col-6 mb-3">
                             <div class="mb-4">
                                 <label>Contact Number</label>
                                 <input type="text" minlength="7" maxlength="10" class="form-control mb-1" value="{{$data->mobile}}" name="mobile"  placeholder="Enter contact number"/>
                                 @error('mobile')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="mb-4">
+                                <label class="form-label">Alternet Contact Number</label>
+                                <input type="text" minlength="7" maxlength="10" class="form-control mb-1" value="{{$data->mobile2}}" name="mobile2"  placeholder="Enter alternet contact number"/>
+                                @error('mobile2')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
                             </div>

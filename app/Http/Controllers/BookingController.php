@@ -354,7 +354,7 @@ class BookingController extends Controller
     }
     public function get_assign_bookings_list()
     {   
-        $data = Booking::where('is_staff',1)->with('bookingDetails')->with('assign_by')->orderBy('id',"DESC")->get();
+        $data = Booking::where(['booking_status'=>0,'is_staff'=>1])->with('bookingDetails')->with('assign_by')->orderBy('id',"DESC")->get();
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
@@ -465,7 +465,7 @@ class BookingController extends Controller
                         if(!empty($all_dates)){
                             foreach($all_dates as $date){
                                 $booking_assign_varification = BookingAssign::whereNotNull('staff_id')
-                                    ->where(['staff_id' => $staff['staff_id'],'type' => $staff['type'], 'date' => $date]);
+                                    ->where(['booking_status'=>0,'staff_id' => $staff['staff_id'],'type' => $staff['type'], 'date' => $date]);
     
                                 // Add shift conditions based on the staff's shift
                                 if ($staff['shift'] == 3) {
@@ -680,7 +680,7 @@ class BookingController extends Controller
     public function check_staff_availability(Request $request)
     {
         $staffType = StaffType::find($request->type);
-        $booking_assign = BookingAssign::whereNotNull('staff_id')->where(['type'=>$staffType->title,'date'=>$request->date]);
+        $booking_assign = BookingAssign::whereNotNull('staff_id')->where(['booking_status'=>0,'type'=>$staffType->title,'date'=>$request->date]);
 
         if($request->shift == 3){
             $booking_assign->whereIn('shift',['1','2','3']);
@@ -737,7 +737,7 @@ class BookingController extends Controller
     }
     public function check_doctor_availability(Request $request)
     {
-        $booking_assign = BookingAssign::whereNotNull('staff_id')->where(['type'=>'Doctor','shift'=>$request->shift,'date'=>$request->date])->pluck('staff_id');
+        $booking_assign = BookingAssign::whereNotNull('staff_id')->where(['booking_status'=>0,'type'=>'Doctor','shift'=>$request->shift,'date'=>$request->date])->pluck('staff_id');
         if(empty($booking_assign)){
             if($request->shift == 3){
                 $doctors = Doctor::where(function ($query) {
@@ -816,5 +816,21 @@ class BookingController extends Controller
         }else{
             return "NoData";
         }
+    }
+    public function booking_reviews()
+    {
+        if (in_array("booking_reviews", Auth::user()->permissions())) {
+            return view('backend.booking_reviews.booking_reviews_list');
+        }
+        abort(403);
+    }
+    public function get_booking_reviews_list()
+    {   
+        $data = Booking::with('added_by')->orderBy('id',"DESC")->get();
+        foreach($data as $da){
+            $customer_details = $da->customerDetails();
+            $da->customer_details = $customer_details;
+        }
+        return response()->json(['data'=>$data]);
     }
 }

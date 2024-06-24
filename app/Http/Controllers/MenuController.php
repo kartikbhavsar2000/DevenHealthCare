@@ -16,6 +16,7 @@ use App\Models\State;
 use App\Models\City;
 use App\Models\Area;
 use App\Models\Booking;
+use App\Models\StaffDocuments;
 
 class MenuController extends Controller
 {
@@ -81,8 +82,12 @@ class MenuController extends Controller
             'city' => 'required',
             'area' => 'required',
             'mobile' => 'nullable|numeric|min:7',
+            'mobile2' => 'nullable|numeric|min:7',
         ],[
             'mobile.min' => "Please enter valid contact number.",
+            'mobile.numeric' => "Please enter valid contact number.",
+            'mobile2.min' => "Please enter valid alternet contact number.",
+            'mobile2.numeric' => "Please enter valid alternet contact number.",
             'h_type.required' => "Please select hospital type.",
         ]);
 
@@ -110,6 +115,7 @@ class MenuController extends Controller
         $data->city = $request->city;
         $data->area = $request->area;
         $data->mobile = $request->mobile;
+        $data->mobile2 = $request->mobile2;
         $data->reference = $request->reference;
         $data->save();
         return redirect()->back()->with('success','The Patient Added Successfully');
@@ -126,8 +132,12 @@ class MenuController extends Controller
             'city' => 'required',
             'area' => 'required',
             'mobile' => 'nullable|numeric|min:7',
+            'mobile2' => 'nullable|numeric|min:7',
         ],[
             'mobile.min' => "Please enter valid contact number.",
+            'mobile.numeric' => "Please enter valid contact number.",
+            'mobile2.min' => "Please enter valid alternet contact number.",
+            'mobile2.numeric' => "Please enter valid alternet contact number.",
             'h_type.required' => "Please select hospital type.",
         ]);
 
@@ -156,6 +166,7 @@ class MenuController extends Controller
             $data->city = $request->city;
             $data->area = $request->area;
             $data->mobile = $request->mobile;
+            $data->mobile2 = $request->mobile2;
             $data->reference = $request->reference;
             $data->update();
             return redirect('patients')->with('success','The Patient Updated Successfully');
@@ -172,7 +183,7 @@ class MenuController extends Controller
     }
     public function get_staff_list()
     {   
-        $data = Staff::with('area')->with('types')->orderBy('id',"DESC")->get();
+        $data = Staff::with('documents')->with('area')->with('types')->orderBy('id',"DESC")->get();
         return response()->json(['data'=>$data]);
     }
     public function add_staff()
@@ -245,6 +256,7 @@ class MenuController extends Controller
             'full_cost.digits_between' => "The amount for cost price is too big.",
             'full_cost.numeric' => "Please enter valid amount.",
         ]);
+
         $data = new Staff();
         $data->f_name = $request->f_name;
         $data->m_name = $request->m_name;
@@ -274,6 +286,18 @@ class MenuController extends Controller
         $data->night_cost = $request->night_cost;
         $data->full_cost = $request->full_cost;
         $data->save();
+
+        if($request->documents){
+            foreach($request->documents as $key => $document){
+                $imageName = time(). '_' . $key . '.' . $document->extension();  
+                $document->move(public_path('staff_documents'), $imageName);
+
+                $staff_docs = new StaffDocuments();
+                $staff_docs->staff_id = $data->id;
+                $staff_docs->name = $imageName;
+                $staff_docs->save();
+            }
+        }
 
         return redirect('staff')->with('success','The Staff Added Successfully');
     }
@@ -337,10 +361,30 @@ class MenuController extends Controller
             $data->night_cost = $request->night_cost;
             $data->full_cost = $request->full_cost;
             $data->update();
+
+            if($request->documents){
+                foreach($request->documents as $key => $document){
+                    $imageName = time(). '_' . $key . '.' . $document->extension();  
+                    $document->move(public_path('staff_documents'), $imageName);
+    
+                    $staff_docs = new StaffDocuments();
+                    $staff_docs->staff_id = $data->id;
+                    $staff_docs->name = $imageName;
+                    $staff_docs->save();
+                }
+            }
+
             return redirect('staff')->with('success','The Staff Updated Successfully');
         }else{
             return redirect()->back()->with('error','Data Not Found');
         }
+    }
+    public function remove_staff_document(Request $request){
+        $staff_docs = StaffDocuments::find($request->id);
+        if($staff_docs){
+            $staff_docs->delete();
+        }
+        return "Removed";
     }
     public function corporates()
     {

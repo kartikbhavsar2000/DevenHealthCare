@@ -192,7 +192,7 @@
                       @endif
                       <p class="mb-1">{{$booking->customer_details->address ?? ""}}</p>
                       <p class="mb-1">{{$booking->state ?? ""}} , {{$booking->city ?? ""}}, {{$booking->area ?? ""}}</p>
-                      <p class="mb-1">{{$booking->customer_details->mobile ?? ""}}</p>
+                      <p class="mb-1">{{$booking->customer_details->mobile ?? ""}} @if($booking->customer_details->mobile2) , @endif {{$booking->customer_details->mobile2 ?? ""}}</p>
                       <p class="mb-0">{{$booking->customer_details->email ?? ""}}</p>
                     </div>
                     <div>

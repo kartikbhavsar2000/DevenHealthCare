@@ -47,14 +47,15 @@
                             <th>Patient Id</th>
                             <th>Hospital</th>
                             <th>Name</th>
-                            <th>DOB</th>
+                            {{-- <th>DOB</th> --}}
                             <th>Age</th>
                             <th>Gender</th>
-                            <th>Address</th>
-                            <th>State</th>
-                            <th>City</th>
-                            <th>Area</th>
+                            {{-- <th>Address</th> --}}
+                            {{-- <th>State</th> --}}
+                            {{-- <th>City</th> --}}
+                            {{-- <th>Area</th> --}}
                             <th>Mobile</th>
+                            <th>Mobile2</th>
                             <th>Email</th>
                             <th>Reference</th>
                             <th>Action</th>
@@ -82,7 +83,7 @@
             extend: 'excel',
             title: 'Patients List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13]
+                columns: [1,2,3,4,5,6,7,8,9]
             }
         }],
         columnDefs: [{
@@ -128,15 +129,15 @@
             { "data": "patient_id" ,"defaultContent": "-"},
             { "data": "h_type" ,"defaultContent": "-"},
             { "data": "name" ,"defaultContent": "-"},
-            {"data": "dob" , render : function ( data, type, row, meta ) {
-                if(data){
-                    return type === 'display'  ?
-                    ''+ moment(new Date(data)).format("DD/MM/YYYY")  +'' :
-                    data;
-                }else{
-                    return "-";
-                }
-            }},
+            // {"data": "dob" , render : function ( data, type, row, meta ) {
+            //     if(data){
+            //         return type === 'display'  ?
+            //         ''+ moment(new Date(data)).format("DD/MM/YYYY")  +'' :
+            //         data;
+            //     }else{
+            //         return "-";
+            //     }
+            // }},
             {"data": "age" , render : function ( data, type, row, meta ) {
                 if(data < 2){
                     return type === 'display'  ?
@@ -149,11 +150,12 @@
                 }
             }},
             { "data": "gender" ,"defaultContent": "-"},
-            { "data": "address" ,"defaultContent": "-"},
-            { "data": "state.name" ,"defaultContent": "-"},
-            { "data": "city.name" ,"defaultContent": "-"},
-            { "data": "area.name" ,"defaultContent": "-"},
+            // { "data": "address" ,"defaultContent": "-"},
+            // { "data": "state.name" ,"defaultContent": "-"},
+            // { "data": "city.name" ,"defaultContent": "-"},
+            // { "data": "area.name" ,"defaultContent": "-"},
             { "data": "mobile" ,"defaultContent": "-"},
+            { "data": "mobile2" ,"defaultContent": "-"},
             { "data": "email" ,"defaultContent": "-"},
             { "data": "reference" ,"defaultContent": "-"},
             {

@@ -30,7 +30,7 @@
                 <h5 class="mb-0">Add Staff</h5>
             </div>
             <hr>
-            <form id="Form" action="{{route('create_staff')}}" method="POST">
+            <form id="Form" action="{{route('create_staff')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body py-0">
                     <div class="row">
@@ -253,6 +253,18 @@
                                 <label class="form-label">Reference</label>
                                 <input type="text" class="form-control mb-1" value="{{old('reference')}}" name="reference" placeholder="Enter reference">
                                 @error('reference')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <hr class="mt-5 mb-3">
+                        <h5><i class="ri-upload-line fs-5 text-white bg-dark px-2 py-2 rounded"></i> Upload Documents</h5>
+                        <hr>
+                        <div class="col-12 mb-3">
+                            <div class="mb-4">
+                                <label class="form-label">Select Documents</label>
+                                <input type="file" class="form-control mb-1" name="documents[]" multiple accept=".jpeg, .jpg, .png, .pdf">
+                                @error('documents')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
                             </div>

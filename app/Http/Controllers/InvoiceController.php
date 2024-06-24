@@ -71,6 +71,11 @@ class InvoiceController extends Controller
     {   
         $data = Booking::find($request->id);
         if($data){
+            $assign_data = BookingAssign::where('booking_id',$data->id)->get();
+            foreach($assign_data as $ad){
+                $ad->booking_status = 1;
+                $ad->update();
+            }
             $data->booking_status = 1;
             $data->closed_by = Auth::user()->id;
             $data->update();

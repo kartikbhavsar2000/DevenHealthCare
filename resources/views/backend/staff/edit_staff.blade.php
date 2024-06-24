@@ -30,7 +30,7 @@
                 <h5 class="mb-0">Edit Staff | {{$data->staff_id}}</h5>
             </div>
             <hr>
-            <form id="Form" action="{{route('update_staff')}}" method="POST">
+            <form id="Form" action="{{route('update_staff')}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card-body pt-0">
                     <div class="row">
@@ -229,6 +229,50 @@
                             </div>
                         </div>
                         <hr class="mt-5 mb-3">
+                        <h5><i class="ri-upload-line fs-5 text-white bg-dark px-2 py-2 rounded"></i> Upload Documents</h5>
+                        <hr>
+                        <div class="col-12 mb-3">
+                            <div class="mb-4">
+                                <label class="form-label">Select Documents</label>
+                                <input type="file" class="form-control mb-1" name="documents[]" multiple accept=".jpeg, .jpg, .png, .pdf">
+                                @error('documents')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                            @if(!empty($data->documents))
+                                <div class="row my-3">
+                                    @foreach($data->documents as $doc)
+                                    <div class="col-2 border border-2 border-primary rounded ms-5 mb-5 p-2 position-relative d-flex justify-content-center align-items-center">
+                                        @php
+                                            $filePath = asset('public/staff_documents/' . $doc->name);
+                                            $extension = pathinfo($doc->name, PATHINFO_EXTENSION);
+                                        @endphp
+                                    
+                                        @if ($extension === 'pdf')
+                                            {{-- Display PDF thumbnail --}}
+                                            <a href="{{ $filePath }}" target="_blank" class="text-center">
+                                                <img src="{{ asset('public/assets/images/pdf_logo.png') }}" class="img-fluid" style="max-height: 100px;"><br>
+                                                <i class="ri-eye-line mt-3"></i> View file
+                                            </a>
+                                        @else
+                                            {{-- Display image --}}
+                                            <a href="{{ $filePath }}" target="_blank">
+                                                <img src="{{ $filePath }}" class="img-fluid" style="max-height: 200px;">
+                                            </a>
+                                        @endif
+                                    
+                                        {{-- Remove document button --}}
+                                        <a class="text-danger position-absolute translate-middle-x bg-white rounded-circle"
+                                           onclick="RemoveDoc({{ $doc->id }})"
+                                           style="cursor: pointer; top: -10px; right: -30px;">
+                                            <i class="ri-close-circle-line ri-30px"></i>
+                                        </a>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                        <hr class="mt-5 mb-3">
                         <h5><i class="ri-bank-line fs-5 text-white bg-dark px-2 py-2 rounded"></i> Bank Detaiils</h5>
                         <hr>
                         <div class="col-3 mb-3">
@@ -362,6 +406,47 @@
                     citySelect.append('<option value="' + city.id + '" ' + selected + '>' + city.name + '</option>');
                 });
                 selectCity();
+            }
+        }); 
+    }
+
+    function RemoveDoc(id){
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, remove it!',
+        customClass: {
+          confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+          cancelButton: 'btn btn-outline-secondary waves-effect'
+        },
+        buttonsStyling: false
+        }).then(function(result) {
+            if(result.dismiss != 'cancel'){
+                $.ajax({
+                    url:"{{route('remove_staff_document')}}",
+                    method:"POST",
+                    data:{'id':id,_token:"{{ csrf_token() }}"},
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success:function(result)
+                    {
+                        Swal.fire({
+                            title: 'Removed!',
+                            text: "The document removed succsessfully!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'ok',
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+                            },
+                            buttonsStyling: false
+                        }); 
+                        setTimeout(function(){ window.location.reload(); }, 500);
+                    }
+                }); 
             }
         }); 
     }

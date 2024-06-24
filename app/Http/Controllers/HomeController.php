@@ -18,6 +18,7 @@ use App\Models\Corporate;
 use App\Models\Hospital;
 use App\Models\BookingAssign;
 use App\Models\Ambulance;
+use Session;
 
 class HomeController extends Controller
 {
@@ -40,9 +41,35 @@ class HomeController extends Controller
     {   
         if (in_array("dashboard", Auth::user()->permissions())) {
             $staff_type = StaffType::orderBy('id',"ASC")->get();
-            $bookings = Booking::with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
+            if(Session::has('customerType')){
+                if(Session::get('customerType') == "CRP"){
+                    $bookings = Booking::where(['booking_type'=>'Corporate','booking_status'=>0])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
+                }elseif(Session::get('customerType') == "All"){
+                    $bookings = Booking::where(['booking_status'=>0])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
+                }else{
+                    $bookings = Booking::where(['booking_type'=>'Patient','booking_status'=>0])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
+                }
+            }else{
+                $bookings = Booking::where(['booking_status'=>0])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
+            }
+            $all_bookings = [];
             foreach($bookings as $booking){
                 $customer_details = $booking->customerDetails();
+                if(Session::has('customerType')){
+                    if(Session::get('customerType') == "DHC"){
+                        if($customer_details->h_type == "DHC"){
+                            $all_bookings[] = $booking;
+                        }
+                    }elseif(Session::get('customerType') == "HSP"){
+                        if($customer_details->h_type != "DHC"){
+                            $all_bookings[] = $booking;
+                        }
+                    }else{
+                        $all_bookings[] = $booking;
+                    }
+                }else{
+                    $all_bookings[] = $booking;
+                }
                 $customer_details->state = State::find($customer_details->state);
                 $customer_details->city = City::find($customer_details->city);
                 $customer_details->area = Area::find($customer_details->area);
@@ -85,9 +112,13 @@ class HomeController extends Controller
             $doctors = Doctor::orderBy('id',"DESC")->get();
             $equipments = Equipment::orderBy('id',"DESC")->get();
             $ambulance = Ambulance::first();
-            return view('backend.dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $bookings,'dates' => $dates]);
+            return view('backend.dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $all_bookings,'dates' => $dates]);
         }
         abort(403);
+    }
+    public function change_customer_type(Request $request){
+        Session::put('customerType', $request->type);
+        return "Stored";
     }
     public function analytics()
     {
@@ -133,7 +164,7 @@ class HomeController extends Controller
 
         foreach($staffType as $type){
             $assign_data = BookingAssign::where('staff_id', '!=', null)
-                ->where('type', $type->title)
+                ->where(['booking_status'=>0,'type'=> $type->title])
                 ->when($startDate === $endDate, function ($query) use ($startDate) {
                     return $query->whereDate('date', $startDate);
                 }, function ($query) use ($startDate, $endDate) {
@@ -145,7 +176,7 @@ class HomeController extends Controller
         }
 
         $assign_data = BookingAssign::where('staff_id', '!=', null)
-            ->where('type', 'Doctor')
+            ->where(['booking_status'=>0,'type'=> 'Doctor'])
             ->when($startDate === $endDate, function ($query) use ($startDate) {
                 return $query->whereDate('date', $startDate);
             }, function ($query) use ($startDate, $endDate) {
@@ -174,7 +205,7 @@ class HomeController extends Controller
 
         foreach ($staffTypes as $type) {
             $totalStaff = Staff::where('type',$type->id)->count();
-            $unavailableCount = BookingAssign::whereNotNull('staff_id')->where('type', $type->title)->whereDate('date', $date)->distinct('staff_id')->count('staff_id');
+            $unavailableCount = BookingAssign::whereNotNull('staff_id')->where(['booking_status'=>0,'type'=> $type->title])->whereDate('date', $date)->distinct('staff_id')->count('staff_id');
             $availableCount = $totalStaff - $unavailableCount;
 
             $availableSeries[] = $availableCount;
@@ -209,7 +240,7 @@ class HomeController extends Controller
         $startDate = $request->query('start_date');
         $endDate = $request->query('end_date');
 
-        $bookings = Booking::when($startDate === $endDate, function ($query) use ($startDate) {
+        $bookings = Booking::where('booking_status',0)->when($startDate === $endDate, function ($query) use ($startDate) {
             return $query->whereDate('start_date', $startDate)
                          ->orWhereDate('end_date', $startDate)
                          ->orWhereBetween('start_date', [$startDate, $startDate])
@@ -307,13 +338,13 @@ class HomeController extends Controller
             $current_date = strtotime('+1 day', $current_date);
         }
         foreach($all_dates as $date){
-            $patientSeries[] = Booking::where('booking_type', 'Patient')
+            $patientSeries[] = Booking::where(['booking_status'=>0,'booking_type'=>'Patient'])
                 ->where(function($query) use ($date) {
                     $query->whereDate('start_date', '<=', $date)
                             ->whereDate('end_date', '>=', $date);
                 })
                 ->count();
-            $corporationSeries[] = Booking::where('booking_type', 'Corporate')
+            $corporationSeries[] = Booking::where(['booking_status'=>0,'booking_type'=>'Corporate'])
             ->where(function($query) use ($date) {
                 $query->whereDate('start_date', '<=', $date)
                         ->whereDate('end_date', '>=', $date);

@@ -69,7 +69,7 @@
                             </div>
                         </div>
                         <hr class="mt-3">
-                        <div class="col-4 mb-3">
+                        <div class="col-6 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Full Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control mb-1" value="{{old('name')}}" name="name"  placeholder="Enter full name"/>
@@ -78,7 +78,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-4 mb-3">
+                        <div class="col-6 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Email Address</label>
                                 <input type="email" class="form-control mb-1" value="{{old('email')}}" name="email"  placeholder="Enter email address"/>
@@ -87,11 +87,20 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-4 mb-3">
+                        <div class="col-6 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Contact Number</label>
                                 <input type="text" minlength="7" maxlength="10" class="form-control mb-1" value="{{old('mobile')}}" name="mobile"  placeholder="Enter contact number"/>
                                 @error('mobile')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="mb-4">
+                                <label class="form-label">Alternet Contact Number</label>
+                                <input type="text" minlength="7" maxlength="10" class="form-control mb-1" value="{{old('mobile2')}}" name="mobile2"  placeholder="Enter alternet contact number"/>
+                                @error('mobile2')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
                             </div>

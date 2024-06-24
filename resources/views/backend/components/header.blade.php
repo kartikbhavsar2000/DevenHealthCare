@@ -124,7 +124,7 @@
 
                 <div class="menu-inner-shadow"></div>
                 @php
-                    $permissions = $permissions = Auth::user() ? Auth::user()->permissions() : [];
+                    $permissions = Auth::user() ? Auth::user()->permissions() : [];
                 @endphp
                 <ul class="menu-inner py-1">
                     <!-- Page -->
@@ -144,7 +144,7 @@
                         </a>
                     </li>
                     @endif
-                    @if(in_array('bookings',$permissions) || in_array('assign_bookings',$permissions) || in_array('staff_attendance',$permissions) || in_array('create_booking',$permissions) || in_array('closed_bookings',$permissions))
+                    @if(in_array('bookings',$permissions) || in_array('assign_bookings',$permissions) || in_array('staff_attendance',$permissions) || in_array('create_booking',$permissions) || in_array('closed_bookings',$permissions) || in_array('booking_reviews',$permissions))
                     <li class="menu-header mt-5">
                         <span class="menu-header-text">Bookings</span>
                     </li>
@@ -194,6 +194,14 @@
                         <a href="{{route('staff_attendance')}}" class="menu-link">
                             <i class="menu-icon tf-icons ri-calendar-check-line"></i>
                             <div>Staff Attendance</div>
+                        </a>
+                    </li>
+                    @endif
+                    @if(in_array('booking_reviews',$permissions))
+                    <li class="menu-item  @if (Route::currentRouteName() == 'booking_reviews') active @endif">
+                        <a href="{{route('booking_reviews')}}" class="menu-link">
+                            <i class="menu-icon tf-icons ri-star-line"></i>
+                            <div>Booking Reviews</div>
                         </a>
                     </li>
                     @endif

@@ -241,6 +241,36 @@
                             @enderror
                         </div>
                     </div>
+                    @if(!empty($data->documents))
+                        <hr class="mt-5 mb-3">
+                        <h5><i class="ri-image-line fs-5 text-white bg-dark px-2 py-2 rounded"></i> Documents</h5>
+                        <hr>
+                        <div class="col-12 mb-3">
+                            <div class="row my-3">
+                                @foreach($data->documents as $doc)
+                                <div class="col-2 border border-2 border-primary rounded ms-5 mb-5 p-2 position-relative d-flex justify-content-center align-items-center">
+                                    @php
+                                        $filePath = asset('public/staff_documents/' . $doc->name);
+                                        $extension = pathinfo($doc->name, PATHINFO_EXTENSION);
+                                    @endphp
+                                
+                                    @if ($extension === 'pdf')
+                                        {{-- Display PDF thumbnail --}}
+                                        <a href="{{ $filePath }}" target="_blank" class="text-center">
+                                            <img src="{{ asset('public/assets/images/pdf_logo.png') }}" class="img-fluid" style="max-height: 100px;"><br>
+                                            <i class="ri-eye-line mt-3"></i> View File
+                                        </a>
+                                    @else
+                                        {{-- Display image --}}
+                                        <a href="{{ $filePath }}" target="_blank">
+                                            <img src="{{ $filePath }}" class="img-fluid" style="max-height: 200px;">
+                                        </a>
+                                    @endif
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                     <hr class="mt-5 mb-3">
                     <h5><i class="ri-bank-line fs-5 text-white bg-dark px-2 py-2 rounded"></i> Bank Detaiils</h5>
                     <hr>

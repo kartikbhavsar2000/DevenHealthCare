@@ -29,6 +29,10 @@ class Staff extends Model
     {
         return $this->hasOne(Area::class,'id','area');
     }
+    public function documents()
+    {
+        return $this->hasMany(StaffDocuments::class,'staff_id','id');
+    }
     protected static function booted()
     {
         parent::boot();

@@ -24,6 +24,8 @@ Route::get('/clear-config-cache', function () {
 
 Route::group(['middleware' => ['admin']], function() {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+    Route::post('/change_customer_type', [App\Http\Controllers\HomeController::class, 'change_customer_type'])->name('change_customer_type');
+
     Route::get('/analytics', [App\Http\Controllers\HomeController::class, 'analytics'])->name('analytics');
 
     Route::get('/get_staff_booking_chart_data', [App\Http\Controllers\HomeController::class, 'get_staff_booking_chart_data'])->name('get_staff_booking_chart_data');
@@ -63,6 +65,9 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/staff_attendance', [App\Http\Controllers\BookingController::class, 'staff_attendance'])->name('staff_attendance');
     Route::get('/get_staff_attendance_list', [App\Http\Controllers\BookingController::class, 'get_staff_attendance_list'])->name('get_staff_attendance_list');
     Route::post('/approve_reject_staff_attendance', [App\Http\Controllers\BookingController::class, 'approve_reject_staff_attendance'])->name('approve_reject_staff_attendance');
+
+    Route::get('/booking_reviews', [App\Http\Controllers\BookingController::class, 'booking_reviews'])->name('booking_reviews');
+    Route::get('/get_booking_reviews_list', [App\Http\Controllers\BookingController::class, 'get_booking_reviews_list'])->name('get_booking_reviews_list');
 
     Route::get('/active_invoice', [App\Http\Controllers\InvoiceController::class, 'active_invoice'])->name('active_invoice');
     Route::get('/get_active_invoice_list', [App\Http\Controllers\InvoiceController::class, 'get_active_invoice_list'])->name('get_active_invoice_list');
@@ -168,6 +173,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::post('/delete_staff', [App\Http\Controllers\MenuController::class, 'delete_staff'])->name('delete_staff');
     Route::post('/create_staff', [App\Http\Controllers\MenuController::class, 'create_staff'])->name('create_staff');
     Route::post('/update_staff', [App\Http\Controllers\MenuController::class, 'update_staff'])->name('update_staff');
+    Route::post('/remove_staff_document', [App\Http\Controllers\MenuController::class, 'remove_staff_document'])->name('remove_staff_document');
 
     Route::get('/corporates', [App\Http\Controllers\MenuController::class, 'corporates'])->name('corporates');
     Route::get('/get_corporates_list', [App\Http\Controllers\MenuController::class, 'get_corporates_list'])->name('get_corporates_list');

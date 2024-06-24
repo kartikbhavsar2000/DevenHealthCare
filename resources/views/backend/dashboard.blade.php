@@ -29,6 +29,9 @@
       color: #4cb7e5!important;
       border:5px solid #4cb7e5;
   }
+  #SelectCustomerType + .select2-container{
+    width: 15%!important;
+  }
 </style>
 @endsection
 
@@ -50,12 +53,20 @@
     </div>
 @endif
 <div class="row g-6">
-  <div class="col-12">
+  <div class="col-6">
       <h4 class="mb-1">Dashboard</h4>
       <p class="mb-0"><a href="{{route('dashboard')}}">Home</a> / Dashboard</p>
   </div>
+  <div class="col-6 text-end pt-3">
+    <select class="form-select" id="SelectCustomerType" onchange="changeCustomerType(this)">
+      <option value="All" {{ session()->has('customerType') && session('customerType') === 'All' ? 'selected' : '' }}>All</option>
+      <option value="DHC" {{ session()->has('customerType') && session('customerType') === 'DHC' ? 'selected' : '' }}>DHC</option>
+      <option value="HSP" {{ session()->has('customerType') && session('customerType') === 'HSP' ? 'selected' : '' }}>HSP</option>
+      <option value="CRP" {{ session()->has('customerType') && session('customerType') === 'CRP' ? 'selected' : '' }}>CRP</option>
+    </select>
+  </div>
   @php
-      $permissions = $permissions = Auth::user() ? Auth::user()->permissions() : [];
+      $permissions = Auth::user() ? Auth::user()->permissions() : [];
   @endphp
   <div class="col-sm-12 col-lg-12">
     <div class="card text-center mb-4">
@@ -494,6 +505,14 @@
               </div>
               <div class="col-8">
                 : <span id="cust_Mobile">-</span>
+              </div>
+            </div>
+            <div class="mt-1 row">
+              <div class="col-4">
+                <b>Contact Number 2</b>
+              </div>
+              <div class="col-8">
+                : <span id="cust_Mobile_2">-</span>
               </div>
             </div>
             <div class="mt-1 row">
@@ -1116,6 +1135,23 @@
   });
 </script>
 <script>
+  function changeCustomerType(thiss){
+    var select = $(thiss);
+    var type = select.find(':selected').val();
+
+    $.ajax({
+        url:"{{route('change_customer_type')}}",
+        method:"POST",
+        data:{'type':type,_token:"{{ csrf_token() }}"},
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success:function(result)
+        {
+          location.reload();
+        }
+    }); 
+  }
   function openCustomerDetailsModal(customer) {
     var data = JSON.parse(customer);
     console.log(data);
@@ -1130,6 +1166,7 @@
       $('#cust_Name').text((data.customer_details.name || '-'));
       $('#cust_Email').text(data.customer_details.email || '-');
       $('#cust_Mobile').text(data.customer_details.mobile || '-');
+      $('#cust_Mobile_2').text(data.customer_details.mobile2 || '-');
       $('#cust_Dob').text(date);
       $('#cust_Age').text(data.customer_details.age + " Years" || '-');
       $('#cust_Gender').text(data.customer_details.gender || '-');
@@ -1502,6 +1539,9 @@
         }
       }); 
   }
+  $('#SelectCustomerType').select2({
+      placeholder: 'Select a type',
+  });
   $('.StaffSelect').select2({
       placeholder: 'Select a staff',
       dropdownParent: $('#AssignStaffCanvas')

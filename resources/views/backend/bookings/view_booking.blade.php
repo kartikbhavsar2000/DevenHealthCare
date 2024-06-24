@@ -44,6 +44,7 @@
                                 <p class="text-nowrap mb-2"><i class="ri-user-line ri-20px me-2"></i>Hospital</p>
                                 <p class="text-nowrap mb-2"><i class="ri-user-line ri-20px me-2"></i>Full Name</p>
                                 <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Mobile</p>
+                                <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Mobile 2</p>
                                 <p class="text-nowrap mb-2"><i class="ri-mail-line ri-20px me-2"></i>Email</p>
                                 <p class="text-nowrap mb-2"><i class="ri-calendar-event-line ri-20px me-2"></i>DOB</p>
                                 <p class="text-nowrap mb-0"><i class="ri-calendar-schedule-line ri-20px me-2"></i>Age</p>
@@ -52,6 +53,7 @@
                                 <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->h_type ?? "-"}}</p>
                                 <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->name ?? "-"}}</p>
                                 <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile ?? "-"}}</p>
+                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile2 ?? "-"}}</p>
                                 <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->email ?? "-"}}</p>
                                 <p class="text-nowrap mb-2"><span class="me-5">:</span> {{date('d/m/Y',strtotime($booking->customer_details->dob)) ?? "-"}}</p>
                                 <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->customer_details->age ?? "-"}}</p>
