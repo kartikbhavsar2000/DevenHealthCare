@@ -54,8 +54,8 @@
 @endif
 <div class="row g-6">
   <div class="col-6">
-      <h4 class="mb-1">Dashboard</h4>
-      <p class="mb-0"><a href="{{route('dashboard')}}">Home</a> / Dashboard</p>
+      <h4 class="mb-1">CRP</h4>
+      <p class="mb-0"><a href="{{route('dashboard')}}">Home</a> / Dashboard / CRP</p>
   </div>
   <div class="col-6 text-end pt-3">
     {{-- <select class="form-select" id="SelectCustomerType" onchange="changeCustomerType(this)">
@@ -68,27 +68,6 @@
   @php
       $permissions = Auth::user() ? Auth::user()->permissions() : [];
   @endphp
-
-  @if(!in_array('dashboard',$permissions))
-  <div class="col-12">
-    <div class="card">
-      <div class="d-flex align-items-end row">
-        <div class="col-md-6 order-2 order-md-1">
-          <div class="card-body">
-            <h2 class="card-title mb-4">Welcome,<br><span class="fw-bold">{{Auth::user()->name ?? ""}}</span> 👋</h2>
-            <h3>{{Auth::user()->role->name ?? ""}}</h3>
-            <p class="mb-0">Sorry! You do not have the access in viewing the rest fortes as disciplined by the Super Admin.</p>
-          </div>
-        </div>
-        <div class="col-md-6 text-center text-md-end order-1 order-md-2">
-          <div class="card-body pb-0 px-0 pt-2">
-            <img src="{{asset('public')}}/assets/img/illustrations/illustration-john-light.png" height="186" class="scaleX-n1-rtl" alt="View Profile" data-app-light-img="illustrations/illustration-john-light.png" data-app-dark-img="illustrations/illustration-john-dark.png">
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  @else
   <div class="col-sm-12 col-lg-12">
     <div class="card text-center mb-4">
       <div class="card-header p-0">
@@ -291,7 +270,6 @@
       </div>
     </div>
   </div>
-  @endif
 </div>
 <div class="modal fade" id="staffDetailsCanvas" tabindex="-1" aria-labelledby="staffDetailsCanvasLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -35,5 +37,31 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    protected function authenticated(\Illuminate\Http\Request $request, $user)
+    {
+        // Log the user name and the route name after successful authentication
+        Log::info('User logged in: ' . $user->name);
+
+        // Optionally redirect to a different page
+        return redirect()->intended($this->redirectTo);
+    }
+
+    public function logout(\Illuminate\Http\Request $request)
+    {
+        $user = Auth::user();
+
+        // Perform the default logout
+        $this->guard()->logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        // Log the user name and the route name after successful logout
+        Log::info('User logged out: ' . $user->name);
+
+        return redirect('/');
     }
 }

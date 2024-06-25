@@ -46,9 +46,25 @@
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="dashboard" name="permission[]" id="dashboard" />
-                                        <label class="form-check-label" for="dashboard">
-                                            Dashboard
+                                        <input class="form-check-input" type="checkbox" value="dhc_dashboard" name="permission[]" id="dhc_dashboard" />
+                                        <label class="form-check-label" for="dhc_dashboard">
+                                            DHC
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="hsp_dashboard" name="permission[]" id="hsp_dashboard" />
+                                        <label class="form-check-label" for="hsp_dashboard">
+                                            HSP
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="crp_dashboard" name="permission[]" id="crp_dashboard" />
+                                        <label class="form-check-label" for="crp_dashboard">
+                                            CRP
                                         </label>
                                     </div>
                                 </div>

@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Log;
 
 class AdminAuthenticated
 {
@@ -16,10 +17,16 @@ class AdminAuthenticated
      */
     public function handle(Request $request, Closure $next): Response
     {
+        $routeName = $request->route() ? $request->route()->getName() : 'undefined';
+        $usereName = Auth::user()->name ?? "undefined"; 
+
         if( Auth::check() )
         {
+            Log::info('User: '. $usereName . ' , Route: ' . $routeName . ' loaded');
             return $next($request);
         }
+        Log::info('User: '. $usereName . ' , Route: ' . $routeName . ' loaded');
+        Log::info('User: '. $usereName . ' , Route: ' . $routeName . ' Permission Denied');
         abort(404);
     }
 }

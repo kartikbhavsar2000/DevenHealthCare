@@ -45,6 +45,7 @@
                             <th>Staff Id</th>
                             <th>Type</th>
                             <th>Name</th>
+                            <th>Rating</th>
                             <th>Mobile</th>
                             <th>Area</th>
                             <th>Gender</th>
@@ -74,7 +75,7 @@
             extend: 'excel',
             title: 'Staff List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8]
+                columns: [1,2,3,4,5,6,7,8,9]
             }
         }],
         columnDefs: [{
@@ -127,6 +128,42 @@
                     return type === 'display' ? data + m_name + l_name : data;
                 }
             },
+            {
+                data: "rating",
+                render: function (data, type, row, meta) {
+                    var rating = "";
+                    var maxStars = 5;
+                    var wholeStars = Math.floor(data); // Number of full stars
+                    var fractionalPart = data - wholeStars; // Fractional part of the rating
+                    var halfStar = fractionalPart >= 0.25 && fractionalPart < 0.75; // Whether to show a half star
+                    var additionalStar = fractionalPart >= 0.75 ? 1 : 0; // Add an additional full star if the fractional part is >= 0.75
+
+                    // Render full stars
+                    for (var i = 1; i <= wholeStars + additionalStar; i++) {
+                        rating += `<i class="ri-star-fill" style="color:gold;"></i>`;
+                    }
+
+                    // Render half star if needed
+                    if (halfStar) {
+                        rating += `<i class="ri-star-half-s-fill" style="color:gold;"></i>`;
+                    }
+
+                    // Render empty stars
+                    for (var i = wholeStars + additionalStar + (halfStar ? 1 : 0); i < maxStars; i++) {
+                        rating += `<i class="ri-star-line" style="color:gold;"></i>`;
+                    }
+
+                    if(data == 1){
+                        rating += `<br> `+data+` Star`;
+                    }else{
+                        rating += `<br> `+data+` Stars`;
+                    }
+
+                    return rating;
+                }
+            },
+
+            // { "data": "rating" ,"defaultContent": "-"},
             { "data": "mobile" ,"defaultContent": "-"},
             { "data": "area.name" ,"defaultContent": "-"},
             { "data": "gender" ,"defaultContent": "-"},
@@ -154,7 +191,7 @@
                 "data": "id",
                 "render": function (data, type, row, meta) {
                     return type === 'display' ?
-                    '<a href="{{asset("/")}}view_staff_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-information-line ri-20px"></i></a><a href="{{asset("/")}}edit_staff/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-edit-box-line ri-20px"></i></a><button onClick="deleted('+data+')" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-delete-bin-7-line ri-20px"></i></button>' :
+                    '<a href="{{asset("/")}}view_staff_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-information-line ri-20px"></i></a><a href="{{asset("/")}}view_staff_reviews/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-user-star-line ri-20px"></i></a><a href="{{asset("/")}}edit_staff/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-edit-box-line ri-20px"></i></a><button onClick="deleted('+data+')" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-delete-bin-7-line ri-20px"></i></button>' :
                     data;
                 }
             },

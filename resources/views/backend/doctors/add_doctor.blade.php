@@ -298,6 +298,8 @@
 <script>
     selectState();
     function openCenteredWindow(url, windowName, width, height) {
+        $('#State').val("").trigger('change');
+        $('#City').val("").trigger('change');
         // Calculate the position of the window to be centered
         var left = (screen.width - width) / 2;
         var top = (screen.height - height) / 2;

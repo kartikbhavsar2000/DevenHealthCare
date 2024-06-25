@@ -20,6 +20,7 @@ use App\Models\Area;
 use App\Models\Booking;
 use App\Models\BookingDetails;
 use App\Models\BookingAssign;
+use App\Models\BookingRating;
 
 class BookingController extends Controller
 {
@@ -830,6 +831,115 @@ class BookingController extends Controller
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
+        }
+        return response()->json(['data'=>$data]);
+    }
+    public function add_booking_reviews($id)
+    {   
+        $booking = Booking::find($id);
+    
+        if (!$booking) {
+            return redirect()->back()->with('error', "No Data Found");
+        }
+    
+        $doctorIds = BookingAssign::where('type', 'Doctor')
+            ->whereNotNull('staff_id')
+            ->where('booking_id', $booking->id)
+            ->distinct()
+            ->orderBy('id', 'DESC')
+            ->pluck('staff_id');
+    
+        $staffIds = BookingAssign::where('type', '!=', 'Doctor')
+            ->whereNotNull('staff_id')
+            ->where('booking_id', $booking->id)
+            ->distinct()
+            ->orderBy('id', 'DESC')
+            ->pluck('staff_id');
+    
+        $ratings = BookingRating::where('booking_id', $id)->get();
+    
+        $data = [];
+        $this->addDoctors($doctorIds, $ratings, $data);
+        $this->addStaff($staffIds, $ratings, $data);
+    
+        return view('backend.booking_reviews.add_booking_reviews', ['data' => $data, 'booking' => $booking]);
+    }
+    private function addDoctors($doctorIds, $ratings, &$data)
+    {
+        foreach ($doctorIds as $docId) {
+            $doctor = Doctor::find($docId);
+            if ($doctor) {
+                $doctor->type_name = "Doctor";
+                $doctor->unique_id = $doctor->doctor_id;
+                $doctor->staff_name = $doctor->name;
+    
+                if ($this->isNotRated($ratings, $doctor->id, $doctor->type_name)) {
+                    $data[] = $doctor;
+                }
+            }
+        }
+    }
+    private function addStaff($staffIds, $ratings, &$data)
+    {
+        foreach ($staffIds as $staffId) {
+            $staff = Staff::find($staffId);
+            if ($staff) {
+                $staff->type_name = StaffType::where('id', $staff->type)->pluck('title')->first();
+                $staff->unique_id = $staff->staff_id;
+                $staff->staff_name = "{$staff->f_name} {$staff->m_name} {$staff->l_name}";
+    
+                if ($this->isNotRated($ratings, $staff->id, $staff->type_name)) {
+                    $data[] = $staff;
+                }
+            }
+        }
+    }
+    private function isNotRated($ratings, $staffId, $typeName)
+    {
+        foreach ($ratings as $rate) {
+            if ($rate->staff_id == $staffId && $rate->type == $typeName) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public function create_booking_reviews(Request $request){
+        $request->validate([
+            'staff_id' => 'required',
+        ],[
+            'staff_id.required' => 'The staff field is required.',
+        ]);
+
+        $rating = new BookingRating();
+        $rating->booking_id = $request->booking_id;
+        $rating->staff_id = $request->staff_id;
+        $rating->type = $request->staff_type;
+        $rating->rating = $request->rating;
+        $rating->description = $request->description;
+        $rating->added_by = Auth::user()->id;
+        $rating->save();
+
+        return redirect()->back()->with('success',"Rating Added Successfully!");
+    }
+    public function get_staff_reviews_list($id)
+    {   
+        $data = BookingRating::where('booking_id',$id)->with('created_by')->orderBy('id',"DESC")->get();
+        foreach($data as $da){
+            if($da->type == "Doctor"){
+                $doctor = Doctor::find($da->staff_id);
+                if($doctor){
+                    $da->staff_name = $doctor->name;
+                }else{
+                    $da->staff_name = "";
+                }
+            }else{
+                $staff = Staff::find($da->staff_id);
+                if($staff){
+                    $da->staff_name = $staff->f_name . " " . $staff->m_name . " " . $staff->l_name;;
+                }else{
+                    $da->staff_name = "";
+                }
+            }
         }
         return response()->json(['data'=>$data]);
     }

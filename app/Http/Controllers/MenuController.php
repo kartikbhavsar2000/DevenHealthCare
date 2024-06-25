@@ -16,6 +16,7 @@ use App\Models\State;
 use App\Models\City;
 use App\Models\Area;
 use App\Models\Booking;
+use App\Models\BookingRating;
 use App\Models\StaffDocuments;
 
 class MenuController extends Controller
@@ -184,6 +185,17 @@ class MenuController extends Controller
     public function get_staff_list()
     {   
         $data = Staff::with('documents')->with('area')->with('types')->orderBy('id',"DESC")->get();
+        foreach($data as $da){
+            $ratings = BookingRating::where('staff_id',$da->id)->with('created_by')->orderBy('id',"DESC")->pluck('rating');
+            // Calculate the sum of ratings
+            $sumOfRatings = $ratings->sum();
+            
+            // Calculate the number of ratings
+            $numberOfRatings = $ratings->count();
+            
+            // Calculate the average rating out of 5 if there are ratings available
+            $da->rating = $numberOfRatings > 0 ? ($sumOfRatings / $numberOfRatings) : 0;
+        }
         return response()->json(['data'=>$data]);
     }
     public function add_staff()
@@ -206,6 +218,22 @@ class MenuController extends Controller
             return view('backend.staff.edit_staff',['states'=>$states,'cities'=>$cities,'area'=>$area,'staff_type'=>$staff_type,'data'=>$data]);
         }
         abort(403);
+    }
+    public function view_staff_reviews($id)
+    {
+        if (in_array("staff", Auth::user()->permissions())) {
+            $staff = Staff::find($id);
+            return view('backend.staff.view_staff_reviews',['staff'=>$staff]);
+        }
+        abort(403);
+    }
+    public function get_staff_all_reviews_list($id)
+    {   
+        $data = BookingRating::where('staff_id',$id)->with('created_by')->orderBy('id',"DESC")->get();
+        foreach($data as $da){
+            $da->booking = Booking::find($da->booking_id);
+        }
+        return response()->json(['data'=>$data]);
     }
     public function view_staff_details($id)
     {

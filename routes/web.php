@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 })->name('login')->middleware('login');
+Route::post('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
 Auth::routes(['register' => false]);
 
@@ -24,6 +25,9 @@ Route::get('/clear-config-cache', function () {
 
 Route::group(['middleware' => ['admin']], function() {
     Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
+    Route::get('/dhc_dashboard', [App\Http\Controllers\HomeController::class, 'dhc_dashboard'])->name('dhc_dashboard');
+    Route::get('/hsp_dashboard', [App\Http\Controllers\HomeController::class, 'hsp_dashboard'])->name('hsp_dashboard');
+    Route::get('/crp_dashboard', [App\Http\Controllers\HomeController::class, 'crp_dashboard'])->name('crp_dashboard');
     Route::post('/change_customer_type', [App\Http\Controllers\HomeController::class, 'change_customer_type'])->name('change_customer_type');
 
     Route::get('/analytics', [App\Http\Controllers\HomeController::class, 'analytics'])->name('analytics');
@@ -68,6 +72,9 @@ Route::group(['middleware' => ['admin']], function() {
 
     Route::get('/booking_reviews', [App\Http\Controllers\BookingController::class, 'booking_reviews'])->name('booking_reviews');
     Route::get('/get_booking_reviews_list', [App\Http\Controllers\BookingController::class, 'get_booking_reviews_list'])->name('get_booking_reviews_list');
+    Route::get('/get_staff_reviews_list/{id}', [App\Http\Controllers\BookingController::class, 'get_staff_reviews_list'])->name('get_staff_reviews_list');
+    Route::get('/add_booking_reviews/{id}', [App\Http\Controllers\BookingController::class, 'add_booking_reviews'])->name('add_booking_reviews');
+    Route::post('/create_booking_reviews', [App\Http\Controllers\BookingController::class, 'create_booking_reviews'])->name('create_booking_reviews');
 
     Route::get('/active_invoice', [App\Http\Controllers\InvoiceController::class, 'active_invoice'])->name('active_invoice');
     Route::get('/get_active_invoice_list', [App\Http\Controllers\InvoiceController::class, 'get_active_invoice_list'])->name('get_active_invoice_list');
@@ -170,6 +177,8 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/add_staff', [App\Http\Controllers\MenuController::class, 'add_staff'])->name('add_staff');
     Route::get('/edit_staff/{id}', [App\Http\Controllers\MenuController::class, 'edit_staff'])->name('edit_staff');
     Route::get('/view_staff_details/{id}', [App\Http\Controllers\MenuController::class, 'view_staff_details'])->name('view_staff_details');
+    Route::get('/view_staff_reviews/{id}', [App\Http\Controllers\MenuController::class, 'view_staff_reviews'])->name('view_staff_reviews');
+    Route::get('/get_staff_all_reviews_list/{id}', [App\Http\Controllers\MenuController::class, 'get_staff_all_reviews_list'])->name('get_staff_all_reviews_list');
     Route::post('/delete_staff', [App\Http\Controllers\MenuController::class, 'delete_staff'])->name('delete_staff');
     Route::post('/create_staff', [App\Http\Controllers\MenuController::class, 'create_staff'])->name('create_staff');
     Route::post('/update_staff', [App\Http\Controllers\MenuController::class, 'update_staff'])->name('update_staff');

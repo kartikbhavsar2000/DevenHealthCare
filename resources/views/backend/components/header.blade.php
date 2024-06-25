@@ -127,15 +127,53 @@
                     $permissions = Auth::user() ? Auth::user()->permissions() : [];
                 @endphp
                 <ul class="menu-inner py-1">
+                    @if(in_array('dashboard',$permissions) || in_array('dhc_dashboard',$permissions) || in_array('hsp_dashboard',$permissions) || in_array('crp_dashboard',$permissions))
+                    <li class="menu-item @if (Route::currentRouteName() == 'dashboard' || Route::currentRouteName() == 'dhc_dashboard' || Route::currentRouteName() == 'hsp_dashboard' || Route::currentRouteName() == 'crp_dashboard') open @endif">
+                        <a href="javascript:void(0);" class="menu-link menu-toggle waves-effect">
+                            <i class="menu-icon tf-icons ri-home-smile-line"></i>
+                            <div>Dashboard</div>
+                        </a>
+                        <ul class="menu-sub">
+                            @if(in_array('dashboard',$permissions))
+                            <li class="menu-item  @if (Route::currentRouteName() == 'dashboard') active @endif">
+                                <a href="{{route('dashboard')}}" class="menu-link">
+                                    <div>All</div>
+                                </a>
+                            </li>
+                            @endif
+                            @if(in_array('dhc_dashboard',$permissions))
+                            <li class="menu-item  @if (Route::currentRouteName() == 'dhc_dashboard') active @endif">
+                                <a href="{{route('dhc_dashboard')}}" class="menu-link">
+                                    <div>DHC</div>
+                                </a>
+                            </li>
+                            @endif
+                            @if(in_array('hsp_dashboard',$permissions))
+                            <li class="menu-item  @if (Route::currentRouteName() == 'hsp_dashboard') active @endif">
+                                <a href="{{route('hsp_dashboard')}}" class="menu-link">
+                                    <div>HSP</div>
+                                </a>
+                            </li>
+                            @endif
+                            @if(in_array('crp_dashboard',$permissions))
+                            <li class="menu-item  @if (Route::currentRouteName() == 'crp_dashboard') active @endif">
+                                <a href="{{route('crp_dashboard')}}" class="menu-link">
+                                    <div>CRP</div>
+                                </a>
+                            </li>
+                            @endif
+                        </ul>
+                    </li>
+                    @endif
                     <!-- Page -->
-                    @if(in_array('dashboard',$permissions))
+                    {{-- @if(in_array('dashboard',$permissions))
                     <li class="menu-item  @if (Route::currentRouteName() == 'dashboard') active @endif">
                         <a href="{{route('dashboard')}}" class="menu-link">
                             <i class="menu-icon tf-icons ri-home-smile-line"></i>
                             <div>Dashboard</div>
                         </a>
                     </li>
-                    @endif
+                    @endif --}}
                     @if(in_array('analytics',$permissions))
                     <li class="menu-item  @if (Route::currentRouteName() == 'analytics') active @endif">
                         <a href="{{route('analytics')}}" class="menu-link">

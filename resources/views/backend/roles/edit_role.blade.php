@@ -48,11 +48,38 @@
                         <div class="col-12 mb-3">
                             <label class="mb-2"><b>Dashboard</b></label>
                             <div class="row">
+                                @if(Auth::user()->id == 1 && $data->id == 1)
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
-                                        <input class="form-check-input" type="checkbox" value="dashboard" @if(in_array('dashboard',$permissions)) checked @endif name="permission[]" id="dashboard" />
+                                        <input type="text" value="dashboard" name="permission[]" class="d-none"/>
+                                        <input class="form-check-input" type="checkbox"  @if(in_array('dashboard',$permissions)) checked @endif name="permission[]" id="dashboard" disabled/>
                                         <label class="form-check-label" for="dashboard">
-                                            Dashboard
+                                            All
+                                        </label>
+                                    </div>
+                                </div>
+                                @endif
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="dhc_dashboard" @if(in_array('dhc_dashboard',$permissions)) checked @endif name="permission[]" id="dhc_dashboard" />
+                                        <label class="form-check-label" for="dhc_dashboard">
+                                            DHC
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="hsp_dashboard" @if(in_array('hsp_dashboard',$permissions)) checked @endif name="permission[]" id="hsp_dashboard" />
+                                        <label class="form-check-label" for="hsp_dashboard">
+                                            HSP
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="crp_dashboard" @if(in_array('crp_dashboard',$permissions)) checked @endif name="permission[]" id="crp_dashboard" />
+                                        <label class="form-check-label" for="crp_dashboard">
+                                            CRP
                                         </label>
                                     </div>
                                 </div>
