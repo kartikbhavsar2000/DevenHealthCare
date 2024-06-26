@@ -47,7 +47,7 @@
                             <th>Type</th>
                             <th>Cost Price</th>
                             <th>Selling Price</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

@@ -272,9 +272,17 @@
                         </ul>
                     </li>
                     @endif
-                    @if(in_array('advance_salary',$permissions))
+                    @if(in_array('advance_salary',$permissions) || in_array('salary',$permissions))
                     <li class="menu-header mt-5">
                         <span class="menu-header-text">Payments</span>
+                    </li>
+                    @endif
+                    @if(in_array('salary',$permissions))
+                    <li class="menu-item  @if (Route::currentRouteName() == 'salary') active @endif">
+                        <a href="{{route('salary')}}" class="menu-link">
+                            <i class="menu-icon tf-icons ri-secure-payment-line"></i>
+                            <div>Salary</div>
+                        </a>
                     </li>
                     @endif
                     @if(in_array('advance_salary',$permissions))

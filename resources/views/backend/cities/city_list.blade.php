@@ -44,7 +44,7 @@
                             <th>Sr No.</th>
                             <th>State</th>
                             <th>Cities Name</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

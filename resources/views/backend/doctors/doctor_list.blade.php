@@ -50,7 +50,7 @@
                             <th>Age</th>
                             <th>Experience</th>
                             <th>Specification</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

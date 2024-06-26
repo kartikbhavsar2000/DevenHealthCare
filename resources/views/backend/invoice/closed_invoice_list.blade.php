@@ -49,7 +49,7 @@
                             <th>Updated At</th>
                             <th>Closed By</th>
                             <th>Total</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

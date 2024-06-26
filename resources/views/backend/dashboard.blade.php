@@ -97,7 +97,7 @@
             @if(!empty($dates))
               @foreach($dates as $key => $date)
                 <li class="nav-item" role="presentation">
-                  <button type="button" style="height: 60px; background: #4cb7e5; color:#c5eeff; border:2px solid #4cb7e5;" class="nav-link d-flex flex-column gap-1 waves-effect  @if($key == 0)active @endif" role="tab" data-bs-toggle="tab" data-bs-target="#navs-card-{{$key}}" aria-controls="navs-profile-{{$key}}" aria-selected="@if($key == 0) true @else false @endif" @if($key != 0) tabindex="-1" @endif>{{date('M d', strtotime($date))}}</button>
+                  <button type="button" style="height: 60px; background: #4cb7e5; color:#c5eeff; border:2px solid #4cb7e5;" class="nav-link d-flex flex-column gap-1 waves-effect  @if($key == 6)active @endif" role="tab" data-bs-toggle="tab" data-bs-target="#navs-card-{{$key}}" aria-controls="navs-profile-{{$key}}" aria-selected="@if($key == 6) true @else false @endif" @if($key != 6) tabindex="-1" @endif>{{date('M d', strtotime($date))}}</button>
                 </li>
               @endforeach
             @endif
@@ -108,7 +108,7 @@
         <div class="tab-content p-0 pb-0">
           @if(!empty($dates))
             @foreach($dates as $key => $date)
-              <div class="tab-pane fade text-start @if($key == 0)active show @endif" id="navs-card-{{$key}}" role="tabpanel">
+              <div class="tab-pane fade text-start @if($key == 6)active show @endif" id="navs-card-{{$key}}" role="tabpanel">
                 <table class="kt_datatable table table-row-bordered table-row-gray-300" style="margin-bottom: 0px!important">
                   <thead>
                       <tr>

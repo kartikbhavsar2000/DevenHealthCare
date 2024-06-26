@@ -157,6 +157,14 @@
                             <div class="row">
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="salary" name="permission[]" id="salary" />
+                                        <label class="form-check-label" for="salary">
+                                            Salary
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
                                         <input class="form-check-input" type="checkbox" value="advance_salary" name="permission[]" id="advance_salary" />
                                         <label class="form-check-label" for="advance_salary">
                                             Advance Salary

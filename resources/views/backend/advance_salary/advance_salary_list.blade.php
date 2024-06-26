@@ -46,7 +46,7 @@
                             <th>Staff Name</th>
                             <th>Amount</th>
                             <th>Description</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

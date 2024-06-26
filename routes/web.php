@@ -209,4 +209,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/edit_advance_salary/{id}', [App\Http\Controllers\PaymentController::class, 'edit_advance_salary'])->name('edit_advance_salary');
     Route::post('/create_advance_salary', [App\Http\Controllers\PaymentController::class, 'create_advance_salary'])->name('create_advance_salary');
     Route::post('/update_advance_salary', [App\Http\Controllers\PaymentController::class, 'update_advance_salary'])->name('update_advance_salary');
+
+    Route::get('/salary', [App\Http\Controllers\PaymentController::class, 'salary'])->name('salary');
+    Route::post('/get_staff_doctor_list', [App\Http\Controllers\PaymentController::class, 'get_staff_doctor_list'])->name('get_staff_doctor_list');
 });

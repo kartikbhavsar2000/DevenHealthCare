@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\AdvanceSalary;
 use App\Models\Staff;
+use App\Models\Doctor;
 
 class PaymentController extends Controller
 {
@@ -73,5 +74,21 @@ class PaymentController extends Controller
         }else{
             return redirect()->back()->with('error','Data Not Found');
         }
+    }
+    public function salary()
+    {
+        if (in_array("salary", Auth::user()->permissions())) {
+            return view('backend.salary.salary');
+        }
+        abort(403);
+    }
+    public function get_staff_doctor_list(Request $request){
+
+        if($request->type == "Doctor"){
+            $data = Doctor::orderBy('name','ASC')->get();
+        }else{
+            $data = Staff::orderBy('f_name','ASC')->get();
+        }
+        return $data;
     }
 }

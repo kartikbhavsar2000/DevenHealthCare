@@ -60,7 +60,7 @@
                             <th>Created At</th>
                             <th>Added By</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

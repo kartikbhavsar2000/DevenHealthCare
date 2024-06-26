@@ -153,13 +153,24 @@ class HomeController extends Controller
                 $booking->staff_data = $staff_data;
                 $booking->doctor_data = $doctor_data;
             }
+            
+            // $dates = [];
+            // $currentDate = new \DateTime();
+            // $dates[] = $currentDate->format('Y-m-d');
 
+            // for ($i = 1; $i <= 6; $i++) {
+            //     $nextDate = clone $currentDate;
+            //     $nextDate->add(new \DateInterval('P' . $i . 'D'));
+            //     $dates[] = $nextDate->format('Y-m-d');
+            // }
             $dates = [];
             $currentDate = new \DateTime();
-            $dates[] = $currentDate->format('Y-m-d');
+            $pastDate = clone $currentDate;
+            $pastDate->sub(new \DateInterval('P6D')); // 7 days before today
+            $dates[] = $pastDate->format('Y-m-d');
 
-            for ($i = 1; $i <= 6; $i++) {
-                $nextDate = clone $currentDate;
+            for ($i = 1; $i <= 12; $i++) { // 13 days total to include 7 days before and 6 days ahead
+                $nextDate = clone $pastDate;
                 $nextDate->add(new \DateInterval('P' . $i . 'D'));
                 $dates[] = $nextDate->format('Y-m-d');
             }
@@ -211,12 +222,23 @@ class HomeController extends Controller
                 $booking->doctor_data = $doctor_data;
             }
 
+            // $dates = [];
+            // $currentDate = new \DateTime();
+            // $dates[] = $currentDate->format('Y-m-d');
+
+            // for ($i = 1; $i <= 6; $i++) {
+            //     $nextDate = clone $currentDate;
+            //     $nextDate->add(new \DateInterval('P' . $i . 'D'));
+            //     $dates[] = $nextDate->format('Y-m-d');
+            // }
             $dates = [];
             $currentDate = new \DateTime();
-            $dates[] = $currentDate->format('Y-m-d');
+            $pastDate = clone $currentDate;
+            $pastDate->sub(new \DateInterval('P6D')); // 7 days before today
+            $dates[] = $pastDate->format('Y-m-d');
 
-            for ($i = 1; $i <= 6; $i++) {
-                $nextDate = clone $currentDate;
+            for ($i = 1; $i <= 12; $i++) { // 13 days total to include 7 days before and 6 days ahead
+                $nextDate = clone $pastDate;
                 $nextDate->add(new \DateInterval('P' . $i . 'D'));
                 $dates[] = $nextDate->format('Y-m-d');
             }
@@ -270,12 +292,23 @@ class HomeController extends Controller
                 $booking->doctor_data = $doctor_data;
             }
 
+            // $dates = [];
+            // $currentDate = new \DateTime();
+            // $dates[] = $currentDate->format('Y-m-d');
+
+            // for ($i = 1; $i <= 6; $i++) {
+            //     $nextDate = clone $currentDate;
+            //     $nextDate->add(new \DateInterval('P' . $i . 'D'));
+            //     $dates[] = $nextDate->format('Y-m-d');
+            // }
             $dates = [];
             $currentDate = new \DateTime();
-            $dates[] = $currentDate->format('Y-m-d');
+            $pastDate = clone $currentDate;
+            $pastDate->sub(new \DateInterval('P6D')); // 7 days before today
+            $dates[] = $pastDate->format('Y-m-d');
 
-            for ($i = 1; $i <= 6; $i++) {
-                $nextDate = clone $currentDate;
+            for ($i = 1; $i <= 12; $i++) { // 13 days total to include 7 days before and 6 days ahead
+                $nextDate = clone $pastDate;
                 $nextDate->add(new \DateInterval('P' . $i . 'D'));
                 $dates[] = $nextDate->format('Y-m-d');
             }
@@ -325,12 +358,23 @@ class HomeController extends Controller
                 $booking->doctor_data = $doctor_data;
             }
 
+            // $dates = [];
+            // $currentDate = new \DateTime();
+            // $dates[] = $currentDate->format('Y-m-d');
+
+            // for ($i = 1; $i <= 6; $i++) {
+            //     $nextDate = clone $currentDate;
+            //     $nextDate->add(new \DateInterval('P' . $i . 'D'));
+            //     $dates[] = $nextDate->format('Y-m-d');
+            // }
             $dates = [];
             $currentDate = new \DateTime();
-            $dates[] = $currentDate->format('Y-m-d');
+            $pastDate = clone $currentDate;
+            $pastDate->sub(new \DateInterval('P6D')); // 7 days before today
+            $dates[] = $pastDate->format('Y-m-d');
 
-            for ($i = 1; $i <= 6; $i++) {
-                $nextDate = clone $currentDate;
+            for ($i = 1; $i <= 12; $i++) { // 13 days total to include 7 days before and 6 days ahead
+                $nextDate = clone $pastDate;
                 $nextDate->add(new \DateInterval('P' . $i . 'D'));
                 $dates[] = $nextDate->format('Y-m-d');
             }

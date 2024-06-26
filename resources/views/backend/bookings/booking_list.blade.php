@@ -54,7 +54,7 @@
                             <th>Created At</th>
                             <th>Added By</th>
                             <th>Total</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody></tbody>

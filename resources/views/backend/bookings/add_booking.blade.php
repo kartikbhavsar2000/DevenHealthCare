@@ -1457,7 +1457,7 @@ $(function () {
         altInput: true,
         altFormat: 'd-m-Y',
         dateFormat: 'Y-m-d',
-        minDate: new Date(),
+        minDate: new Date().fp_incr(-6),
         maxDate: new Date(new Date().setMonth(new Date().getMonth() + 2))
     });
     $('#BookingStartDate').on('change', function(){

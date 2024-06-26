@@ -56,7 +56,7 @@
                             <th>Staff Cost</th>
                             <th>Rejection Reason</th>
                             <th>Location</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
