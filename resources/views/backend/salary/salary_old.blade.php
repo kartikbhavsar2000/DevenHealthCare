@@ -32,7 +32,7 @@
                 @csrf
                 <div class="card-body py-0">
                     <div class="row">
-                        {{-- <div class="col-3">
+                        <div class="col-3">
                             <label class="form-label" for="typeSelector">Select Type:</label>
                             <div class="d-flex py-3">
                                 <div class="form-check me-10">
@@ -45,22 +45,15 @@
                                 </div>
                             </div>
                             <div id="typeError" class="text-danger"></div>
-                        </div> --}}
-                        <div class="col-10">
+                        </div>
+                        <div class="col-9">
                             <div class="mb-4">
                                 <label class="form-label">Select Staff <span class="text-danger">*</span></label>
-                                <select class="form-control" name="staff_id[]" id="StaffId"  multiple="multiple">
-                                    @if(!empty($staff))
-                                        @foreach($staff as $st)
-                                            <option value="{{$st->id}}" @if(old('staff_id') == $st->id) selected @endif>{{$st->f_name ?? ""}} {{$st->m_name ?? ""}} {{$st->l_name ?? ""}} - {{$st->staff_id ?? ""}}</option>
-                                        @endforeach
-                                    @endif
+                                <select class="form-control" name="staff_id" id="StaffId" disabled>
+                                    <option value=""></option>
                                 </select>
                                 <div id="staffError" class="text-danger"></div>
                             </div>
-                        </div>
-                        <div class="col-2 mt-8">
-                            <button type="button" class="btn btn-white border border-1 border-dark text-dark w-100" id="selectAll">Select All Staff</button>
                         </div>
                         <div class="col-5">
                             <div class="form-group">
@@ -89,12 +82,11 @@
                               <thead>
                                 <tr>
                                   <th>Sr No.</th>
-                                  <th>Staff ID</th>
-                                  <th>Staff Name</th>
-                                  <th>Total Assign</th>
-                                  <th>Present</th>
-                                  <th>Absent</th>
-                                  <th>Salary</th>
+                                  <th>Booking ID</th>
+                                  <th>Date</th>
+                                  <th>Shift</th>
+                                  <th>Amount</th>
+                                  <th>Attendance Status</th>
                                 </tr>
                               </thead>
                               <tbody id="table-body">
@@ -102,6 +94,9 @@
                               </tbody>
                             </table>
                         </div>
+                    </div>
+                    <div class="col-12 text-end mt-5 pe-5">
+                        <b>Total Salary : </b> <span id="grand-total">₹00</span>
                     </div>
                 </div>
                 <hr>
@@ -183,23 +178,36 @@
 
                     $('#table-body').empty();
 
+                    var grandTotal = 0;
+
                     // Populate the table with the data received
                     $.each(result, function(index, item) {
-                        var present = '<span class="badge bg-label-warning w-100 my-1">Pending('+item.pending_count+')</span><span class="badge bg-label-success w-100 my-1">Approved('+item.approved_count+')</span><span class="badge bg-label-danger w-100 my-1">Rejected('+item.rejected_count+')</span>';
-                        var status = '<span class="badge bg-label-secondary">Not Marked</span>';
-                        
+                        var status = '-';
+                        if(item.att_marked == 0){
+                            status = '<span class="badge bg-label-secondary">Not Marked</span>';
+                        }else{
+                            if(item.status == 0){
+                                status = '<span class="badge bg-label-warning">Pending</span>';
+                            }else if(item.status == 1){
+                                status = '<span class="badge bg-label-success">Approved</span>';
+                            }else{
+                                status = '<span class="badge bg-label-danger">Rejected</span>';
+                            }
+                        }
                         $('#table-body').append(
                             '<tr>' +
                             '<td>' + (index + 1) + '</td>' +
-                            '<td>' + item.staff.staff_id + '</td>' +
-                            '<td>' + item.staff.staff_name + '</td>' +
-                            '<td>' + item.total_assign + '</td>' +
-                            '<td>' + present + '</td>' +
-                            '<td>' + item.absent_count + '</td>' +
-                            '<td>' + '₹' +  parseInt(item.total_salary, 10).toLocaleString() + '</td>' +
+                            '<td>' + item.booking_unique_id + '</td>' +
+                            '<td>' + formatDate(item.date) + '</td>' +
+                            '<td>' + item.shift_name + '</td>' +
+                            '<td>' + '₹' +  parseInt(item.cost_rate, 10).toLocaleString() + '</td>' +
+                            '<td>' + status + '</td>' +
                             '</tr>'
                         );
+                        grandTotal += parseInt(item.cost_rate, 10);
                     });
+
+                    $('#grand-total').text('₹' + grandTotal.toLocaleString());
                 }
             }); 
         }
@@ -207,17 +215,17 @@
     function validateFields(){
         var validate = true;
 
-        // var type = $('input[name="type"]:checked').val();
+        var type = $('input[name="type"]:checked').val();
         var month = $('#monthpicker').val();
         var weeks = $('#weekselector').val();
         var staff_id = $('#StaffId').val();
-        console.log(staff_id);
-        // if(!type){
-        //     $('#typeError').text('Please select a type.');
-        //     validate = false;
-        // } else {
-        //     $('#typeError').text('');
-        // }
+
+        if(!type){
+            $('#typeError').text('Please select a type.');
+            validate = false;
+        } else {
+            $('#typeError').text('');
+        }
 
         if(!month){
             $('#monthError').text('Please select a month.');
@@ -233,7 +241,7 @@
             $('#weeksError').text('');
         }
 
-        if (!staff_id || staff_id.length === 0) {
+        if(!staff_id){
             $('#staffError').text('Please select a staff member.');
             validate = false;
         } else {
@@ -304,8 +312,7 @@
 
         $('#weekselector').select2({
             placeholder: "Select Weeks",
-            allowClear: true,
-            closeOnSelect: false
+            allowClear: true
         }).on("change", function() {
             var selectedOptions = $(this).val();
             selectedWeeks = selectedOptions ? selectedOptions.map(function(option) {
@@ -317,17 +324,7 @@
 
 <script>
     $('#StaffId').select2({
-        placeholder: 'Select Staff',
-        allowClear: true,
-        closeOnSelect: false
-    });
-    $('#selectAll').click(function() {
-        $('#StaffId > option').each(function() {
-            if ($(this).val() !== "") {
-                $(this).prop("selected", true);
-            }
-        });
-        $('#StaffId').trigger("change");
+        placeholder: 'Select Staff'
     });
 </script>
 @endsection

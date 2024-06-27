@@ -50,7 +50,7 @@ class UserController extends Controller
     public function create_role(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255|unique:roles,name',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/|unique:roles,name',
         ]);
 
         $data = new Role();
@@ -129,7 +129,7 @@ class UserController extends Controller
     public function create_user(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
             'email' => 'required|email|unique:users,email',
             'role' => 'required',
             'password' => 'required|min:8',

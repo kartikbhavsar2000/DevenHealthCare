@@ -52,7 +52,7 @@ class MasterController extends Controller
     public function create_hospital(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
             'address' => 'required',
             'mobile1' => 'required|numeric|min:7',
             'mobile2' => 'required|numeric|min:7',
@@ -76,7 +76,7 @@ class MasterController extends Controller
     public function update_hospital(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
             'address' => 'required',
             'mobile1' => 'required|numeric|min:7',
             'mobile2' => 'required|numeric|min:7',
@@ -177,7 +177,7 @@ class MasterController extends Controller
     public function create_equipment(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
             'type' => 'required',
             'cost_price' => 'required|numeric|min:0|digits_between:1,12',
             'sell_price' => 'required|numeric|min:0|digits_between:1,12',
@@ -199,7 +199,7 @@ class MasterController extends Controller
     public function update_equipment(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
             'type' => 'required',
             'cost_price' => 'required|numeric|min:0|digits_between:1,12',
             'sell_price' => 'required|numeric|min:0|digits_between:1,12',
@@ -309,7 +309,7 @@ class MasterController extends Controller
     public function create_staff_type(Request $request)
     {
         $request->validate([
-            'title' => 'required|max:255|unique:staff_type,title',
+            'title' => 'required|max:255|regex:/^([^0-9]*)$/|unique:staff_type,title',
         ]);
 
         $data = new StaffType();
@@ -320,7 +320,7 @@ class MasterController extends Controller
     public function update_staff_type(Request $request)
     {
         $request->validate([
-            'title' => 'required|max:255|unique:staff_type,title,'.$request->id,
+            'title' => 'required|max:255|regex:/^([^0-9]*)$/|unique:staff_type,title,'.$request->id,
         ]);
 
         $data = StaffType::find($request->id);
@@ -378,7 +378,7 @@ class MasterController extends Controller
     public function create_state(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
         ]);
 
         $find = State::where(['name'=>$request->name])->first();
@@ -394,7 +394,7 @@ class MasterController extends Controller
     public function update_state(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
         ]);
 
         $find = State::where('id','!=',$request->id)->where(['name'=>$request->name])->first();
@@ -459,7 +459,7 @@ class MasterController extends Controller
     public function create_city(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
             'state' => 'required',
         ]);
 
@@ -477,7 +477,7 @@ class MasterController extends Controller
     public function update_city(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
             'state' => 'required',
         ]);
 
@@ -533,7 +533,7 @@ class MasterController extends Controller
     public function create_area(Request $request)
     {
         $request->validate([
-            // 'name' => 'required|max:255',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
             'city' => 'required',
         ]);
         foreach($request->name as $name){
@@ -553,7 +553,7 @@ class MasterController extends Controller
     public function update_area(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            // 'name' => 'required|max:255|regex:/^([^0-9]*)$/',
             'city' => 'required',
         ]);
 

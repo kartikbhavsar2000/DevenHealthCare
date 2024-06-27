@@ -85,9 +85,9 @@ class InvoiceController extends Controller
     public function invoice_details_by_dates(Request $request)
     {
         $booking = Booking::with('BookingDetails')->find($request->id);
+        $enddate = strtotime($request->endDate);
         $startDate = $request->startDate;
-        $endDate = $request->endDate;
-
+        $endDate = date('Y-m-d', $enddate);
         $all_dates = [];
         $current_date = strtotime($startDate);
         $end_timestamp = strtotime($endDate);

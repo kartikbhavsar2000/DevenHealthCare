@@ -255,7 +255,9 @@ class MenuController extends Controller
     public function create_staff(Request $request)
     {
         $request->validate([
-            'f_name' => 'required|max:255',
+            'f_name' => 'required|max:255|alpha',
+            'm_name' => 'nullable|max:255|alpha',
+            'l_name' => 'nullable|max:255|alpha',
             'type' => 'required',
             'email' => 'nullable|email',
             'doj' => 'required',
@@ -266,17 +268,22 @@ class MenuController extends Controller
             'area' => 'required',
             'mobile' => 'nullable|numeric|min:7',
             'mobile2' => 'nullable|numeric|min:7',
-            'experience' => 'required',
+            'experience' => 'required|numeric',
             'day_cost' => 'nullable|numeric|min:0|digits_between:1,12',
             'night_cost' => 'nullable|numeric|min:0|digits_between:1,12',
             'full_cost' => 'nullable|numeric|min:0|digits_between:1,12',
             'password' => 'required|min:6|required_with:password_confirmation|same:password_confirmation',
             'password_confirmation' => 'required|min:6'
         ],[
+            'f_name.alpha' => "The first name field must only contain letters.",
+            'm_name.alpha' => "The middle name field must only contain letters.",
+            'l_name.alpha' => "The last name field must only contain letters.",
             'doj.required' => "The date of joining field is required.",
             'f_name.required' => "The first name field is required.",
             'mobile.min' => "Please enter valid contact number.",
+            'mobile.numeric' => "The contact number field must be a number.",
             'mobile2.min' => "Please enter valid alternet contact number.",
+            'mobile2.numeric' => "The alternet contact number field must be a number.",
             'day_cost.digits_between' => "The amount for cost price is too big.",
             'day_cost.numeric' => "Please enter valid amount.",
             'night_cost.digits_between' => "The amount for cost price is too big.",
@@ -332,7 +339,9 @@ class MenuController extends Controller
     public function update_staff(Request $request)
     {
         $request->validate([
-            'f_name' => 'required|max:255',
+            'f_name' => 'required|max:255|alpha',
+            'm_name' => 'nullable|max:255|alpha',
+            'l_name' => 'nullable|max:255|alpha',
             'type' => 'required',
             'email' => 'nullable|email',
             'doj' => 'required',
@@ -343,15 +352,22 @@ class MenuController extends Controller
             'area' => 'required',
             'mobile' => 'nullable|numeric|min:7',
             'mobile2' => 'nullable|numeric|min:7',
-            'experience' => 'required',
+            'experience' => 'required|numeric',
             'day_cost' => 'nullable|numeric|min:0|digits_between:1,12',
             'night_cost' => 'nullable|numeric|min:0|digits_between:1,12',
             'full_cost' => 'nullable|numeric|min:0|digits_between:1,12',
+            'password' => 'required|min:6|required_with:password_confirmation|same:password_confirmation',
+            'password_confirmation' => 'required|min:6'
         ],[
+            'f_name.alpha' => "The first name field must only contain letters.",
+            'm_name.alpha' => "The middle name field must only contain letters.",
+            'l_name.alpha' => "The last name field must only contain letters.",
             'doj.required' => "The date of joining field is required.",
             'f_name.required' => "The first name field is required.",
             'mobile.min' => "Please enter valid contact number.",
+            'mobile.numeric' => "The contact number field must be a number.",
             'mobile2.min' => "Please enter valid alternet contact number.",
+            'mobile2.numeric' => "The alternet contact number field must be a number.",
             'day_cost.digits_between' => "The amount for cost price is too big.",
             'day_cost.numeric' => "Please enter valid amount.",
             'night_cost.digits_between' => "The amount for cost price is too big.",
@@ -465,7 +481,7 @@ class MenuController extends Controller
     public function create_corporate(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
             'address' => 'required',
             'city' => 'required',
             'state' => 'required',
@@ -495,7 +511,7 @@ class MenuController extends Controller
     public function update_corporate(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
             'address' => 'required',
             'city' => 'required',
             'state' => 'required',
@@ -576,7 +592,7 @@ class MenuController extends Controller
     public function create_doctor(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
             'email' => 'nullable|email',
             'doj' => 'required',
             'gender' => 'required',
@@ -638,7 +654,7 @@ class MenuController extends Controller
     public function update_doctor(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
             'email' => 'nullable|email',
             'doj' => 'required',
             'gender' => 'required',

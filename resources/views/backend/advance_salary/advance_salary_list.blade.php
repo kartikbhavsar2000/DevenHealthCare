@@ -125,7 +125,7 @@
                 "data": "amount",
                 "render": function (data, type, row, meta) {
                     return type === 'display' ?
-                    '₹'+data :
+                    '₹'+ parseInt(data, 10).toLocaleString() :
                     data;
                 }
             },

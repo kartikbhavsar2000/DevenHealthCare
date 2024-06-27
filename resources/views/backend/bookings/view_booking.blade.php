@@ -320,9 +320,9 @@
                                         @endphp
                                         <tr>
                                             <td>{{ $staff->name ?? '' }}<br><span style="font-size: 12px;">{{ $shift }}</span></td>
-                                            <td>₹{{ $staff->sell_rate ?? '00' }}</td>
+                                            <td>₹{{ number_format($staff->sell_rate) ?? '00' }}</td>
                                             <td>{{ $staff->qnt ?? '1' }}</td>
-                                            <td>₹{{ $staff->sell_rate * $staff->qnt ?? '00' }}</td>
+                                            <td>₹{{ number_format($staff->sell_rate * $staff->qnt) ?? '00' }}</td>
                                         </tr>
                                     @endforeach
                                 @endif
@@ -330,9 +330,9 @@
                                     @foreach($equipment_data as $equipment)
                                         <tr>
                                             <td>{{ $equipment->name ?? '' }}</td>
-                                            <td>₹{{ $equipment->cost_rate ?? '00' }}</td>
+                                            <td>₹{{ number_format($equipment->cost_rate) ?? '00' }}</td>
                                             <td>{{ $equipment->qnt ?? '1' }}</td>
-                                            <td>₹{{ $equipment->sell_rate ?? '00' }}</td>
+                                            <td>₹{{ number_format($equipment->sell_rate) ?? '00' }}</td>
                                         </tr>
                                     @endforeach
                                 @endif
@@ -350,9 +350,9 @@
                                         @endphp
                                         <tr>
                                             <td>{{ $doctor->name ?? '' }}<br><span style="font-size: 12px;">{{ $shift }}</span></td>
-                                            <td>₹{{ $doctor->sell_rate ?? '00' }}</td>
+                                            <td>₹{{ number_format($doctor->sell_rate) ?? '00' }}</td>
                                             <td>{{ $doctor->qnt ?? '1' }}</td>
-                                            <td>₹{{ $doctor->sell_rate ?? '00' }}</td>
+                                            <td>₹{{ number_format($doctor->sell_rate) ?? '00' }}</td>
                                         </tr>
                                     @endforeach
                                 @endif
@@ -370,9 +370,9 @@
                                         @endphp
                                         <tr>
                                             <td>{{ $ambulance->name ?? '' }}<br><span style="font-size: 12px;">{{ $shift }}</span></td>
-                                            <td>₹{{ $ambulance->sell_rate ?? '00' }}</td>
+                                            <td>₹{{ number_format($ambulance->sell_rate) ?? '00' }}</td>
                                             <td>{{ $ambulance->qnt ?? '1' }}</td>
-                                            <td>₹{{ $ambulance->sell_rate ?? '00' }}</td>
+                                            <td>₹{{ number_format($ambulance->sell_rate) ?? '00' }}</td>
                                         </tr>
                                     @endforeach
                                 @endif
@@ -389,11 +389,11 @@
                         <div class="order-calculations">
                             <div class="d-flex justify-content-start gap-4">
                                 <span class="w-px-100 text-heading">Subtotal:</span>
-                                <h6 class="mb-0" id="SubTotal">₹{{$booking->sub_total ?? "00.00"}}</h6>
+                                <h6 class="mb-0" id="SubTotal">₹{{number_format($booking->sub_total) ?? "00.00"}}</h6>
                             </div>
                             <div class="d-flex justify-content-start gap-4">
                                 <h6 class="w-px-100 mb-0">Total:</h6>
-                                <h6 class="mb-0" id="Total">₹{{$booking->total ?? "00.00"}}</h6>
+                                <h6 class="mb-0" id="Total">₹{{number_format($booking->total) ?? "00.00"}}</h6>
                             </div>
                         </div>
                     </div>

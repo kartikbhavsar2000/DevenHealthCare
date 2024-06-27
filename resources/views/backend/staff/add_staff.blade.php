@@ -80,7 +80,7 @@
                         <div class="col-3 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Email Address</label>
-                                <input type="email" class="form-control mb-1" value="{{old('email')}}" name="email"  placeholder="Enter email address"/>
+                                <input type="text" class="form-control mb-1" value="{{old('email')}}" name="email"  placeholder="Enter email address"/>
                                 @error('email')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
@@ -224,7 +224,7 @@
                         <div class="col-6 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Experience <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control mb-1" value="{{old('experience')}}" name="experience" pattern="^\d*(\.\d+)?$" placeholder="Enter experience" title="Please enter a valid number (integer or decimal).">
+                                <input type="number" class="form-control mb-1" value="{{old('experience')}}" name="experience" placeholder="Enter experience" title="Please enter a valid number (integer or decimal).">
                                 @error('experience')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror

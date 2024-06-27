@@ -81,7 +81,7 @@
                         <div class="col-3 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Email Address</label>
-                                <input type="email" class="form-control mb-1" value="{{$data->email}}" name="email"  placeholder="Enter email address"/>
+                                <input type="text" class="form-control mb-1" value="{{$data->email}}" name="email"  placeholder="Enter email address"/>
                                 @error('email')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror

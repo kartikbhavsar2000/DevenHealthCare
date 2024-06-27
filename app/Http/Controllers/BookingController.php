@@ -827,7 +827,7 @@ class BookingController extends Controller
     }
     public function get_booking_reviews_list()
     {   
-        $data = Booking::with('added_by')->orderBy('id',"DESC")->get();
+        $data = Booking::where('booking_status',1)->with('added_by')->orderBy('id',"DESC")->get();
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;

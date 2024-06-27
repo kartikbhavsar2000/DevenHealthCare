@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use App\Models\AdvanceSalary;
 use App\Models\Staff;
 use App\Models\Doctor;
+use App\Models\BookingAssign;
+use App\Models\Shifts;
+use App\Models\Booking;
 
 class PaymentController extends Controller
 {
@@ -78,7 +81,8 @@ class PaymentController extends Controller
     public function salary()
     {
         if (in_array("salary", Auth::user()->permissions())) {
-            return view('backend.salary.salary');
+            $staff = Staff::orderBy('f_name',"ASC")->get();
+            return view('backend.salary.salary',['staff'=>$staff]);
         }
         abort(403);
     }
@@ -86,9 +90,124 @@ class PaymentController extends Controller
 
         if($request->type == "Doctor"){
             $data = Doctor::orderBy('name','ASC')->get();
+            foreach($data as $da){
+                $da->staff_name = $da->name;
+                $da->unique_id = $da->doctor_id;
+            }
         }else{
             $data = Staff::orderBy('f_name','ASC')->get();
+            foreach($data as $da){
+                $da->staff_name = $da->f_name . " " . $da->m_name . " " . $da->l_name;
+                $da->unique_id = $da->staff_id;
+            }
         }
         return $data;
     }
+    // public function get_staff_doctor_salary_details(Request $request) {
+    //     $data = [];
+    
+    //     foreach ($request->weeks as $week) {
+    //         // Decode the JSON string for each week
+    //         $weekData = json_decode($week, true);
+    //         $startDate = $weekData['startDate'];
+    //         $endDate = $weekData['endDate'];
+    
+    //         if ($request->type == "Doctor") {
+    //             $doctor = Doctor::find($request->staff_id);
+    //             if ($doctor) {
+    //                 $booking_assign = BookingAssign::where(['type' => $request->type, 'staff_id' => $doctor->id])->whereBetween('date', [$startDate, $endDate])->get();
+    //                 foreach($booking_assign as $ba){
+    //                     $booking_id = Booking::find($ba->booking_id);
+    //                     $shift_name = Shifts::find($ba->shift);
+    //                     if($booking_id){
+    //                         $ba->booking_unique_id = $booking_id->unique_id;
+    //                     }
+    //                     if($shift_name){
+    //                         $ba->shift_name = $shift_name->name;
+    //                     }
+    //                 }
+    //                 if (!$booking_assign->isEmpty()) {
+    //                     $data = array_merge($data, $booking_assign->toArray());
+    //                 }
+    //             }
+    //         } else {
+    //             $staff = Staff::find($request->staff_id);
+    //             if ($staff) {
+    //                 $booking_assign = BookingAssign::where('staff_id', $staff->id)->whereBetween('date', [$startDate, $endDate])->get();
+    //                 foreach($booking_assign as $ba){
+    //                     $booking_id = Booking::find($ba->booking_id);
+    //                     $shift_name = Shifts::find($ba->shift);
+    //                     if($booking_id){
+    //                         $ba->booking_unique_id = $booking_id->unique_id;
+    //                     }
+    //                     if($shift_name){
+    //                         $ba->shift_name = $shift_name->name;
+    //                     }
+    //                 }
+    //                 if (!$booking_assign->isEmpty()) {
+    //                     $data = array_merge($data, $booking_assign->toArray());
+    //                 }
+    //             }
+    //         }
+    //     }
+    
+    //     return response()->json($data);
+    // }
+    public function get_staff_doctor_salary_details(Request $request) {
+        $data = [];
+    
+        foreach ($request->staff_id as $st_id) {
+            $staff = Staff::find($st_id);
+            if ($staff) {
+                $staff->staff_name = $staff->f_name . " " . $staff->m_name . " " . $staff->l_name;
+                $total_assign = 0;
+                $absent_count = 0;
+                $pending_count = 0;
+                $approved_count = 0;
+                $rejected_count = 0;
+                $total_salary = 0;
+    
+                foreach ($request->weeks as $week) {
+                    // Decode the JSON string for each week
+                    $weekData = json_decode($week, true);
+                    $startDate = $weekData['startDate'];
+                    $endDate = $weekData['endDate'];
+    
+                    $booking_assign = BookingAssign::where('staff_id', $staff->id)->whereBetween('date', [$startDate, $endDate])->get();
+                    $total_assign += count($booking_assign);
+    
+                    foreach ($booking_assign as $ba) {
+                        if ($ba->attr_marked == 0) {
+                            $absent_count++;
+                        } elseif ($ba->attr_marked == 1) {
+                            if ($ba->status == 0) {
+                                $pending_count++;
+                            } elseif ($ba->status == 1) {
+                                $approved_count++;
+                                $total_salary += (int)$ba->cost_rate;
+                            } elseif ($ba->status == 2) {
+                                $rejected_count++;
+                            }
+                        }
+                    }
+                }
+    
+                $staff_data = [
+                    'staff' => $staff,
+                    'total_assign' => $total_assign,
+                    'absent_count' => $absent_count,
+                    'pending_count' => $pending_count,
+                    'approved_count' => $approved_count,
+                    'rejected_count' => $rejected_count,
+                    'total_salary' => $total_salary,
+                ];
+    
+                $data[] = $staff_data;
+            }
+        }
+    
+        return response()->json($data);
+    }
+    
+    
 }

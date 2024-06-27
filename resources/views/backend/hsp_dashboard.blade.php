@@ -1179,7 +1179,7 @@
       $('#cust_BookingType').text(data.booking_type || '-');
       $('#cust_BookingStart').text(data.start_date || '-');
       $('#cust_BookingEnd').text(data.end_date || '-');
-      $('#cust_BookingTotal').text(data.total || '-');
+      $('#cust_BookingTotal').text('₹'+ parseInt(data.total,10).toLocaleString() || '-');
 
       var bookingData = "";
       $.each(data.booking_details, function(index, item) {
@@ -1204,7 +1204,7 @@
                               <td>`+ type +`</td>
                               <td>`+ (item.shift_name ?? "-") +`</td>
                               <td>`+ (item.qnt ?? "-") +`</td>
-                              <td>`+ (rate ?? "-") +`</td>
+                              <td>`+ ('₹'+  parseInt(rate,10).toLocaleString() ?? "-") +`</td>
                           </tr>`;
       });
       $('#cust_BookingData').html(bookingData);
@@ -1224,7 +1224,7 @@
       $('#corp_BookingType').text(data.booking_type || '-');
       $('#corp_BookingStart').text(data.start_date || '-');
       $('#corp_BookingEnd').text(data.end_date || '-');
-      $('#corp_BookingTotal').text(data.total || '-');
+      $('#corp_BookingTotal').text('₹'+ parseInt(data.total,10).toLocaleString() || '-');
 
       var bookingData = "";
       $.each(data.booking_details, function(index, item) {
@@ -1250,7 +1250,7 @@
                               <td>`+ type +`</td>
                               <td>`+ (item.shift_name ?? "-") +`</td>
                               <td>`+ (item.qnt ?? "-") +`</td>
-                              <td>`+ (rate ?? "-") +`</td>
+                              <td>`+ ('₹'+  parseInt(rate,10).toLocaleString() ?? "-") +`</td>
                           </tr>`;
       });
       $('#corp_BookingData').html(bookingData);

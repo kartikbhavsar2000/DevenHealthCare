@@ -212,4 +212,5 @@ Route::group(['middleware' => ['admin']], function() {
 
     Route::get('/salary', [App\Http\Controllers\PaymentController::class, 'salary'])->name('salary');
     Route::post('/get_staff_doctor_list', [App\Http\Controllers\PaymentController::class, 'get_staff_doctor_list'])->name('get_staff_doctor_list');
+    Route::post('/get_staff_doctor_salary_details', [App\Http\Controllers\PaymentController::class, 'get_staff_doctor_salary_details'])->name('get_staff_doctor_salary_details');
 });

@@ -154,7 +154,7 @@
                 }
             }},
             {"data": "total" , render : function ( data, type, row, meta ) {
-                return "₹"+data;
+                return '₹'+ parseInt(data, 10).toLocaleString();
             }},
             // {
             //     "data": "id",

@@ -450,7 +450,7 @@
                         <div class="order-calculations">
                             <div class="d-flex justify-content-start gap-4">
                                 <span class="w-px-100 text-heading">Subtotal:</span>
-                                <h6 class="mb-0" id="SubTotal">₹00.00</h6>
+                                <h6 class="mb-0" id="SubTotal">₹00</h6>
                             </div>
                             {{-- <div class="d-flex justify-content-start gap-4">
                                 <span class="w-px-100 text-heading">Tax:</span>
@@ -458,7 +458,7 @@
                             </div> --}}
                             <div class="d-flex justify-content-start gap-4">
                                 <h6 class="w-px-100 mb-0">Total:</h6>
-                                <h6 class="mb-0" id="Total">₹00.00</h6>
+                                <h6 class="mb-0" id="Total">₹00</h6>
                             </div>
                             <div class="col-sm-12">
                                 <input class="form-control d-none" type="text" name="sub_total" id="subTotalInput">
@@ -882,9 +882,9 @@ $(function () {
             if(staffchecked.prop('checked') == true){
                 tableData += `<tr>
                                 <td>`+staffType+`<br>`+staffShift+`</td>
-                                <td>`+staffRate+`</td>
+                                <td>`+parseInt(staffRate,10).toLocaleString()+`</td>
                                 <td>`+days+`</td>
-                                <td>`+staffRate * days+`</td>
+                                <td>`+parseInt(staffRate * days,10).toLocaleString()+`</td>
                             </tr>`;
             }
         }
@@ -897,9 +897,9 @@ $(function () {
             if(equipmentchecked.prop('checked') == true){
                 tableData += `<tr>
                                 <td>`+equipmentName+`</td>
-                                <td>`+equipmentPrice+`</td>
+                                <td>`+parseInt(equipmentPrice,10).toLocaleString()+`</td>
                                 <td>`+equipmentQnt+`</td>
-                                <td>`+equipmentRate+`</td>
+                                <td>`+parseInt(equipmentRate,10).toLocaleString()+`</td>
                             </tr>`;
             }
         }
@@ -924,9 +924,9 @@ $(function () {
             if(doctorchecked.prop('checked') == true){
                 tableData += `<tr>
                                 <td>Doctor<br>`+doctorDate+` `+staffShift+`</td>
-                                <td>`+doctorRate+`</td>
+                                <td>`+parseInt(doctorRate,10).toLocaleString()+`</td>
                                 <td>1</td>
-                                <td>`+doctorRate+`</td>
+                                <td>`+parseInt(doctorRate,10).toLocaleString()+`</td>
                             </tr>`;
             }
         }
@@ -944,9 +944,9 @@ $(function () {
             if(ambulancechecked.prop('checked') == true){
                 tableData += `<tr>
                                 <td>Ambulance<br>`+staffShift+`</td>
-                                <td>`+ambulanceRate+`</td>
+                                <td>`+parseInt(ambulanceRate,10).toLocaleString()+`</td>
                                 <td>1</td>
-                                <td>`+ambulanceRate+`</td>
+                                <td>`+parseInt(ambulanceRate,10).toLocaleString()+`</td>
                             </tr>`;
             }
         }
@@ -1148,13 +1148,13 @@ $(function () {
         
         // var tax_amount = sub_total * 0.18;
         // var total = sub_total + tax_amount;
-        $('#SubTotal').text('₹ ' + sub_total.toFixed(2));
-        // $('#Tax').text('₹ ' + tax_amount.toFixed(2));
-        $('#Total').text('₹ ' + sub_total.toFixed(2));
+        $('#SubTotal').text('₹ ' + sub_total.toLocaleString());
+        // $('#Tax').text('₹ ' + tax_amount.toLocaleString());
+        $('#Total').text('₹ ' + sub_total.toLocaleString());
 
 
-        $('#subTotalInput').val(sub_total.toFixed(2));
-        $('#totalInput').val(sub_total.toFixed(2));
+        $('#subTotalInput').val(sub_total.toLocaleString());
+        $('#totalInput').val(sub_total.toLocaleString());
 
         ShowItemsInTable();
     }

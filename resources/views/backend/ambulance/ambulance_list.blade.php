@@ -113,9 +113,30 @@
                     return meta.row+1;
             }},
             { "data": "name" ,"defaultContent": "-"},
-            { "data": "day_cost" ,"defaultContent": "-"},
-            { "data": "night_cost" ,"defaultContent": "-"},
-            { "data": "full_cost" ,"defaultContent": "-"},
+            {
+                "data": "day_cost",
+                "render": function (data, type, row, meta) {
+                    return type === 'display' ?
+                    '₹'+ parseInt(data, 10).toLocaleString() :
+                    data;
+                }
+            },
+            {
+                "data": "night_cost",
+                "render": function (data, type, row, meta) {
+                    return type === 'display' ?
+                    '₹'+ parseInt(data, 10).toLocaleString() :
+                    data;
+                }
+            },
+            {
+                "data": "full_cost",
+                "render": function (data, type, row, meta) {
+                    return type === 'display' ?
+                    '₹'+ parseInt(data, 10).toLocaleString() :
+                    data;
+                }
+            },
             {
                 "data": "id",
                 "render": function (data, type, row, meta) {

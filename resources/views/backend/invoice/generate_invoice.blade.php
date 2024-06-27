@@ -59,7 +59,7 @@
                                 <td class="text-nowrap">{{date('d/m/Y',strtotime($payment->start_date)) ?? "-"}}</td>
                                 <td class="text-nowrap">{{date('d/m/Y',strtotime($payment->end_date)) ?? "-"}}</td>
                                 <td>{{$payment->created_by->name ?? "-"}}</td>
-                                <td>₹{{$payment->amount ?? "0"}}</td>
+                                <td>₹{{ number_format($payment->amount ?? 0) }}</td>
                               </tr>
                             @endforeach
                           @endif
@@ -78,7 +78,7 @@
                             <div
                                 class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-4 pb-sm-0">
                                 <div>
-                                    <h4 class="mb-0">₹{{$booking->total ?? "00"}}</h4>
+                                    <h4 class="mb-0">₹{{number_format($booking->total) ?? "00"}}</h4>
                                     <p class="mb-0">Total</p>
                                 </div>
                                 <div class="avatar me-lg-6">
@@ -93,7 +93,7 @@
                             <div
                                 class="d-flex justify-content-between align-items-start border-end pb-4 pb-sm-0 card-widget-3">
                                 <div>
-                                    <h4 class="mb-0">₹{{$booking->total - $booking->pending_payment ?? "00"}}</h4>
+                                    <h4 class="mb-0">₹{{number_format($booking->total - $booking->pending_payment) ?? "00"}}</h4>
                                     <p class="mb-0">Paid</p>
                                 </div>
                                 <div class="avatar me-sm-6">
@@ -106,7 +106,7 @@
                         <div class="col-sm-6 col-lg-4">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
-                                    <h4 class="mb-0">₹{{$booking->pending_payment ?? "00"}}</h4>
+                                    <h4 class="mb-0">₹{{number_format($booking->pending_payment) ?? "00"}}</h4>
                                     <p class="mb-0">Unpaid</p>
                                 </div>
                                 <div class="avatar">
@@ -135,7 +135,7 @@
                     </div>
                     <div class="mb-2 col-lg-6 col-xl-6 col-12 mb-0">
                         <div class="form-floating form-floating-outline">
-                            <input type="text" class="form-control" name="end_date" placeholder="DD-MM-YYYY" value="{{date('Y-m-d',strtotime($booking->end_date))}}" id="BookingEndDate" readonly/>
+                            <input type="text" class="form-control" name="end_date" placeholder="DD-MM-YYYY" value="{{date('d-m-Y',strtotime($booking->end_date))}}" id="BookingEndDate" readonly/>
                             <label for="BookingEndDate">End Date</label>
                         </div>
                         <span class="text-danger" id="EndError"></span>
@@ -468,6 +468,51 @@
 
         return day + '/' + month + '/' + year;
     }
+    function formatDate(dateString) {
+        // Helper function to pad day and month with leading zeros
+        function pad(num) {
+            return num < 10 ? '0' + num : num;
+        }
+
+        // Split the date string into components
+        var parts = dateString.split('-');
+        if (parts.length !== 3) {
+            console.error("Invalid date format:", dateString);
+            return dateString;
+        }
+
+        var day, month, year;
+
+        // Check if the format is YYYY-MM-DD or DD-MM-YYYY
+        if (parseInt(parts[0], 10) > 31) {
+            // Assuming YYYY-MM-DD
+            year = parseInt(parts[0], 10);
+            month = parseInt(parts[1], 10) - 1; // Months are zero-based in JavaScript Date
+            day = parseInt(parts[2], 10);
+        } else {
+            // Assuming DD-MM-YYYY
+            day = parseInt(parts[0], 10);
+            month = parseInt(parts[1], 10) - 1; // Months are zero-based in JavaScript Date
+            year = parseInt(parts[2], 10);
+        }
+
+        // Create a new date object
+        var date = new Date(year, month, day);
+
+        // Check if the parsed date is valid
+        if (isNaN(date.getTime())) {
+            console.error("Invalid date:", dateString);
+            return dateString; // or handle the error appropriately
+        }
+
+        // Format the date as DD/MM/YYYY
+        var formattedDay = pad(day);
+        var formattedMonth = pad(month + 1); // Adjust month back to 1-based
+        var formattedYear = year;
+
+        return formattedDay + '/' + formattedMonth + '/' + formattedYear;
+    }
+
     function submit(id){
         var startDate = $('#BookingStartDate').val();
         var endDate = $('#BookingEndDate').val();
@@ -506,16 +551,16 @@
                             '<tr>' +
                             '<td>' + (index + 1) + '</td>' +
                             '<td>' + item.description + '</td>' +
-                            '<td>' + item.price + '</td>' +
+                            '<td>' + '₹' + item.price.toLocaleString() + '</td>' +
                             '<td>' + item.qnt + '</td>' +
-                            '<td>' + item.total + '</td>' +
+                            '<td>' + '₹' + item.total.toLocaleString() + '</td>' +
                             '</tr>'
                         );
                         grandTotal += item.total;
                     });
 
-                    $('#grand-sub-total').text('₹' + grandTotal);
-                    $('#grand-total').text('₹' + grandTotal);
+                    $('#grand-sub-total').text('₹' + grandTotal.toLocaleString());
+                    $('#grand-total').text('₹' + grandTotal.toLocaleString());
                 }
             }); 
         }

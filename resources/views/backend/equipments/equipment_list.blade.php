@@ -120,7 +120,7 @@
                 "data": "cost_price",
                 "render": function (data, type, row, meta) {
                     return type === 'display' ?
-                    '₹'+data :
+                    '₹'+ parseInt(data, 10).toLocaleString() :
                     data;
                 }
             },
@@ -128,7 +128,7 @@
                 "data": "sell_price",
                 "render": function (data, type, row, meta) {
                     return type === 'display' ?
-                    '₹'+data :
+                    '₹'+ parseInt(data, 10).toLocaleString() :
                     data;
                 }
             },
