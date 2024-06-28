@@ -191,18 +191,32 @@
                     },
                     success:function(result)
                     {
-                        Swal.fire({
-                            title: 'Closed!',
-                            text: "The booking closed succsessfully!",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'ok',
-                            customClass: {
-                                confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
-                            },
-                            buttonsStyling: false
-                        }); 
-                        setTimeout(function(){ window.location.reload(); }, 500);
+                        if(result == "Error"){
+                            Swal.fire({
+                                title: 'Error!',
+                                text: "There should be at least one payment history to close the booking.",
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'ok',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+                                },
+                                buttonsStyling: false
+                            }); 
+                        }else{
+                            Swal.fire({
+                                title: 'Closed!',
+                                text: "The booking closed succsessfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'ok',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+                                },
+                                buttonsStyling: false
+                            }); 
+                            setTimeout(function(){ window.location.reload(); }, 500);
+                        }
                     }
                 }); 
             }

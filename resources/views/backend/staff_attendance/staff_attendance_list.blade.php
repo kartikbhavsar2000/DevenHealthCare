@@ -139,7 +139,7 @@
                 { "data": "booking.unique_id" ,"defaultContent": "-"},
                 { "data": "type" ,"defaultContent": "-"},
                 {
-                    data: "id",
+                    data: "staff.f_name",
                     render: function (data, type, row, meta) {
                         // Check if the proof image exists
                         if(row.staff){
@@ -191,15 +191,25 @@
                     }
                 },
                 {"data": "cost_rate" , render : function ( data, type, row, meta ) {
-                    return '₹'+ parseInt(data, 10).toLocaleString();
+                    if(data){
+                        return '₹'+ parseInt(data, 10).toLocaleString();
+                    }else{
+                        return "-";
+                    }
                 }},
                 { "data": "rej_reason" ,"defaultContent": "-"},
                 {
                     "data": "id",
                     "render": function (data, type, row, meta) {
-                        return type === 'display' ?
-                        '<a href="https://www.google.com/maps/search/?api=1&query='+row.lat+','+row.lng+'" target="_blank" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-map-pin-line"></i></a>' :
-                        data;
+                        if(row.lat && row.lng){
+                            return type === 'display' ?
+                            '<a href="https://www.google.com/maps/search/?api=1&query='+row.lat+','+row.lng+'" target="_blank" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-map-pin-line"></i></a>' :
+                            data;
+                        }else{
+                            return type === 'display' ?
+                            '<span class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-map-pin-line" style="color:#bbbcbe;"></i></span>' :
+                            data;   
+                        }
                     }
                 },
                 {

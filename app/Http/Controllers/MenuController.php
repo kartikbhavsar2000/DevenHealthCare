@@ -247,6 +247,14 @@ class MenuController extends Controller
         }
         abort(403);
     }
+    public function staff_salary_slip($id)
+    {
+        if (in_array("staff", Auth::user()->permissions())) {
+            $data = Staff::with('types')->find($id);
+            return view('backend.staff.salary_slip',['data'=>$data]);
+        }
+        abort(403);
+    }
     public function delete_staff(Request $request)
     {
         $data = Staff::find($request->id)->delete();

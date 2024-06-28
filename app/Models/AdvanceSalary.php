@@ -16,4 +16,12 @@ class AdvanceSalary extends Model
     {
         return $this->hasOne(Staff::class,'id','staff_id');
     }
+    public function created_by_user()
+    {
+        return $this->hasOne(User::class,'id','added_by');
+    }
+    public function updated_by_user()
+    {
+        return $this->hasOne(User::class,'id','updated_by');
+    }
 }

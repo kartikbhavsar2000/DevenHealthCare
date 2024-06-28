@@ -57,8 +57,8 @@
                             <th>Customer Name</th>
                             <th>Start Date</th>
                             <th>End Date</th>
-                            <th>Created At</th>
-                            <th>Added By</th>
+                            {{-- <th>Created At</th>
+                            <th>Added By</th> --}}
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -84,7 +84,7 @@
             extend: 'excel',
             title: 'Bookings List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8]
+                columns: [1,2,3,4,5,6]
             }
         }],
         columnDefs: [{
@@ -148,22 +148,22 @@
                     return "-";
                 }
             }},
-            {"data": "created_at" , render : function ( data, type, row, meta ) {
-                if(data){
-                    return type === 'display'  ?
-                    ''+ moment(new Date(data)).format("DD/MM/YYYY hh:mm A")  +'' :
-                    data;
-                }else{
-                    return "-";
-                }
-            }},
-            {"data": "added_by" , render : function ( data, type, row, meta ) {
-                if(data){
-                    return data.name;
-                }else{
-                    return "-";
-                }
-            }},
+            // {"data": "created_at" , render : function ( data, type, row, meta ) {
+            //     if(data){
+            //         return type === 'display'  ?
+            //         ''+ moment(new Date(data)).format("DD/MM/YYYY hh:mm A")  +'' :
+            //         data;
+            //     }else{
+            //         return "-";
+            //     }
+            // }},
+            // {"data": "added_by" , render : function ( data, type, row, meta ) {
+            //     if(data){
+            //         return data.name;
+            //     }else{
+            //         return "-";
+            //     }
+            // }},
             {
                 "data": "id",
                 "render": function (data, type, row, meta) {

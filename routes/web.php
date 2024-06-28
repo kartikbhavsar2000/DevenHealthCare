@@ -179,6 +179,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/view_staff_details/{id}', [App\Http\Controllers\MenuController::class, 'view_staff_details'])->name('view_staff_details');
     Route::get('/view_staff_reviews/{id}', [App\Http\Controllers\MenuController::class, 'view_staff_reviews'])->name('view_staff_reviews');
     Route::get('/get_staff_all_reviews_list/{id}', [App\Http\Controllers\MenuController::class, 'get_staff_all_reviews_list'])->name('get_staff_all_reviews_list');
+    Route::get('/staff_salary_slip/{id}', [App\Http\Controllers\MenuController::class, 'staff_salary_slip'])->name('staff_salary_slip');
     Route::post('/delete_staff', [App\Http\Controllers\MenuController::class, 'delete_staff'])->name('delete_staff');
     Route::post('/create_staff', [App\Http\Controllers\MenuController::class, 'create_staff'])->name('create_staff');
     Route::post('/update_staff', [App\Http\Controllers\MenuController::class, 'update_staff'])->name('update_staff');
@@ -207,10 +208,12 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/get_advance_salary_list', [App\Http\Controllers\PaymentController::class, 'get_advance_salary_list'])->name('get_advance_salary_list');
     Route::get('/add_advance_salary', [App\Http\Controllers\PaymentController::class, 'add_advance_salary'])->name('add_advance_salary');
     Route::get('/edit_advance_salary/{id}', [App\Http\Controllers\PaymentController::class, 'edit_advance_salary'])->name('edit_advance_salary');
+    Route::post('/advance_salary_change_status', [App\Http\Controllers\PaymentController::class, 'advance_salary_change_status'])->name('advance_salary_change_status');
     Route::post('/create_advance_salary', [App\Http\Controllers\PaymentController::class, 'create_advance_salary'])->name('create_advance_salary');
     Route::post('/update_advance_salary', [App\Http\Controllers\PaymentController::class, 'update_advance_salary'])->name('update_advance_salary');
 
     Route::get('/salary', [App\Http\Controllers\PaymentController::class, 'salary'])->name('salary');
     Route::post('/get_staff_doctor_list', [App\Http\Controllers\PaymentController::class, 'get_staff_doctor_list'])->name('get_staff_doctor_list');
     Route::post('/get_staff_doctor_salary_details', [App\Http\Controllers\PaymentController::class, 'get_staff_doctor_salary_details'])->name('get_staff_doctor_salary_details');
+    Route::post('/staff_salary_pay', [App\Http\Controllers\PaymentController::class, 'staff_salary_pay'])->name('staff_salary_pay');
 });

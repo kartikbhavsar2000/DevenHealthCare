@@ -204,15 +204,19 @@
                                 <td>{{$booking->unique_id ?? ""}}</td>
                             </tr>
                             <tr>
-                                 <td class="pe-4">Date Issues:</td>
+                                <td class="pe-4">Date Issues:</td>
                                 <td>{{date('d/m/Y')}}</td>
                             </tr>
                             <tr>
-                                <td class="pe-4">Service Start Date:</td>
+                                <td class="pe-4">Service Period:</td>
+                                <td>{{date('d/m/Y',strtotime($booking->start_date))}} To {{date('d/m/Y',strtotime($booking->end_date))}}</td>
+                            </tr>
+                            <tr>
+                                <td class="pe-4">Invoice Start Date:</td>
                                 <td id="DataStartDate">{{date('d/m/Y',strtotime($booking->start_date))}}</td>
                             </tr>
                             <tr>
-                              <td class="pe-4">Service End Date:</td>
+                              <td class="pe-4">Invoice End Date:</td>
                               <td id="DataEndDate">{{date('d/m/Y',strtotime($booking->end_date))}}</td>
                             </tr>
                         </tbody>

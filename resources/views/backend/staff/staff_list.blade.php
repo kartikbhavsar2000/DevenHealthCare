@@ -209,7 +209,7 @@
                             <li><a href="{{asset("/")}}view_staff_details/` + data + `" class="dropdown-item"><i class="ri-information-line ri-20px"></i> View Staff Details</a></li>
                             <li><a href="{{asset("/")}}view_staff_reviews/` + data + `" class="dropdown-item"><i class="ri-user-star-line ri-20px"></i> Staff Ratings</a></li>
                             <li><a href="{{asset("/")}}edit_staff/` + data + `" class="dropdown-item"><i class="ri-edit-box-line ri-20px"></i> Edit Staff</a></li>
-                            <li><a href="#" class="dropdown-item"><i class="ri-money-rupee-circle-line ri-20px"></i> Staff Salary</a></li>
+                            <li><a href="{{asset("/")}}staff_salary_slip/` + data + `" class="dropdown-item"><i class="ri-file-list-2-line"></i> Staff Salary Slip</a></li>
                             <div class="dropdown-divider"></div>
                             <li><button onClick="deleted(`+data+`)" class="dropdown-item text-danger"><i class="ri-delete-bin-7-line" style="font-size:19px;"></i> Delete Staff</button></li>
                         </ul>

@@ -46,6 +46,11 @@
                             <th>Staff Name</th>
                             <th>Amount</th>
                             <th>Description</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
+                            <th>Created By</th>
+                            <th>Updated By</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -130,6 +135,40 @@
                 }
             },
             { "data": "description" ,"defaultContent": "-"},
+            {"data": "created_at" , render : function ( data, type, row, meta ) {
+                if(data){
+                    return type === 'display'  ?
+                    ''+ moment(new Date(data)).format("DD/MM/YYYY hh:mm A")  +'' :
+                    data;
+                }else{
+                    return "-";
+                }
+            }},
+            {"data": "updated_at" , render : function ( data, type, row, meta ) {
+                if(data){
+                    return type === 'display'  ?
+                    ''+ moment(new Date(data)).format("DD/MM/YYYY hh:mm A")  +'' :
+                    data;
+                }else{
+                    return "-";
+                }
+            }},
+            { "data": "created_by_user.name" ,"defaultContent": "-"},
+            { "data": "updated_by_user.name" ,"defaultContent": "-"},
+            {
+                "data": "status",
+                "render": function (data, type, row, meta) {
+                    if(data == 0){
+                        return type === 'display' ?
+                        '<button onclick="changeStatus('+row.id+')" class="btn btn-label-warning w-100">Unpaid</button>' :
+                        data;
+                    }else{
+                        return type === 'display' ?
+                        '<button class="btn btn-label-success w-100">Paid</button>' :
+                        data;
+                    }
+                }
+            },
             {
                 "data": "id",
                 "render": function (data, type, row, meta) {
@@ -141,6 +180,47 @@
         ],
         
     });
+
+    function changeStatus(id){
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        customClass: {
+          confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+          cancelButton: 'btn btn-outline-secondary waves-effect'
+        },
+        buttonsStyling: false
+        }).then(function(result) {
+            if(result.dismiss != 'cancel'){
+                $.ajax({
+                    url:"{{route('advance_salary_change_status')}}",
+                    method:"POST",
+                    data:{'id':id,_token:"{{ csrf_token() }}"},
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success:function(result)
+                    {
+                        Swal.fire({
+                            title: 'Changed!',
+                            text: "The status changed succsessfully!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'ok',
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+                            },
+                            buttonsStyling: false
+                        }); 
+                        setTimeout(function(){ window.location.reload(); }, 500);
+                    }
+                }); 
+            }
+        }); 
+    }
 </script>
 
 @endsection

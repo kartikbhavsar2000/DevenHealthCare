@@ -612,6 +612,7 @@ class BookingController extends Controller
             $booking->sub_total = $sub_total;
             $booking->total = $total;
             $booking->pending_payment = $pending_payment;
+            $booking->is_doctor = 1;
             $booking->update();
     
             return redirect()->back()->with('success','Doctor Added & Assign Successfully.');
@@ -644,6 +645,7 @@ class BookingController extends Controller
             $booking->sub_total = $sub_total;
             $booking->total = $total;
             $booking->pending_payment = $pending_payment;
+            $booking->is_equipment = 1;
             $booking->update();
     
             return redirect()->back()->with('success','Equipment Added Successfully.');
@@ -671,6 +673,7 @@ class BookingController extends Controller
             $booking->sub_total = $sub_total;
             $booking->total = $total;
             $booking->pending_payment = $pending_payment;
+            $booking->is_ambulance = 1;
             $booking->update();
     
             return redirect()->back()->with('success','Ambulance Added Successfully.');
@@ -859,7 +862,7 @@ class BookingController extends Controller
         $ratings = BookingRating::where('booking_id', $id)->get();
     
         $data = [];
-        $this->addDoctors($doctorIds, $ratings, $data);
+        // $this->addDoctors($doctorIds, $ratings, $data);
         $this->addStaff($staffIds, $ratings, $data);
     
         return view('backend.booking_reviews.add_booking_reviews', ['data' => $data, 'booking' => $booking]);
@@ -923,16 +926,16 @@ class BookingController extends Controller
     }
     public function get_staff_reviews_list($id)
     {   
-        $data = BookingRating::where('booking_id',$id)->with('created_by')->orderBy('id',"DESC")->get();
+        $data = BookingRating::where('type','!=',"Doctor")->where('booking_id',$id)->with('created_by')->orderBy('id',"DESC")->get();
         foreach($data as $da){
-            if($da->type == "Doctor"){
-                $doctor = Doctor::find($da->staff_id);
-                if($doctor){
-                    $da->staff_name = $doctor->name;
-                }else{
-                    $da->staff_name = "";
-                }
-            }else{
+            // if($da->type == "Doctor"){
+            //     $doctor = Doctor::find($da->staff_id);
+            //     if($doctor){
+            //         $da->staff_name = $doctor->name;
+            //     }else{
+            //         $da->staff_name = "";
+            //     }
+            // }else{
                 $staff = Staff::find($da->staff_id);
                 if($staff){
                     $da->staff_name = $staff->f_name . " " . $staff->m_name . " " . $staff->l_name;;
@@ -940,7 +943,7 @@ class BookingController extends Controller
                     $da->staff_name = "";
                 }
             }
-        }
+        // }
         return response()->json(['data'=>$data]);
     }
 }

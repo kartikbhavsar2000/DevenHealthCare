@@ -255,14 +255,12 @@ class HomeController extends Controller
     {   
         if (in_array("hsp_dashboard", Auth::user()->permissions())) {
             $staff_type = StaffType::orderBy('id',"ASC")->get();
-            $bookings = Booking::where(['booking_status'=>0])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
+            $bookings = Booking::where('booking_type','!=','Corporate')->where(['booking_status'=>0])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
             $all_bookings = [];
             foreach($bookings as $booking){
                 $customer_details = $booking->customerDetails();
-                if(Session::get('customerType') == "HSP"){
-                    if($customer_details->h_type != "DHC"){
-                        $all_bookings[] = $booking;
-                    }
+                if($customer_details->h_type != "DHC"){
+                    $all_bookings[] = $booking;
                 }
                 $customer_details->state = State::find($customer_details->state);
                 $customer_details->city = City::find($customer_details->city);
@@ -591,7 +589,7 @@ class HomeController extends Controller
         ];
 
         return response()->json($data);
-    }
+    }   
     public function patient_vs_corporation_chart(Request $request)
     {
         $all_dates = [];

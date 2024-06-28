@@ -41,7 +41,7 @@
                         <h6 ><i class="ri-information-2-line ri-24px"></i> Patient Details :</h6>
                         <div class="row mx-5">
                             <div class="col-2">
-                                <p class="text-nowrap mb-2"><i class="ri-user-line ri-20px me-2"></i>Hospital</p>
+                                <p class="text-nowrap mb-2"><i class="ri-hospital-line ri-20px me-2"></i>Hospital</p>
                                 <p class="text-nowrap mb-2"><i class="ri-user-line ri-20px me-2"></i>Full Name</p>
                                 <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Mobile</p>
                                 <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Mobile 2</p>

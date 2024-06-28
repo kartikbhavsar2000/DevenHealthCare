@@ -28,7 +28,7 @@
                 <h5 class="mb-0">Generate Salary</h5>
             </div>
             <hr>
-            <form id="Form" action="{{route('create_advance_salary')}}" method="POST">
+            <form id="Form" action="{{route('staff_salary_pay')}}" method="POST">
                 @csrf
                 <div class="card-body py-0">
                     <div class="row">
@@ -94,7 +94,8 @@
                                   <th>Total Assign</th>
                                   <th>Present</th>
                                   <th>Absent</th>
-                                  <th>Salary</th>
+                                  <th>Payment</th>
+                                  <th>Payable Amount</th>
                                 </tr>
                               </thead>
                               <tbody id="table-body">
@@ -106,7 +107,7 @@
                 </div>
                 <hr>
                 <div class="card-footer text-end">
-                    <button type="submit" id="Submit" class="btn btn-flex btn-primary h-40px fs-7 fw-bold me-1">Submit</button>
+                    <button type="submit" id="Submit" class="btn btn-flex btn-primary h-40px fs-7 fw-bold me-1"><i class="ri-money-rupee-circle-line me-2" style="font-weight: 500;"></i> Pay Now</button>
                 </div>
             </form>
         </div>
@@ -186,6 +187,7 @@
                     // Populate the table with the data received
                     $.each(result, function(index, item) {
                         var present = '<span class="badge bg-label-warning w-100 my-1">Pending('+item.pending_count+')</span><span class="badge bg-label-success w-100 my-1">Approved('+item.approved_count+')</span><span class="badge bg-label-danger w-100 my-1">Rejected('+item.rejected_count+')</span>';
+                        var payment = '<span class="badge bg-label-warning w-100 my-1">Unpaid('+item.staff_unpaid_count+')</span><span class="badge bg-label-success w-100 my-1">Paid('+item.staff_paid_count+')</span>';
                         var status = '<span class="badge bg-label-secondary">Not Marked</span>';
                         
                         $('#table-body').append(
@@ -196,6 +198,7 @@
                             '<td>' + item.total_assign + '</td>' +
                             '<td>' + present + '</td>' +
                             '<td>' + item.absent_count + '</td>' +
+                            '<td>' + payment + '</td>' +
                             '<td>' + '₹' +  parseInt(item.total_salary, 10).toLocaleString() + '</td>' +
                             '</tr>'
                         );
