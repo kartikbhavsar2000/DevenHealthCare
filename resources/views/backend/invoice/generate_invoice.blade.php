@@ -555,7 +555,7 @@
                             '<tr>' +
                             '<td>' + (index + 1) + '</td>' +
                             '<td>' + item.description + '</td>' +
-                            '<td>' + '₹' + item.price.toLocaleString() + '</td>' +
+                            '<td>' + '₹' + parseInt(item.price,10).toLocaleString() + '</td>' +
                             '<td>' + item.qnt + '</td>' +
                             '<td>' + '₹' + item.total.toLocaleString() + '</td>' +
                             '</tr>'
@@ -568,7 +568,7 @@
                 }
             }); 
         }
-    }
+    }78039360700
     $(document).ready(function() {
         var start_date = @json($booking->start_date);
         var end_date = @json($booking->end_date);

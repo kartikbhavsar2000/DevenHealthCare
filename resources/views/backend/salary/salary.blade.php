@@ -60,7 +60,7 @@
                             </div>
                         </div>
                         <div class="col-2 mt-8">
-                            <button type="button" class="btn btn-white border border-1 border-dark text-dark w-100" id="selectAll">Select All Staff</button>
+                            <button type="button" class="btn btn-white w-100" id="selectAll">Select All Staff</button>
                         </div>
                         <div class="col-5">
                             <div class="form-group">
@@ -79,7 +79,7 @@
                         
                         <div class="col-2 mb-3 mt-8">
                             <div class="mb-4">
-                                <button class="btn btn-label-secondary w-100" type="button" onclick="getStaffSalaryDetails()">Generate</button>
+                                <button class="btn btn-secondary w-100" type="button" onclick="getStaffSalaryDetails()">Generate</button>
                             </div>
                         </div>
                     </div>

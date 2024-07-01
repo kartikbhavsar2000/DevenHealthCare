@@ -18,6 +18,7 @@ use App\Models\Area;
 use App\Models\Booking;
 use App\Models\BookingRating;
 use App\Models\StaffDocuments;
+use App\Models\BookingAssign;
 
 class MenuController extends Controller
 {
@@ -245,6 +246,26 @@ class MenuController extends Controller
             $data = Staff::find($id);
             return view('backend.staff.view_staff',['states'=>$states,'cities'=>$cities,'area'=>$area,'staff_type'=>$staff_type,'data'=>$data]);
         }
+        abort(403);
+    }
+    public function get_staff_salary_slip_data(Request $request)
+    {
+        if (in_array("staff", Auth::user()->permissions())) {
+            // Extract month and year from the request
+            $requestMonth = $request->month; // Assuming 'Jul 2024' format
+            $startDate = date('Y-m-01', strtotime($requestMonth));
+            $endDate = date('Y-m-t', strtotime($requestMonth));
+            
+            $booking_assign = BookingAssign::where([
+                'staff_id' => $request->staff_id,
+                'att_marked' => 1,
+                'status' => 1,
+                'staff_payment' => 1
+            ])->whereBetween('date', [$startDate, $endDate])->pluck('cost_rate')->sum();
+
+            return $booking_assign;
+        }
+        
         abort(403);
     }
     public function staff_salary_slip($id)

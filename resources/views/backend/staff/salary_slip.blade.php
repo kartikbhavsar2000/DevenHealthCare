@@ -142,21 +142,21 @@
                                 <div class="row details-row">
                                     <div class="col-6">
                                         <p class="title">Basic Salary:</p>
-                                        <p class="amount">₹3000</p>
+                                        <p class="amount" id="Salary">₹00</p>
                                     </div>
                                     <div class="col-6">
                                         <p class="title">Allowances:</p>
-                                        <p class="amount">₹500</p>
+                                        <p class="amount" id="Allowances">₹00</p>
                                     </div>
                                 </div>
                                 <div class="row details-row">
                                     <div class="col-6">
                                         <p class="title">Deductions:</p>
-                                        <p class="amount">₹200</p>
+                                        <p class="amount" id="Deductions">₹00</p>
                                     </div>
                                     <div class="col-6">
                                         <p class="title">Net Pay:</p>
-                                        <p class="amount">₹3300</p>
+                                        <p class="amount" id="NeetSalary">₹00</p>
                                     </div>
                                 </div>
                             </div>
@@ -253,7 +253,32 @@
     }
     function getStaffSalaryDetails(){
         var month = $('#monthpicker').val();
-        $('#PayMonth').text(month);
+        var staff_id = '{{$data->id}}';
+        $.ajax({
+            url:"{{route('get_staff_salary_slip_data')}}",
+            method:"POST",
+            data:{'month':month,'staff_id':staff_id,_token:"{{ csrf_token() }}"},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success:function(result)
+            {
+                console.log(result);
+                calculateSalary(result);
+                $('#PayMonth').text(month);
+            }
+        }); 
+    }
+    function calculateSalary(total){
+        var salary = total;
+        var allowances = 500;
+        var deductions = 200;
+        var neet_salary = parseInt(salary, 10) + allowances - deductions;
+
+        $('#Salary').text('₹'+ parseInt(salary, 10).toLocaleString());
+        $('#Allowances').text('₹'+ parseInt(allowances, 10).toLocaleString());
+        $('#Deductions').text('₹'+ parseInt(deductions, 10).toLocaleString());
+        $('#NeetSalary').text('₹'+ parseInt(neet_salary, 10).toLocaleString());
     }
     $(document).ready(function() {
         // Get the current date

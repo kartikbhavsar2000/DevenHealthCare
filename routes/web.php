@@ -184,6 +184,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::post('/create_staff', [App\Http\Controllers\MenuController::class, 'create_staff'])->name('create_staff');
     Route::post('/update_staff', [App\Http\Controllers\MenuController::class, 'update_staff'])->name('update_staff');
     Route::post('/remove_staff_document', [App\Http\Controllers\MenuController::class, 'remove_staff_document'])->name('remove_staff_document');
+    Route::post('/get_staff_salary_slip_data', [App\Http\Controllers\MenuController::class, 'get_staff_salary_slip_data'])->name('get_staff_salary_slip_data');
 
     Route::get('/corporates', [App\Http\Controllers\MenuController::class, 'corporates'])->name('corporates');
     Route::get('/get_corporates_list', [App\Http\Controllers\MenuController::class, 'get_corporates_list'])->name('get_corporates_list');
