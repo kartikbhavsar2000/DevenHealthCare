@@ -43,6 +43,7 @@ class InvoiceController extends Controller
     {
         if (in_array("active_invoice", Auth::user()->permissions())) {
             $booking = Booking::with('bookingDetails')->find($id);
+            $booking_amount_diffrence = BookingAssign::where('type','!=','Doctor')->where('status','!=',1)->where(['booking_id'=>$booking->id,'att_marked'=>0])->sum('sell_rate');
             $booking->customer_details = $booking->customerDetails();
             $booking->state = State::where('id',$booking->customer_details->state)->pluck('name')->first();
             $booking->city = City::where('id',$booking->customer_details->city)->pluck('name')->first();
@@ -54,7 +55,7 @@ class InvoiceController extends Controller
             }
 
             $payments = BookingPayment::where(['booking_id'=>$booking->id])->with('created_by')->get();
-            return view('backend.invoice.generate_invoice',['booking' => $booking,'payments'=>$payments]);
+            return view('backend.invoice.generate_invoice',['booking_amount_diffrence' => $booking_amount_diffrence,'booking' => $booking,'payments'=>$payments]);
         }
         abort(403);
     }
@@ -151,7 +152,9 @@ class InvoiceController extends Controller
                     ];
                 }
             }elseif($details->type == 2){
-                if($booking->start_date == $request->startDate && $booking->end_date == $request->endDate){
+                $dateToCheckTimee = strtotime($details->date);
+                $dateToCheck = date('Y-m-d', $dateToCheckTimee);
+                if (($dateToCheck >= $startDate && $dateToCheck <= $endDate) || $dateToCheck == $startDate || $dateToCheck == $endDate) {
                     $data[] = [
                         'description' => $description,
                         'price' => $details->cost_rate,
@@ -160,7 +163,9 @@ class InvoiceController extends Controller
                     ];
                 }
             }elseif($details->type == 4){
-                if($booking->start_date == $request->startDate && $booking->end_date == $request->endDate){
+                $dateToCheckTimee = strtotime($details->date);
+                $dateToCheck = date('Y-m-d', $dateToCheckTimee);
+                if (($dateToCheck >= $startDate && $dateToCheck <= $endDate) || $dateToCheck == $startDate || $dateToCheck == $endDate) {
                     $data[] = [
                         'description' => $description,
                         'price' => $price,

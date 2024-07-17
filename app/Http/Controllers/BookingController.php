@@ -347,6 +347,7 @@ class BookingController extends Controller
                                 $booking_details->sell_rate = $equipment['equipment_rate'];
                                 $booking_details->name = $equipment_details->name;
                                 $booking_details->qnt = $equipment['equipment_qnt'];
+                                $booking_details->date = date('Y-m-d',strtotime($booking->start_date));
                                 $booking_details->save();
                                 $equipment_rate[] = $equipment['equipment_rate'];
                             }
@@ -358,6 +359,9 @@ class BookingController extends Controller
                     if(!empty($request->doctor_data)){
                         foreach($request->doctor_data as $doctor){
                             if (!empty($doctor) && isset($doctor['doctor_shift']) && isset($doctor['doctor_rate']) && isset($doctor['doctor_name']) && isset($doctor['date'])) {
+
+                                $timestamp = strtotime($doctor['date']);
+
                                 $booking_details = new BookingDetails();
                                 $booking_details->booking_id = $booking->id;
                                 $booking_details->type = 3;
@@ -365,6 +369,7 @@ class BookingController extends Controller
                                 $booking_details->sell_rate = $doctor['doctor_rate'];
                                 $booking_details->name = $doctor['doctor_name'];
                                 $booking_details->qnt = 1;
+                                $booking_details->date = date('Y-m-d', $timestamp);
                                 $booking_details->save();
 
                                 $booking_assign = new BookingAssign();
@@ -374,7 +379,7 @@ class BookingController extends Controller
                                 $booking_assign->shift = $doctor['doctor_shift'];
                                 $booking_assign->sell_rate = $doctor['doctor_rate'];
 
-                                $timestamp = strtotime($doctor['date']);
+                                
                                 $booking_assign->date = date('Y-m-d', $timestamp);
 
                                 $booking_assign->save();
@@ -396,6 +401,7 @@ class BookingController extends Controller
                                 $booking_details->sell_rate = $ambulance['ambulance_rate'];
                                 $booking_details->name = $ambulance['ambulance_name'];
                                 $booking_details->qnt = 1;
+                                $booking_details->date = date('Y-m-d',strtotime($booking->start_date));
                                 $booking_details->save();
                                 $ambulance_rate[] = $ambulance['ambulance_rate'];
                             }
@@ -853,6 +859,8 @@ class BookingController extends Controller
     {
         $booking = Booking::find($request->booking_id);
         if($booking){
+            $timestamp = strtotime($request->date);
+
             $booking_details = new BookingDetails();
             $booking_details->booking_id = $booking->id;
             $booking_details->type = 3;
@@ -860,6 +868,7 @@ class BookingController extends Controller
             $booking_details->sell_rate = $request->sell_rate;
             $booking_details->name = $request->staff_type;
             $booking_details->qnt = 1;
+            $booking_details->date = date('Y-m-d', $timestamp);
             $booking_details->save();
     
             $booking_assign = new BookingAssign();
@@ -871,7 +880,7 @@ class BookingController extends Controller
             $booking_assign->cost_rate = $request->cost_rate;
             $booking_assign->staff_id = $request->staff_id;
     
-            $timestamp = strtotime($request->date);
+            
             $booking_assign->date = date('Y-m-d', $timestamp);
     
             $booking_assign->save();
@@ -895,6 +904,8 @@ class BookingController extends Controller
     {
         $booking = Booking::find($request->booking_id);
         if($booking){
+            $timestamp = strtotime($request->date);
+
             if($request->name){
                 $equipment = Equipment::find($request->name);
             }else{
@@ -907,6 +918,7 @@ class BookingController extends Controller
             $booking_details->cost_rate = $request->cost_rate;
             $booking_details->name = $equipment->name;
             $booking_details->qnt = $request->qnt;
+            $booking_details->date = date('Y-m-d', $timestamp);
             $booking_details->save();
 
             $sub_total = $booking->sub_total + $request->sell_rate;
@@ -928,6 +940,8 @@ class BookingController extends Controller
     {
         $booking = Booking::find($request->booking_id);
         if($booking){
+            $timestamp = strtotime($request->date);
+            
             $booking_details = new BookingDetails();
             $booking_details->booking_id = $booking->id;
             $booking_details->type = 4;
@@ -935,6 +949,7 @@ class BookingController extends Controller
             $booking_details->name = $request->type;
             $booking_details->shift = $request->shift;
             $booking_details->qnt = 1;
+            $booking_details->date = date('Y-m-d', $timestamp);
             $booking_details->save();
 
             $sub_total = $booking->sub_total + $request->sell_rate;

@@ -47,6 +47,7 @@
                             <th>Month</th>
                             <th>Amount</th>
                             <th>Type</th>
+                            <th>Description</th>
                             <th>Added By</th>
                             <th>Created At</th>
                         </tr>
@@ -65,6 +66,7 @@
                                     @else
                                     <td class="text-success">Added</td>
                                     @endif
+                                    <td>{{$da->description ?? "-"}}</td>
                                     <td>{{$da->created_by_user->name ?? "-"}}</td>
                                     <td>{{date('d/m/Y H:s A',strtotime($da->created_at))}}</td>
                                 </tr>
@@ -90,7 +92,7 @@
             extend: 'excel',
             title: 'Advance Salary History',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7]
+                columns: [1,2,3,4,5,6,7,8]
             }
         }],
         columnDefs: [{

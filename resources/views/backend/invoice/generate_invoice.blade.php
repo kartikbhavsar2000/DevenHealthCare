@@ -74,7 +74,7 @@
             <div class="card-widget-separator-wrapper">
                 <div class="card-body card-widget-separator">
                     <div class="row gy-4 gy-sm-1">
-                        <div class="col-sm-4 col-lg-4">
+                        <div class="col-sm-6 col-lg-3">
                             <div
                                 class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-4 pb-sm-0">
                                 <div>
@@ -89,7 +89,7 @@
                             </div>
                             <hr class="d-none d-sm-block d-lg-none">
                         </div>
-                        <div class="col-sm-6 col-lg-4">
+                        <div class="col-sm-6 col-lg-3">
                             <div
                                 class="d-flex justify-content-between align-items-start border-end pb-4 pb-sm-0 card-widget-3">
                                 <div>
@@ -103,11 +103,25 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 col-lg-4">
-                            <div class="d-flex justify-content-between align-items-start">
+                        <div class="col-sm-6 col-lg-3">
+                            <div
+                                class="d-flex justify-content-between align-items-start border-end pb-4 pb-sm-0 card-widget-3">
                                 <div>
-                                    <h4 class="mb-0">₹{{number_format($booking->pending_payment) ?? "0"}}</h4>
+                                    <h4 class="mb-0">₹{{number_format($booking->pending_payment - $booking_amount_diffrence) ?? "0"}}</h4>
                                     <p class="mb-0">Unpaid</p>
+                                </div>
+                                <div class="avatar me-sm-6">
+                                    <span class="avatar-initial rounded-3 bg-label-secondary">
+                                        <i class="ri-money-rupee-circle-line text-heading ri-26px"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="d-flex justify-content-between align-items-start ">
+                                <div>
+                                    <h4 class="mb-0">₹{{number_format($booking_amount_diffrence) ?? "0"}}</h4>
+                                    <p class="mb-0">Diffrence</p>
                                 </div>
                                 <div class="avatar">
                                     <span class="avatar-initial rounded-3 bg-label-secondary">
@@ -237,9 +251,7 @@
                 <div class="pt-6">
                     <button type="submit" class="btn btn-primary me-4 waves-effect waves-light" onclick="submit({{$booking->id}})">Generate</button>
                     <div class="mt-5">
-                        <b class="text-danger">Note :-</b>
-                        <p class="m-0 mt-2">- This invoice is generated based on staff attendance. If the attendance is marked and approved by the admin, it will be reflected in the invoice.</p>
-                        <p class="m-0">- The equipment and ambulance data will only be visible in the invoice if the booking start and end dates match the invoice start and end dates.</p>
+                        <b class="text-danger">Note :- </b><span class="m-0 text-dark">This invoice is generated based on staff attendance. If the attendance is marked and approved by the admin, it will be reflected in the invoice.</span>
                     </div>
                 </div>
             </div>

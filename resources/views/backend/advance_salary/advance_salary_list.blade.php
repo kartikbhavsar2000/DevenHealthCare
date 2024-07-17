@@ -46,7 +46,7 @@
                             <th>Staff Name</th>
                             <th>Month</th>
                             <th>Pending Amount</th>
-                            <th>Description</th>
+                            {{-- <th>Description</th> --}}
                             <th>Created At</th>
                             <th>Updated At</th>
                             <th>Created By</th>
@@ -76,7 +76,7 @@
             extend: 'excel',
             title: 'Advance Salary List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8]
+                columns: [1,2,3,4,5,6,7]
             }
         }],
         columnDefs: [{
@@ -136,7 +136,7 @@
                     data;
                 }
             },
-            { "data": "description" ,"defaultContent": "-"},
+            // { "data": "description" ,"defaultContent": "-"},
             {"data": "created_at" , render : function ( data, type, row, meta ) {
                 if(data){
                     return type === 'display'  ?

@@ -77,9 +77,6 @@ class PaymentController extends Controller
         $checkMonth = AdvanceSalary::where(['staff_id'=>$request->staff_id,'month'=>$request->month])->first();
         if($checkMonth){
             $checkMonth->amount = $request->amount + $checkMonth->amount;
-            if($request->description){
-                $checkMonth->description = $request->description;
-            }
             $checkMonth->updated_by = Auth::user()->id;
             $checkMonth->update();
 
@@ -89,6 +86,9 @@ class PaymentController extends Controller
             $ad_Data->month = $request->month;
             $ad_Data->amount = $request->amount;
             $ad_Data->added_by = Auth::user()->id;
+            if($request->description){
+                $ad_Data->description = $request->description;
+            }
             $ad_Data->type = 1;
             $ad_Data->save();
 
@@ -109,6 +109,9 @@ class PaymentController extends Controller
             $ad_Data->month = $request->month;
             $ad_Data->amount = $request->amount;
             $ad_Data->added_by = Auth::user()->id;
+            if($request->description){
+                $ad_Data->description = $request->description;
+            }
             $ad_Data->type = 1;
             $ad_Data->save();
         }
@@ -125,7 +128,6 @@ class PaymentController extends Controller
         if($data){
             $amount = $data->amount - $request->pay_amount;
             $data->amount = $amount;
-            $data->description = $request->description;
             $data->updated_by = Auth::user()->id;
             $data->update();
 
@@ -135,6 +137,9 @@ class PaymentController extends Controller
             $ad_Data->month = $data->month;
             $ad_Data->amount = $request->pay_amount;
             $ad_Data->added_by = Auth::user()->id;
+            if($request->description){
+                $ad_Data->description = $request->description;
+            }
             $ad_Data->type = 0;
             $ad_Data->save();
 
@@ -361,6 +366,7 @@ class PaymentController extends Controller
                         $ad_Data->month = $checkMonth->month;
                         $ad_Data->amount = $total_salary;
                         $ad_Data->added_by = Auth::user()->id;
+                        $ad_Data->description = "Deducted from the salary.";
                         $ad_Data->type = 0;
                         $ad_Data->save();
 
@@ -378,6 +384,7 @@ class PaymentController extends Controller
                         $ad_Data->month = $data->month;
                         $ad_Data->amount = $data->amount;
                         $ad_Data->added_by = Auth::user()->id;
+                        $ad_Data->description = "Carryover from the previous month.";
                         $ad_Data->type = 1;
                         $ad_Data->save();
 
@@ -392,6 +399,7 @@ class PaymentController extends Controller
                         $ad_Data->month = $checkMonth->month;
                         $ad_Data->amount = $advance_salary;
                         $ad_Data->added_by = Auth::user()->id;
+                        $ad_Data->description = "Deducted from the salary.";
                         $ad_Data->type = 0;
                         $ad_Data->save();
                     }

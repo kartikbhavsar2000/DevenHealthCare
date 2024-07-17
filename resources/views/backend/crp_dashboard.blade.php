@@ -135,8 +135,8 @@
                                 @if(in_array('bookings',$permissions))
                                   @if($date >= date('Y-m-d'))
                                   <div class="col-12 text-center mt-2">
-                                    <button class="badge badge-center bg-white border border-primary text-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Ambulance" data-bs-custom-class="tooltip-dark" onclick="addAmbulanceCanvas('{{$booking->id}}')" type="button" style="line-height: 10px;"><i class="ri-taxi-line"></i></button>
-                                    <button class="badge badge-center bg-white border border-primary text-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Equipments" data-bs-custom-class="tooltip-dark" onclick="addEquipmentsCanvas('{{$booking->id}}')" type="button" style="line-height: 10px;"><i class="ri-syringe-line"></i></button>
+                                    <button class="badge badge-center bg-white border border-primary text-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Ambulance" data-bs-custom-class="tooltip-dark" onclick="addAmbulanceCanvas('{{$booking->id}}','{{$date}}')" type="button" style="line-height: 10px;"><i class="ri-taxi-line"></i></button>
+                                    <button class="badge badge-center bg-white border border-primary text-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Equipments" data-bs-custom-class="tooltip-dark" onclick="addEquipmentsCanvas('{{$booking->id}}','{{$date}}')" type="button" style="line-height: 10px;"><i class="ri-syringe-line"></i></button>
                                   </div>
                                   @endif
                                 @endif
@@ -321,9 +321,6 @@
               Gender
             </div>
             <div class="mt-1">
-              Address
-            </div>
-            <div class="mt-1">
               State
             </div>
             <div class="mt-1">
@@ -331,6 +328,9 @@
             </div>
             <div class="mt-1">
               Area
+            </div>
+            <div class="mt-1">
+              Address
             </div>
           </div>
           <div class="col-8">
@@ -362,9 +362,6 @@
               : <span id="st_Gender">-</span>
             </div>
             <div class="mt-1">
-              : <span id="st_Address">-</span>
-            </div>
-            <div class="mt-1">
               : <span id="st_State">-</span>
             </div>
             <div class="mt-1">
@@ -372,6 +369,9 @@
             </div>
             <div class="mt-1">
               : <span id="st_Area">-</span>
+            </div>
+            <div class="mt-1">
+              : <span id="st_Address">-</span>
             </div>
           </div>
         </div>
@@ -414,9 +414,6 @@
               Gender
             </div>
             <div class="mt-1">
-              Address
-            </div>
-            <div class="mt-1">
               State
             </div>
             <div class="mt-1">
@@ -424,6 +421,9 @@
             </div>
             <div class="mt-1">
               Area
+            </div>
+            <div class="mt-1">
+              Address
             </div>
           </div>
           <div class="col-8">
@@ -452,9 +452,6 @@
               : <span id="doc_Gender">-</span>
             </div>
             <div class="mt-1">
-              : <span id="doc_Address">-</span>
-            </div>
-            <div class="mt-1">
               : <span id="doc_State">-</span>
             </div>
             <div class="mt-1">
@@ -462,6 +459,9 @@
             </div>
             <div class="mt-1">
               : <span id="doc_Area">-</span>
+            </div>
+            <div class="mt-1">
+              : <span id="doc_Address">-</span>
             </div>
           </div>
         </div>
@@ -1109,6 +1109,7 @@
         <div class="mb-2 col-12 mb-6">
             <div class="form-floating form-floating-outline">
                 <input type="text" class="form-control d-none" name="booking_id" id="Equipment_Booking_Id" value="">
+                <input type="text" class="form-control d-none" name="date" id="Equipment_Booking_Date" value="">
                 <select class="EquipmentSelect select2 form-select equipment-select" name="name" id="SelectEquipment" onchange="addEquipmentRate(this)" required>
                   <option value="" disabled selected>Select equipment</option>
                   @if(!empty($equipments))
@@ -1176,6 +1177,7 @@
         <div class="col-12 mt-5">
           <div class="form-floating form-floating-outline">
             <input type="text" class="form-control d-none" name="booking_id" id="Ambulance_Booking_Id" value="">
+            <input type="text" class="form-control d-none" name="date" id="Ambulance_Booking_Date" value="">
             <input type="text" class="form-control" name="type" value="Ambulance" readonly>
             <label>Type</label>
           </div>
@@ -1622,12 +1624,14 @@
 
     $('#AddAssignStaffCanvas').offcanvas('show');
   }
-  function addEquipmentsCanvas(booking_id){
+  function addEquipmentsCanvas(booking_id,date){
     $('#Equipment_Booking_Id').val(booking_id);
+    $('#Equipment_Booking_Date').val(date);
     $('#AddEquipmentsCanvas').offcanvas('show');
   }
-  function addAmbulanceCanvas(booking_id){
+  function addAmbulanceCanvas(booking_id,date){
     $('#Ambulance_Booking_Id').val(booking_id);
+    $('#Ambulance_Booking_Date').val(date);
     $('#AddAmbulanceCanvas').offcanvas('show');
   }
   function filterAndSetDoctor(thiss){
