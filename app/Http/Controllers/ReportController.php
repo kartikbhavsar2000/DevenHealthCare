@@ -43,7 +43,7 @@ class ReportController extends Controller
                     'staff_payment' => 1
                 ])->whereBetween('date', [$startDate, $endDate])->count();
                 $checkMonth = AdvanceSalary::where(['staff_id'=>$st->id,'month'=>$requestMonth])->first();
-                $checkMonthSum = AdvanceSalaryHistory::where(['staff_id'=>$st->id,'month'=>$requestMonth,'type'=>0])->sum('amount');
+                $checkMonthSum = AdvanceSalaryHistory::where(['staff_id'=>$st->id,'month'=>$requestMonth,'type'=>0,'is_salary'=>1])->sum('amount');
                 if($checkMonth){
                     $deduct = $checkMonth->amount;
                 }else{

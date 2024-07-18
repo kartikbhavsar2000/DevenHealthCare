@@ -91,6 +91,28 @@
             width: 5px; /* Width of the scrollbar */
             height: 5px; /* Height of the scrollbar, if horizontal */
         }
+        .loader {
+            display: block; 
+            position: fixed;
+            left: 55%;
+            top: 50%;
+            width: 50px;
+            height: 50px;
+            margin-left: -25px; 
+            margin-top: -25px; 
+            /* border: 10px solid #f3f3f3; 
+            border-top: 10px solid #4cb7e5; 
+            border-radius: 50%;
+            animation: spin 2s linear infinite; */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #DATAAA {
+            display: none; /* Hide content by default */
+        }
     </style>
 </head>
 
@@ -195,6 +217,14 @@
                         </a>
                     </li>
                     @endif
+                    @if(in_array('assign_bookings',$permissions))
+                    <li class="menu-item  @if (Route::currentRouteName() == 'assign_bookings') active @endif">
+                        <a href="{{route('assign_bookings')}}" class="menu-link">
+                            <i class="menu-icon tf-icons ri-user-follow-line"></i>
+                            <div>Assign Booking</div>
+                        </a>
+                    </li>
+                    @endif
                     @if(in_array('bookings',$permissions) || in_array('closed_bookings',$permissions))
                     <li class="menu-item @if (Route::currentRouteName() == 'bookings' || Route::currentRouteName() == 'closed_bookings') open @endif">
                         <a href="javascript:void(0);" class="menu-link menu-toggle waves-effect">
@@ -219,11 +249,11 @@
                         </ul>
                     </li>
                     @endif
-                    @if(in_array('assign_bookings',$permissions))
-                    <li class="menu-item  @if (Route::currentRouteName() == 'assign_bookings') active @endif">
-                        <a href="{{route('assign_bookings')}}" class="menu-link">
-                            <i class="menu-icon tf-icons ri-user-follow-line"></i>
-                            <div>Assign Booking</div>
+                    @if(in_array('booking_reviews',$permissions))
+                    <li class="menu-item  @if (Route::currentRouteName() == 'booking_reviews') active @endif">
+                        <a href="{{route('booking_reviews')}}" class="menu-link">
+                            <i class="menu-icon tf-icons ri-star-line"></i>
+                            <div>Booking Reviews</div>
                         </a>
                     </li>
                     @endif
@@ -232,14 +262,6 @@
                         <a href="{{route('staff_attendance')}}" class="menu-link">
                             <i class="menu-icon tf-icons ri-calendar-check-line"></i>
                             <div>Staff Attendance</div>
-                        </a>
-                    </li>
-                    @endif
-                    @if(in_array('booking_reviews',$permissions))
-                    <li class="menu-item  @if (Route::currentRouteName() == 'booking_reviews') active @endif">
-                        <a href="{{route('booking_reviews')}}" class="menu-link">
-                            <i class="menu-icon tf-icons ri-star-line"></i>
-                            <div>Booking Reviews</div>
                         </a>
                     </li>
                     @endif
@@ -522,7 +544,12 @@
                     <!-- Content -->
 
                     <div class="container-xxl flex-grow-1 container-p-y">
-                        @yield('content')
+                        <div id="loader" class="loader">
+                            <img src="{{asset('public')}}/assets/images/logo.png" alt="Loading...">
+                        </div>
+                        <div id="DATAAA">
+                            @yield('content')
+                        </div>
                     </div>
                     <!-- / Content -->
 
@@ -589,6 +616,17 @@
     <script src="{{asset('public')}}/assets/js/main.js"></script>
     <!-- Page JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            dataTable = $('#kt_datatable').DataTable();
+        });
+        $(window).on('load', function() {
+            $("#loader").fadeOut("slow", function() {
+                $("#DATAAA").fadeIn("slow");
+                dataTable.columns.adjust().draw();
+            });
+        });
+    </script>
 	@yield('javascript')
 
 </body>

@@ -255,6 +255,9 @@
         buttonsStyling: false,
         input:'textarea',
         inputPlaceholder: 'Enter reason for pause...',
+        inputAttributes: {
+            maxlength: 50
+        },
         buttonsStyling: false,
         }).then(function(result) {
             if (result.isConfirmed) {

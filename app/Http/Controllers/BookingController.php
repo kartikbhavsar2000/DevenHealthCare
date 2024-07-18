@@ -1272,30 +1272,22 @@ class BookingController extends Controller
             $current_date = strtotime('+1 day', $current_date);
         }
 
-        $days_count = count($all_dates);
-
         $bookingDetails = BookingDetails::where(['booking_id'=> $booking->id,'type'=>1])->get();
 
         foreach($bookingDetails as $details){
-            $details->qnt = $days_count;
+            $d_count = BookingAssign::where(['booking_id' => $booking->id,'booking_detail_id' => $details->id])->whereBetween('date',[$start_date,$yesterday])->count();
+            $details->qnt = $d_count;
             $details->update();
         }
 
         $data = BookingAssign::where('booking_id', $booking->id)->whereBetween('date',[$today,$end_date])->get();
 
         foreach($data as $da){
-            // $da->staff_id = NULL;
-            // $da->cost_rate = NULL;
-            // $da->att_marked = 0;
-            // $da->status = 0;
-            // $da->booking_status = 1;
-            // $da->staff_payment = 0;
-            // $da->updated_by = Auth::user()->id;
             $da->delete();
         }
 
         $staff_and_doctor_sum = BookingAssign::where('booking_id', $booking->id)
-            ->whereBetween('date', [$booking->start_date, $yesterday])
+            ->whereBetween('date', [$start_date, $yesterday])
             ->sum('sell_rate');
 
         $equipment_and_ambulance_sum = BookingDetails::where('booking_id', $booking->id)

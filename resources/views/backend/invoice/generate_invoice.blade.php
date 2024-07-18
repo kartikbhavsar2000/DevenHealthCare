@@ -79,7 +79,7 @@
                                 class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-4 pb-sm-0">
                                 <div>
                                     <h4 class="mb-0">₹{{number_format($booking->total) ?? "0"}}</h4>
-                                    <p class="mb-0">Total</p>
+                                    <p class="mb-0">Total Amount</p>
                                 </div>
                                 <div class="avatar me-lg-6">
                                     <span class="avatar-initial rounded-3 bg-label-secondary">
@@ -94,7 +94,7 @@
                                 class="d-flex justify-content-between align-items-start border-end pb-4 pb-sm-0 card-widget-3">
                                 <div>
                                     <h4 class="mb-0">₹{{number_format($booking->total - $booking->pending_payment) ?? "0"}}</h4>
-                                    <p class="mb-0">Paid</p>
+                                    <p class="mb-0">Paid Amount</p>
                                 </div>
                                 <div class="avatar me-sm-6">
                                     <span class="avatar-initial rounded-3 bg-label-secondary">
@@ -108,7 +108,7 @@
                                 class="d-flex justify-content-between align-items-start border-end pb-4 pb-sm-0 card-widget-3">
                                 <div>
                                     <h4 class="mb-0">₹{{number_format($booking->pending_payment - $booking_amount_diffrence) ?? "0"}}</h4>
-                                    <p class="mb-0">Unpaid</p>
+                                    <p class="mb-0">Pending Amount</p>
                                 </div>
                                 <div class="avatar me-sm-6">
                                     <span class="avatar-initial rounded-3 bg-label-secondary">
@@ -121,7 +121,7 @@
                             <div class="d-flex justify-content-between align-items-start ">
                                 <div>
                                     <h4 class="mb-0">₹{{number_format($booking_amount_diffrence) ?? "0"}}</h4>
-                                    <p class="mb-0">Diffrence</p>
+                                    <p class="mb-0">Diffrence Amount</p>
                                 </div>
                                 <div class="avatar">
                                     <span class="avatar-initial rounded-3 bg-label-secondary">
@@ -129,6 +129,10 @@
                                     </span>
                                 </div>
                             </div>
+                        </div>
+                        <hr class="my-3">
+                        <div class="col-12">
+                            <b class="text-danger">Note :- </b><span class="m-0 text-dark">The difference amount represents instances where staff are absent, attendance is unmarked, or staff members are not allocated.</span>
                         </div>
                     </div>
                 </div>
@@ -387,7 +391,7 @@
     </div>
     <div class="d-flex justify-content-between bg-lighter p-2 px-5 mb-5">
         <p class="mb-0">Pending Amount:</p>
-        <p class="fw-medium mb-0">₹{{$booking->pending_payment ?? "00"}}</p>
+        <p class="fw-medium mb-0">₹{{$booking->pending_payment  - $booking_amount_diffrence ?? "00"}}</p>
     </div>
     <div class="offcanvas-body">
       <form action="{{route('add_booking_payment')}}" method="POST" id="AddPaymentForm">
@@ -419,7 +423,7 @@
                 <div class="input-group input-group-merge">
                     <span class="input-group-text text-secondary">₹</span>
                     <div class="form-floating form-floating-outline">
-                        <input type="number" class="form-control" name="amount" min="1" max="{{$booking->pending_payment ?? '0'}}" placeholder="00" required id="PaymentAmount" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
+                        <input type="number" class="form-control" name="amount" min="1" max="{{$booking->pending_payment  - $booking_amount_diffrence ?? '0'}}" placeholder="00" required id="PaymentAmount" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
                         <label for="PaymentAmount">Amount</label>
                     </div>
                 </div>

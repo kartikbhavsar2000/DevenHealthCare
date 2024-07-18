@@ -86,7 +86,7 @@
                         <div class="col-12 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Description</label>
-                                <textarea type="text" name="description"  class="form-control">{{$data->description ?? ""}}</textarea> 
+                                <textarea type="text" name="description"  class="form-control"></textarea> 
                                 @error('description')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror

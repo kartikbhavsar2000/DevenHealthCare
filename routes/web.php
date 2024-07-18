@@ -35,6 +35,7 @@ Route::group(['middleware' => ['admin']], function() {
 
     Route::get('/get_staff_booking_chart_data', [App\Http\Controllers\HomeController::class, 'get_staff_booking_chart_data'])->name('get_staff_booking_chart_data');
     Route::get('/get_income_expense_chart_data', [App\Http\Controllers\HomeController::class, 'get_income_expense_chart_data'])->name('get_income_expense_chart_data');
+    Route::get('/get_profit_loss_chart_data', [App\Http\Controllers\HomeController::class, 'get_profit_loss_chart_data'])->name('get_profit_loss_chart_data');
     Route::get('/area_wise_booking_chart', [App\Http\Controllers\HomeController::class, 'area_wise_booking_chart'])->name('area_wise_booking_chart');
     Route::get('/area_wise_patient_and_staff_chart', [App\Http\Controllers\HomeController::class, 'area_wise_patient_and_staff_chart'])->name('area_wise_patient_and_staff_chart');
     Route::get('/available_and_occupied_staff', [App\Http\Controllers\HomeController::class, 'available_and_occupied_staff'])->name('available_and_occupied_staff');

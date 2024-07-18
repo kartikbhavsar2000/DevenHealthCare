@@ -90,6 +90,7 @@ class PaymentController extends Controller
                 $ad_Data->description = $request->description;
             }
             $ad_Data->type = 1;
+            $ad_Data->is_salary = 0;
             $ad_Data->save();
 
         }else{
@@ -113,6 +114,7 @@ class PaymentController extends Controller
                 $ad_Data->description = $request->description;
             }
             $ad_Data->type = 1;
+            $ad_Data->is_salary = 0;
             $ad_Data->save();
         }
         
@@ -141,6 +143,7 @@ class PaymentController extends Controller
                 $ad_Data->description = $request->description;
             }
             $ad_Data->type = 0;
+            $ad_Data->is_salary = 0;
             $ad_Data->save();
 
             return redirect('advance_salary')->with('success','The Advance Salary Updated Successfully');
@@ -368,6 +371,7 @@ class PaymentController extends Controller
                         $ad_Data->added_by = Auth::user()->id;
                         $ad_Data->description = "Deducted from the salary.";
                         $ad_Data->type = 0;
+                        $ad_Data->is_salary = 1;
                         $ad_Data->save();
 
                         $data = new AdvanceSalary();
@@ -386,6 +390,7 @@ class PaymentController extends Controller
                         $ad_Data->added_by = Auth::user()->id;
                         $ad_Data->description = "Carryover from the previous month.";
                         $ad_Data->type = 1;
+                        $ad_Data->is_salary = 0;
                         $ad_Data->save();
 
                     } else {
@@ -401,6 +406,7 @@ class PaymentController extends Controller
                         $ad_Data->added_by = Auth::user()->id;
                         $ad_Data->description = "Deducted from the salary.";
                         $ad_Data->type = 0;
+                        $ad_Data->is_salary = 1;
                         $ad_Data->save();
                     }
                 }

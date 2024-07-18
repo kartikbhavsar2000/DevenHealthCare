@@ -778,7 +778,6 @@
 
 @section('javascript')
 <script src="{{asset('public')}}/assets/vendor/libs/jquery-repeater/jquery-repeater.js"></script>
-
 <script>
 $(function () {
     

@@ -13,6 +13,7 @@ use App\Models\Equipment;
 use App\Models\City;
 use App\Models\Area;
 use App\Models\Booking;
+use App\Models\BookingDetails;
 use App\Models\Patient;
 use App\Models\Corporate;
 use App\Models\Hospital;
@@ -728,8 +729,31 @@ class HomeController extends Controller
         }
 
         foreach ($all_dates as $date) {
-            $profitSeries[] = BookingAssign::where(['att_marked' => 1, 'status' => 1, 'date' => $date])->sum('sell_rate');
-            $lossSeries[] = BookingAssign::where(['att_marked' => 1, 'status' => 1, 'date' => $date, 'staff_payment' => 1])->sum('cost_rate');
+            $doctorSell = BookingAssign::where(['date' => $date, 'type' => 'Doctor'])->sum('sell_rate');
+            $doctorCost = BookingAssign::where(['date' => $date, 'type' => 'Doctor'])->sum('cost_rate');
+
+            $staffSell = BookingAssign::where('type', '!=', 'Doctor')->where(['att_marked' => 1, 'status' => 1, 'date' => $date])->sum('sell_rate');
+            $staffCost = BookingAssign::where('type', '!=', 'Doctor')->where(['att_marked' => 1, 'status' => 1, 'date' => $date])->sum('cost_rate');
+
+            $equipments = BookingDetails::where(['type' => 2, 'date' => $date])->get();
+            $equipmentSell = 0;
+            $equipmentCost = 0;
+            foreach ($equipments as $equipment) {
+                $equipmenttt = Equipment::where('name',$equipment->name)->first();
+                if($equipmenttt){
+                    if($equipmenttt->type == "Sale"){
+                        $equipmentSell += $equipment->sell_rate * $equipment->qnt;
+                        $equipmentCost += $equipment->cost_rate * $equipment->qnt;
+                    }else{
+                        $equipmentSell += $equipment->sell_rate * $equipment->qnt;
+                    }
+                }
+            }
+
+            $ambSell = BookingDetails::where(['type' => 4, 'date' => $date])->sum('sell_rate');
+
+            $profitSeries[] = $doctorSell + $doctorSell + $equipmentSell + $ambSell;
+            $lossSeries[] = $doctorCost +  $staffCost + $equipmentCost;
             $categories[] = date('d M', strtotime($date));
         }
 
@@ -745,6 +769,67 @@ class HomeController extends Controller
                 ]
             ],
             'categories' => $categories
+        ];
+
+        return response()->json($data);
+    }
+    public function get_profit_loss_chart_data(Request $request)
+    {
+        $all_dates = [];
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+        $current_date = strtotime($startDate);
+        $end_timestamp = strtotime($endDate);
+
+        $docProfit = [];
+        $stProfit = [];
+        $eqiProfit = [];
+        $ambProfit = [];
+
+        while ($current_date <= $end_timestamp) {
+            $all_dates[] = date('Y-m-d', $current_date);
+            $current_date = strtotime('+1 day', $current_date);
+        }
+
+        foreach ($all_dates as $date) {
+            $doctorSell = BookingAssign::where(['date' => $date, 'type' => 'Doctor'])->sum('sell_rate');
+            $doctorCost = BookingAssign::where(['date' => $date, 'type' => 'Doctor'])->sum('cost_rate');
+            $docProfit[] = $doctorSell - $doctorCost;
+
+            $staffSell = BookingAssign::where('type', '!=', 'Doctor')->where(['att_marked' => 1, 'status' => 1, 'date' => $date])->sum('sell_rate');
+            $staffCost = BookingAssign::where('type', '!=', 'Doctor')->where(['att_marked' => 1, 'status' => 1, 'date' => $date])->sum('cost_rate');
+            $stProfit[] = $staffSell - $staffCost;
+
+            $equipments = BookingDetails::where(['type' => 2, 'date' => $date])->get();
+            $equipmentSell = 0;
+            $equipmentCost = 0;
+            foreach ($equipments as $equipment) {
+                $equipmenttt = Equipment::where('name',$equipment->name)->first();
+                if($equipmenttt){
+                    if($equipmenttt->type == "Sale"){
+                        $equipmentSell += $equipment->sell_rate * $equipment->qnt;
+                        $equipmentCost += $equipment->cost_rate * $equipment->qnt;
+                    }else{
+                        $equipmentSell += $equipment->sell_rate * $equipment->qnt;
+                    }
+                }
+            }
+            $eqiProfit[] = $equipmentSell - $equipmentCost;
+
+            $ambProfit[] = BookingDetails::where(['type' => 4, 'date' => $date])->sum('sell_rate');
+        }
+        // dd(array_sum($docProfit));
+
+        $dataaaa = [ array_sum($stProfit), array_sum($docProfit),array_sum($eqiProfit), array_sum($ambProfit)];
+
+        $data = [
+            'series' => [
+                [
+                    'name' => 'Amount',
+                    'data' => $dataaaa
+                ]
+            ],
+            'categories' => ['Staff', 'Doctor', 'Equipment', 'Ambulance']
         ];
 
         return response()->json($data);

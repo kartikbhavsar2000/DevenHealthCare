@@ -43,7 +43,7 @@
         <!-- Role Table -->
         <div class="card">
             <div class="card-datatable table-responsive">
-                <table id="kt_datatable" class="table table-row-bordered table-row-gray-300">
+                <table id="kt_datatable5" class="table table-row-bordered table-row-gray-300">
                     <thead>
                         <tr>
                             <th>Sr No.</th>
@@ -85,7 +85,7 @@
             autoclose: true
         }).datepicker('setDate', formattedDate);
 
-        var table =$('#kt_datatable').DataTable({
+        var table =$('#kt_datatable5').DataTable({
             dom: `<'row'<'col-sm-12'lBtr>>
 			<'row'<'col-sm-12 col-md-8'i><'col-sm-12 col-md-4 d-flex justify-content-end align-items-center'p>>`,
             pageLength: 10,
@@ -142,7 +142,7 @@
             },
             success: function(result) {
 
-                var table = $('#kt_datatable').DataTable();
+                var table = $('#kt_datatable5').DataTable();
                 table.clear().draw();
 
                 // Assuming 'result' is the array of data you want to add to the DataTable
@@ -182,5 +182,12 @@
         }); 
     }
 </script>
-
+<script>
+    $(document).ready(function() {
+        dataTable = $('#kt_datatable5').DataTable();
+    });
+    $(window).on('load', function() {
+        dataTable.columns.adjust().draw();
+    });
+</script>
 @endsection

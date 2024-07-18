@@ -70,7 +70,7 @@
   <!--/ Card Border Shadow -->
 
   <!-- Vehicles overview -->
-  <div class="col-lg-6 col-xxl-6 order-5 order-xxl-0">
+  <div class="col-lg-6 col-xxl-6 order-3 order-xxl-1">
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between">
           <div>
@@ -109,6 +109,24 @@
     <div class="card">
         <div class="card-header d-flex align-items-center justify-content-between">
             <div>
+                <h5 class="card-title mb-0">Profit VS Loss</h5>
+            </div>
+            <div class="dropdown d-sm-flex">
+                <div class="form-floating form-floating-outline">
+                    <input type="text" id="ProfitVsLossDaterange" class="form-control" />
+                    <label for="ProfitVsLossDaterange">Month</label>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="profitChart"></div>
+        </div>
+    </div>
+  </div>
+  <div class="col-lg-12 col-xxl-12 order-3 order-xxl-1">
+    <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <div>
                 <h5 class="card-title mb-0">Income VS Expense</h5>
             </div>
             <div class="dropdown d-sm-flex">
@@ -119,7 +137,7 @@
             </div>
         </div>
         <div class="card-body">
-            <div id="profitChart"></div>
+            <div id="incomeChart"></div>
         </div>
     </div>
   </div>
@@ -187,6 +205,129 @@
 <script src="{{asset('public')}}/assets/js/app-logistics-dashboard.js"></script>
 <script src="{{asset('public')}}/assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.js"></script>
 <script>
+     document.addEventListener("DOMContentLoaded", function () {
+            $('#ProfitVsLossDaterange').daterangepicker({
+                opens: 'left',
+                locale: {
+                    format: 'DD/MM/YYYY'
+                },
+                startDate: moment().startOf('month').format('DD/MM/YYYY'),
+                endDate: moment().endOf('month').format('DD/MM/YYYY')
+            }, function(start, end, label) {
+                fetchChartData(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+            });
+
+            var options = {
+                series: [],
+                chart: {
+                    type: 'bar',
+                    height: 365,
+                    foreColor: '#333'  // Darker color for text elements
+                },
+                plotOptions: {
+                    bar: {
+                        colors: {
+                            ranges: []
+                        }
+                    }
+                },
+                xaxis: {
+                    categories: [],
+                    labels: {
+                        style: {
+                            colors: '#333',  // Darker color for x-axis labels
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Amount',
+                        style: {
+                            color: '#333'  // Darker color for y-axis title
+                        }
+                    },
+                    labels: {
+                        style: {
+                            colors: '#333',  // Darker color for y-axis labels
+                            fontSize: '12px'
+                        }
+                    }
+                },
+                tooltip: {
+                    shared: true,
+                    intersect: false,
+                },
+                dataLabels: {
+                    enabled: true,
+                    style: {
+                        colors: ['#333']  // Darker color for data labels
+                    }
+                },
+                annotations: {
+                    yaxis: [{
+                        y: 0,
+                        borderColor: '#000',  // Darker color for zero line
+                        label: {
+                            borderColor: '#000',
+                            style: {
+                                color: '#fff',
+                                background: '#000'
+                            }
+                        }
+                    }]
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#profitChart"), options);
+            chart.render();
+
+            function fetchChartData(start_date, end_date) {
+                $.ajax({
+                    url: '{{ route("get_profit_loss_chart_data") }}',
+                    method: 'GET',
+                    data: {
+                        start_date: start_date,
+                        end_date: end_date
+                    },
+                    success: function (data) {
+                        console.log(data);
+
+                        var series = [{
+                            name: 'Amount',
+                            data: data.series[0].data
+                        }];
+
+                        var colors = data.series[0].data.map(value => value < 0 ? '#db1919' : '#0dbb0d'); // Dark red and dark green
+
+                        chart.updateOptions({
+                            series: series,
+                            xaxis: {
+                                categories: data.categories
+                            },
+                            plotOptions: {
+                                bar: {
+                                    colors: {
+                                        ranges: data.series[0].data.map((value, index) => ({
+                                            from: value,
+                                            to: value,
+                                            color: value < 0 ? '#db1919' : '#0dbb0d'
+                                        }))
+                                    }
+                                }
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        console.error('Error fetching chart data:', error);
+                    }
+                });
+            }
+
+            fetchChartData(moment().startOf('month').format('YYYY-MM-DD'), moment().endOf('month').format('YYYY-MM-DD'));
+        });
+
+
     document.addEventListener("DOMContentLoaded", function () {
         $('#IncomeVsExpenseDaterange').daterangepicker({
             opens: 'left',
@@ -223,11 +364,11 @@
                 intersect: false,
             },
             dataLabels: {
-                enabled: true
+                enabled: false
             }
         };
 
-        var chart = new ApexCharts(document.querySelector("#profitChart"), options);
+        var chart = new ApexCharts(document.querySelector("#incomeChart"), options);
         chart.render();
 
         function fetchChartData(start_date, end_date) {
