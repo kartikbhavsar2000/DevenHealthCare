@@ -194,7 +194,19 @@
             //     "data": "id",
             //     "render": function (data, type, row, meta) {
             //         return type === 'display' ?
-            //         '<a href="{{asset("/")}}view_staff_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-information-line ri-20px"></i></a><a href="{{asset("/")}}view_staff_reviews/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-user-star-line ri-20px"></i></a><a href="{{asset("/")}}edit_staff/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-edit-box-line ri-20px"></i></a><button onClick="deleted('+data+')" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-delete-bin-7-line ri-20px"></i></button>' :
+            //         `<div class="d-inline-block"><a href="javascript:;"
+            //                 class="btn btn-sm btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
+            //                 aria-expanded="false"><i class="ri-more-2-line"></i></a>
+            //             <ul class="dropdown-menu dropdown-menu-end m-0" style="">
+            //                 <li><a href="{{asset("/")}}view_staff_details/` + data + `" class="dropdown-item"><i class="ri-information-line ri-20px"></i> View Staff Details</a></li>
+            //                 <li><a href="{{asset("/")}}view_staff_reviews/` + data + `" class="dropdown-item"><i class="ri-user-star-line ri-20px"></i> Staff Ratings</a></li>
+            //                 <li><a href="{{asset("/")}}edit_staff/` + data + `" class="dropdown-item"><i class="ri-edit-box-line ri-20px"></i> Edit Staff</a></li>
+            //                 <li><a href="{{asset("/")}}staff_salary_slip/` + data + `" class="dropdown-item"><i class="ri-file-list-2-line"></i> Staff Salary Slip</a></li>
+            //                 <li><a href="{{asset("/")}}change_staff_password/` + data + `" class="dropdown-item"><i class="ri-key-2-line"></i> Change Password</a></li>
+            //                 <div class="dropdown-divider"></div>
+            //                 <li><button onClick="deleted(`+data+`)" class="dropdown-item text-danger"><i class="ri-delete-bin-7-line" style="font-size:19px;"></i> Delete Staff</button></li>
+            //             </ul>
+            //         </div>` :
             //         data;
             //     }
             // },
@@ -211,8 +223,6 @@
                             <li><a href="{{asset("/")}}edit_staff/` + data + `" class="dropdown-item"><i class="ri-edit-box-line ri-20px"></i> Edit Staff</a></li>
                             <li><a href="{{asset("/")}}staff_salary_slip/` + data + `" class="dropdown-item"><i class="ri-file-list-2-line"></i> Staff Salary Slip</a></li>
                             <li><a href="{{asset("/")}}change_staff_password/` + data + `" class="dropdown-item"><i class="ri-key-2-line"></i> Change Password</a></li>
-                            <div class="dropdown-divider"></div>
-                            <li><button onClick="deleted(`+data+`)" class="dropdown-item text-danger"><i class="ri-delete-bin-7-line" style="font-size:19px;"></i> Delete Staff</button></li>
                         </ul>
                     </div>` :
                     data;

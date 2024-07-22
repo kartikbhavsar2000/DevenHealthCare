@@ -401,7 +401,7 @@ class HomeController extends Controller
             $corporate_count = Corporate::count();
             $booking_count = Booking::count();
             $hospital_count = Hospital::count();
-
+            $states = State::where('status',1)->orderBy('name','asc')->get();
             $data = [
                 'staff_count' => $staff_count,
                 'doctor_count' => $doctor_count,
@@ -409,6 +409,7 @@ class HomeController extends Controller
                 'corporate_count' => $corporate_count,
                 'booking_count' => $booking_count,
                 'hospital_count' => $hospital_count,
+                'states' => $states,
             ];
             return view('backend.analytics',['data'=>$data]);
         }
@@ -428,12 +429,12 @@ class HomeController extends Controller
     }
     public function get_cities_by_state(Request $request)
     {
-        $data = City::where('state_id',$request->id)->orderBy('name',"asc")->get();
+        $data = City::where('state_id',$request->id)->where('status',1)->orderBy('name',"asc")->get();
         return response()->json(['data'=>$data]);
     }
     public function get_areas_by_city(Request $request)
     {
-        $data = Area::where('city_id',$request->id)->orderBy('name',"asc")->get();
+        $data = Area::where('city_id',$request->id)->where('status',1)->orderBy('name',"asc")->get();
         return response()->json(['data'=>$data]);
     }
     public function get_staff_booking_chart_data(Request $request)
@@ -559,7 +560,12 @@ class HomeController extends Controller
 
         foreach ($active_bookings as $Abooking) {
             $area = $Abooking->customerDetails()->area;
-            $area_name = Area::find($area)->name;
+            if($request->city){
+                $areaaaaa = Area::where('city_id', $request->city)->where('status', 1)->where('id',$area)->first();
+            }else{
+                $areaaaaa = Area::where('status', 1)->where('id',$area)->first();
+            }
+            $area_name = $areaaaaa->name;
 
             if (!isset($area_counts_active[$area_name])) {
                 $area_counts_active[$area_name] = 0;
@@ -569,7 +575,12 @@ class HomeController extends Controller
 
         foreach ($close_bookings as $Cbooking) {
             $area = $Cbooking->customerDetails()->area;
-            $area_name = Area::find($area)->name;
+            if($request->city){
+                $areaaaaa = Area::where('city_id', $request->city)->where('status', 1)->where('id',$area)->first();
+            }else{
+                $areaaaaa = Area::where('status', 1)->where('id',$area)->first();
+            }
+            $area_name = $areaaaaa->name;
 
             if (!isset($area_counts_close[$area_name])) {
                 $area_counts_close[$area_name] = 0;
@@ -579,7 +590,12 @@ class HomeController extends Controller
 
         foreach ($paused_bookings as $Pbooking) {
             $area = $Pbooking->customerDetails()->area;
-            $area_name = Area::find($area)->name;
+            if($request->city){
+                $areaaaaa = Area::where('city_id', $request->city)->where('status', 1)->where('id',$area)->first();
+            }else{
+                $areaaaaa = Area::where('status', 1)->where('id',$area)->first();
+            }
+            $area_name = $areaaaaa->name;
 
             if (!isset($area_counts_pause[$area_name])) {
                 $area_counts_pause[$area_name] = 0;
@@ -628,7 +644,11 @@ class HomeController extends Controller
         $areas = [];
 
         // Retrieve all areas where status is 1
-        $areas = Area::where('status', 1)->get();
+        if($request->state && $request->city){
+            $areas = Area::where('city_id', $request->city)->where('status', 1)->get();
+        }else{
+            $areas = Area::where('status', 1)->get();
+        }
 
         // Filter areas and calculate staff and patient counts
         $filtered_areas = $areas->filter(function ($area) use (&$staff_counts, &$patient_counts) {
@@ -742,21 +762,21 @@ class HomeController extends Controller
                 $equipmenttt = Equipment::where('name',$equipment->name)->first();
                 if($equipmenttt){
                     if($equipmenttt->type == "Sale"){
-                        $equipmentSell += $equipment->sell_rate * $equipment->qnt;
-                        $equipmentCost += $equipment->cost_rate * $equipment->qnt;
+                        $equipmentSell += $equipment->sell_rate;
+                        $equipmentCost += $equipmenttt->cost_price * $equipment->qnt;
                     }else{
-                        $equipmentSell += $equipment->sell_rate * $equipment->qnt;
+                        $equipmentSell += $equipment->sell_rate;
+                        $equipmentCost += 0;
                     }
                 }
             }
 
             $ambSell = BookingDetails::where(['type' => 4, 'date' => $date])->sum('sell_rate');
-
-            $profitSeries[] = $doctorSell + $doctorSell + $equipmentSell + $ambSell;
+            
+            $profitSeries[] = $doctorSell + $staffSell + $equipmentSell + $ambSell;
             $lossSeries[] = $doctorCost +  $staffCost + $equipmentCost;
             $categories[] = date('d M', strtotime($date));
         }
-
         $data = [
             'series' => [
                 [
@@ -807,10 +827,10 @@ class HomeController extends Controller
                 $equipmenttt = Equipment::where('name',$equipment->name)->first();
                 if($equipmenttt){
                     if($equipmenttt->type == "Sale"){
-                        $equipmentSell += $equipment->sell_rate * $equipment->qnt;
-                        $equipmentCost += $equipment->cost_rate * $equipment->qnt;
+                        $equipmentSell += $equipment->sell_rate;
+                        $equipmentCost += $equipmenttt->cost_price * $equipment->qnt;
                     }else{
-                        $equipmentSell += $equipment->sell_rate * $equipment->qnt;
+                        $equipmentSell += $equipment->sell_rate;
                     }
                 }
             }
@@ -818,8 +838,6 @@ class HomeController extends Controller
 
             $ambProfit[] = BookingDetails::where(['type' => 4, 'date' => $date])->sum('sell_rate');
         }
-        // dd(array_sum($docProfit));
-
         $dataaaa = [ array_sum($stProfit), array_sum($docProfit),array_sum($eqiProfit), array_sum($ambProfit)];
 
         $data = [

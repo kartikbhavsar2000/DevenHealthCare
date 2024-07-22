@@ -343,17 +343,19 @@ class MenuController extends Controller
     public function delete_staff(Request $request)
     {
         $staff = Staff::find($request->id);
-        // If staff does not exist, return an error response
         if (!$staff) {
             return response()->json(['error' => 'Staff not found'], 404);
         }
 
-        // Delete the staff
         $staff->delete();
 
         $adSalary = AdvanceSalary::where('staff_id',$request->id)->delete();
         $adSalaryHistory = AdvanceSalaryHistory::where('staff_id',$request->id)->delete();
-        $assign = BookingAssign::where('type','!=','Doctor')->where('staff_id', $request->id)->delete();
+        $assign = BookingAssign::where('type','!=','Doctor')->where('staff_id', $request->id)->get();
+        foreach($assign as $aa){
+            $aa->staff_id = NULL;
+            $aa->update();
+        }
         $rating = BookingRating::where('type','!=','Doctor')->where('staff_id', $request->id)->delete();
         $documents = StaffDocuments::where('staff_id', $request->id)->delete();
         

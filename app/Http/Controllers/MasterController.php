@@ -14,6 +14,7 @@ use App\Models\State;
 use App\Models\City;
 use App\Models\Area;
 use App\Models\Hospital;
+use App\Models\Patient;
 
 class MasterController extends Controller
 {
@@ -46,7 +47,15 @@ class MasterController extends Controller
     }
     public function delete_hospital(Request $request)
     {
-        $data = Hospital::find($request->id)->delete();
+        $data = Hospital::find($request->id);
+        if($data){
+            $patients = Patient::where('h_type', $data->name)->get();
+            foreach($patients as $patient){
+                $patient->h_type = "DHC";
+                $patient->update();
+            }
+            $data->delete();
+        }
         return "Deleted";
     }
     public function create_hospital(Request $request)

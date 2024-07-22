@@ -165,14 +165,53 @@
             <div>
                 <h5 class="card-title mb-0">Area Wise Bookings</h5>
             </div>
-            <div class="dropdown d-none d-sm-flex">
-                <div class="form-floating form-floating-outline">
-                    <input type="text" id="AreaWiseBookingDaterange" class="form-control" />
-                    <label for="AreaWiseBookingDaterange">Date</label>
-                </div>
-            </div>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
+                <i class="ri-filter-line me-1"></i>Filter
+            </button>
         </div>
         <div class="card-body">
+            <div class="collapse my-3" id="collapseExample2">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-4 mb-3">
+                            <div class="mb-4">
+                                <label class="form-label">State</label>
+                                <select class="form-control mb-1" name="state" id="State2" onchange="selectState2()">
+                                    <option value=""></option>
+                                    @if(!empty($data['states']))
+                                        @foreach($data['states'] as $key => $state)
+                                            <option value="{{$state->id}}" @if($state->id == 5 || $key == 0) selected @endif>{{$state->name}}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                @error('state')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-4 mb-3">
+                            <div class="mb-4">
+                                <label class="form-label">City</label>
+                                <select class="form-control mb-1" name="city" id="City2" onchange="fetchBookingData($('#AreaWiseBookingDaterange').data('daterangepicker').startDate.format('YYYY-MM-DD'), $('#AreaWiseBookingDaterange').data('daterangepicker').endDate.format('YYYY-MM-DD'))">
+                                    <option value=""></option>
+                                </select>
+                                @error('city')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-4 mb-3">
+                            <div class="mb-4">
+                                <label class="form-label"  for="AreaWiseBookingDaterange">Date</label>
+                                <div class="dropdown d-none d-sm-flex">
+                                    {{-- <label for="AreaWiseBookingDaterange">Date</label> --}}
+                                    <input type="text" id="AreaWiseBookingDaterange" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="barChart"></div>
         </div>
     </div>
@@ -184,14 +223,44 @@
             <div>
                 <h5 class="card-title mb-0">Area Wise Patients & Staff</h5>
             </div>
-            {{-- <div class="dropdown d-none d-sm-flex">
-                <div class="form-floating form-floating-outline">
-                    <input type="text" id="AreaWiseStaffAndPatientDaterange" class="form-control" />
-                    <label for="AreaWiseStaffAndPatientDaterange">Date</label>
-                </div>
-            </div> --}}
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <i class="ri-filter-line me-1"></i>Filter
+            </button>
         </div>
         <div class="card-body">
+            <div class="collapse my-3" id="collapseExample">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-6 mb-3">
+                            <div class="mb-4">
+                                <label class="form-label">State</label>
+                                <select class="form-control mb-1" name="state" id="State" onchange="selectState()">
+                                    <option value=""></option>
+                                    @if(!empty($data['states']))
+                                        @foreach($data['states'] as $key => $state)
+                                            <option value="{{$state->id}}" @if($state->id == 5 || $key == 0) selected @endif>{{$state->name}}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                                @error('state')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-6 mb-3">
+                            <div class="mb-4">
+                                <label class="form-label">City</label>
+                                <select class="form-control mb-1" name="city" id="City" onchange="fetchPSData()">
+                                    <option value=""></option>
+                                </select>
+                                @error('city')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="barChart2"></div>
         </div>
     </div>
@@ -204,6 +273,70 @@
 <script src="{{asset('public')}}/assets/vendor/libs/apex-charts/apexcharts.js"></script>
 <script src="{{asset('public')}}/assets/js/app-logistics-dashboard.js"></script>
 <script src="{{asset('public')}}/assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.js"></script>
+<script>
+     $(document).ready(function() {
+        selectState();
+        selectState2();
+        fetchPSData();
+        fetchBookingData($('#AreaWiseBookingDaterange').data('daterangepicker').startDate.format('YYYY-MM-DD'), $('#AreaWiseBookingDaterange').data('daterangepicker').endDate.format('YYYY-MM-DD'));
+     });
+    function selectState() {
+        var id = $('#State').val();
+        $.ajax({
+            url:"{{route('get_cities_by_state')}}",
+            method:"POST",
+            data:{'id':id,_token:"{{ csrf_token() }}"},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success:function(result)
+            {
+                var cities = result.data;
+                var citySelect = $('#City');
+                var cityyy = '125';
+                
+                citySelect.empty().append('<option value=""></option>');
+                cities.forEach(function(city,index) {
+                    if(cityyy == city.id || index == 0){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    citySelect.append('<option value="' + city.id + '" ' + selected + '>' + city.name + '</option>');
+                });
+                fetchPSData();
+            }
+        }); 
+    }
+    function selectState2() {
+        var id = $('#State2').val();
+        $.ajax({
+            url:"{{route('get_cities_by_state')}}",
+            method:"POST",
+            data:{'id':id,_token:"{{ csrf_token() }}"},
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success:function(result)
+            {
+                var cities = result.data;
+                var citySelect = $('#City2');
+                var cityyy = '125';
+                
+                citySelect.empty().append('<option value=""></option>');
+                cities.forEach(function(city,index) {
+                    if(cityyy == city.id || index == 0){
+                        var selected = "selected";
+                    }else{
+                        var selected = "";
+                    }
+                    citySelect.append('<option value="' + city.id + '" ' + selected + '>' + city.name + '</option>');
+                });
+                fetchBookingData($('#AreaWiseBookingDaterange').data('daterangepicker').startDate.format('YYYY-MM-DD'), $('#AreaWiseBookingDaterange').data('daterangepicker').endDate.format('YYYY-MM-DD'));
+            }
+        }); 
+    }
+</script>
 <script>
      document.addEventListener("DOMContentLoaded", function () {
             $('#ProfitVsLossDaterange').daterangepicker({
@@ -291,8 +424,6 @@
                         end_date: end_date
                     },
                     success: function (data) {
-                        console.log(data);
-
                         var series = [{
                             name: 'Amount',
                             data: data.series[0].data
@@ -337,7 +468,7 @@
             startDate: moment().startOf('month').format('DD/MM/YYYY'),
             endDate: moment().endOf('month').format('DD/MM/YYYY')
         }, function(start, end, label) {
-            fetchChartData(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+            fetchChartData2(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
         });
 
         var options = {
@@ -371,7 +502,7 @@
         var chart = new ApexCharts(document.querySelector("#incomeChart"), options);
         chart.render();
 
-        function fetchChartData(start_date, end_date) {
+        function fetchChartData2(start_date, end_date) {
             $.ajax({
                 url: '{{ route("get_income_expense_chart_data") }}',
                 method: 'GET',
@@ -380,7 +511,6 @@
                     end_date: end_date
                 },
                 success: function (data) {
-                    console.log(data);
                     var series = [
                         {
                             name: 'Income',
@@ -411,7 +541,7 @@
             });
         }
 
-        fetchChartData(moment().startOf('month').format('YYYY-MM-DD'), moment().endOf('month').format('YYYY-MM-DD'));
+        fetchChartData2(moment().startOf('month').format('YYYY-MM-DD'), moment().endOf('month').format('YYYY-MM-DD'));
     });
 
 
@@ -552,99 +682,6 @@
         updateChart();
     });
 
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     $('#AvailableAndOccupiedStaffDaterange').daterangepicker({
-    //         opens: 'left',
-    //         locale: {
-    //             format: 'DD/MM/YYYY'
-    //         },
-    //         startDate: moment().startOf('week').format('DD/MM/YYYY'),
-    //         endDate: moment().endOf('week').format('DD/MM/YYYY')
-    //     }, function(start, end, label) {
-    //         $.ajax({
-    //             url: '{{route("available_and_occupied_staff")}}',
-    //             method: 'GET',
-    //             data: {
-    //                 start_date: start.format('YYYY-MM-DD'),
-    //                 end_date: end.format('YYYY-MM-DD')
-    //             },
-    //             success: function (data) {
-    //                 console.log('Received data:', data); // Log received data
-    //                 chart.updateOptions({
-    //                     series: data.series,
-    //                     xaxis: {
-    //                         categories: data.categories
-    //                     }
-    //                 });
-    //             },
-    //             error: function (error) {
-    //                 console.error('Error fetching chart data:', error);
-    //             }
-    //         });
-    //     });
-
-    //     var options = {
-    //         series: [],
-    //         chart: {
-    //             type: 'bar',
-    //             height: 375
-    //         },
-    //         plotOptions: {
-    //             bar: {
-    //                 horizontal: true,
-    //                 columnWidth: '55%',
-    //                 endingShape: 'rounded'
-    //             },
-    //         },
-    //         dataLabels: {
-    //             enabled: true
-    //         },
-    //         stroke: {
-    //             show: true,
-    //             width: 2,
-    //             colors: ['transparent']
-    //         },
-    //         xaxis: {
-    //             categories: []
-    //         },
-    //         fill: {
-    //             opacity: 1
-    //         },
-    //         tooltip: {
-    //             y: {
-    //                 formatter: function (val) {
-    //                     return val + " staff"
-    //                 }
-    //             }
-    //         }
-    //     };
-
-    //     var chart = new ApexCharts(document.querySelector("#hbarChart"), options);
-    //     chart.render();
-
-    //     $.ajax({
-    //         url: '{{route("available_and_occupied_staff")}}',
-    //         method: 'GET',
-    //         data: {
-    //             start_date: moment().startOf('week').format('YYYY-MM-DD'),
-    //             end_date: moment().endOf('week').format('YYYY-MM-DD')
-    //         },
-    //         success: function (data) {
-    //             console.log('Received data:', data); // Log received data
-    //             chart.updateOptions({
-    //                 series: data.series,
-    //                 xaxis: {
-    //                     categories: data.categories
-    //                 }
-    //             });
-    //         },
-    //         error: function (error) {
-    //             console.error('Error fetching chart data:', error);
-    //         }
-    //     });
-        
-    // });
-
     document.addEventListener("DOMContentLoaded", function () {
         $('#PatientVsCorporationDaterange').daterangepicker({
             opens: 'left',
@@ -662,7 +699,6 @@
                     end_date: end.format('YYYY-MM-DD')
                 },
                 success: function (data) {
-                    console.log('Received data:', data); // Log received data
                     chart.updateOptions({
                         series: data.series,
                         xaxis: {
@@ -724,7 +760,6 @@
                 end_date: moment().endOf('week').format('YYYY-MM-DD')
             },
             success: function (data) {
-                console.log('Received data:', data); // Log received data
                 chart.updateOptions({
                     series: data.series,
                     xaxis: {
@@ -739,192 +774,6 @@
         
     });
 
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     $('#AreaWiseBookingDaterange').daterangepicker({
-    //         opens: 'left',
-    //         locale: {
-    //             format: 'DD/MM/YYYY'
-    //         },
-    //         startDate: moment().startOf('week').format('DD/MM/YYYY'),
-    //         endDate: moment().endOf('week').format('DD/MM/YYYY')
-    //     }, function(start, end, label) {
-    //         $.ajax({
-    //             url: '{{ route("area_wise_booking_chart") }}',
-    //             method: 'GET',
-    //             data: {
-    //                 start_date: start.format('YYYY-MM-DD'),
-    //                 end_date: end.format('YYYY-MM-DD')
-    //             },
-    //             success: function (data) {
-    //                 chart.updateOptions({
-    //                     series: data.series,
-    //                     xaxis: {
-    //                         categories: data.categories
-    //                     }
-    //                 });
-    //             },
-    //             error: function (error) {
-    //                 console.error('Error fetching chart data:', error);
-    //             }
-    //         });
-    //     });
-
-    //     var options = {
-    //         series: [],
-    //         chart: {
-    //             type: 'bar',
-    //             height: 335
-    //         },
-    //         colors: ['#F02627'],
-    //         plotOptions: {
-    //             bar: {
-    //                 horizontal: false,
-    //                 columnWidth: '55%',
-    //                 endingShape: 'rounded'
-    //             }
-    //         },
-    //         dataLabels: {
-    //             enabled: false
-    //         },
-    //         stroke: {
-    //             show: true,
-    //             width: 2,
-    //             colors: ['transparent']
-    //         },
-    //         xaxis: {
-    //             categories: []
-    //         },
-    //         fill: {
-    //             opacity: 1
-    //         },
-    //         tooltip: {
-    //             y: {
-    //                 formatter: function (val) {
-    //                     return val
-    //                 }
-    //             }
-    //         }
-    //     };
-
-    //     var chart = new ApexCharts(document.querySelector("#barChart"), options);
-    //     chart.render();
-
-    //     $.ajax({
-    //         url: '{{ route("area_wise_booking_chart") }}',
-    //         method: 'GET',
-    //         data: {
-    //             start_date: moment().startOf('week').format('YYYY-MM-DD'),
-    //             end_date: moment().endOf('week').format('YYYY-MM-DD')
-    //         },
-    //         success: function (data) {
-    //             chart.updateOptions({
-    //                 series: data.series,
-    //                 xaxis: {
-    //                     categories: data.categories
-    //                 }
-    //             });
-    //         },
-    //         error: function (error) {
-    //             console.error('Error fetching chart data:', error);
-    //         }
-    //     });
-    // });
-
-    document.addEventListener("DOMContentLoaded", function () {
-        $('#PatientVsCorporationDaterange').daterangepicker({
-            opens: 'left',
-            locale: {
-                format: 'DD/MM/YYYY'
-            },
-            startDate: moment().startOf('week').format('DD/MM/YYYY'),
-            endDate: moment().endOf('week').format('DD/MM/YYYY')
-        }, function(start, end, label) {
-            $.ajax({
-                url: '{{route("patient_vs_corporation_chart")}}',
-                method: 'GET',
-                data: {
-                    start_date: start.format('YYYY-MM-DD'),
-                    end_date: end.format('YYYY-MM-DD')
-                },
-                success: function (data) {
-                    console.log('Received data:', data); // Log received data
-                    chart.updateOptions({
-                        series: data.series,
-                        xaxis: {
-                            categories: data.categories
-                        }
-                    });
-                },
-                error: function (error) {
-                    console.error('Error fetching chart data:', error);
-                }
-            });
-        });
-
-        var options = {
-            series: [],
-            chart: {
-                type: 'area',
-                height: 350
-            },
-            colors: ['#1DA1F2','#ff9800'],
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    columnWidth: '55%',
-                    endingShape: 'rounded'
-                },
-            },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                show: true,
-                width: 2,
-                colors: ['transparent']
-            },
-            xaxis: {
-                categories: []
-            },
-            fill: {
-                opacity: 1
-            },
-            tooltip: {
-                y: {
-                    formatter: function (val) {
-                        return val
-                    }
-                }
-            }
-        };
-
-        var chart = new ApexCharts(document.querySelector("#areaChart"), options);
-        chart.render();
-
-        $.ajax({
-            url: '{{route("patient_vs_corporation_chart")}}',
-            method: 'GET',
-            data: {
-                start_date: moment().startOf('week').format('YYYY-MM-DD'),
-                end_date: moment().endOf('week').format('YYYY-MM-DD')
-            },
-            success: function (data) {
-                console.log('Received data:', data); // Log received data
-                chart.updateOptions({
-                    series: data.series,
-                    xaxis: {
-                        categories: data.categories
-                    }
-                });
-            },
-            error: function (error) {
-                console.error('Error fetching chart data:', error);
-            }
-        });
-        
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
     $('#AreaWiseBookingDaterange').daterangepicker({
         opens: 'left',
         locale: {
@@ -936,53 +785,57 @@
         fetchBookingData(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
     });
 
-    var options = {
-        series: [],
-        chart: {
-            type: 'bar',
-            height: 335
-        },
-        colors: ['#1E90FF','#F02627','#ff9800'], // Add colors for both series
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: '55%',
-                endingShape: 'rounded'
-            }
-        },
-        dataLabels: {
-            enabled: false
-        },
-        stroke: {
-            show: true,
-            width: 2,
-            colors: ['transparent']
-        },
-        xaxis: {
-            categories: []
-        },
-        fill: {
-            opacity: 1
-        },
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return val;
+    function fetchBookingData(startDate, endDate) {
+        var options = {
+            series: [],
+            chart: {
+                type: 'bar',
+                height: 335
+            },
+            colors: ['#1E90FF','#F02627','#ff9800'], // Add colors for both series
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    endingShape: 'rounded'
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                show: true,
+                width: 2,
+                colors: ['transparent']
+            },
+            xaxis: {
+                categories: []
+            },
+            fill: {
+                opacity: 1
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val) {
+                        return val;
+                    }
                 }
             }
-        }
-    };
+        };
 
-    var chart = new ApexCharts(document.querySelector("#barChart"), options);
-    chart.render();
+        var chart = new ApexCharts(document.querySelector("#barChart"), options);
+        chart.render();
 
-    function fetchBookingData(startDate, endDate) {
+        var state = $('#State2').val();
+        var city = $('#City2').val();
         $.ajax({
             url: '{{ route("area_wise_booking_chart") }}',
             method: 'GET',
             data: {
                 start_date: startDate,
-                end_date: endDate
+                end_date: endDate,
+                state: state,
+                city: city
             },
             success: function (data) {
                 chart.updateOptions({
@@ -998,40 +851,9 @@
         });
     }
 
-    // Initial fetch for the current week
-    fetchBookingData(moment().startOf('week').format('YYYY-MM-DD'), moment().endOf('week').format('YYYY-MM-DD'));
-});
+    fetchBookingData($('#AreaWiseBookingDaterange').data('daterangepicker').startDate.format('YYYY-MM-DD'), $('#AreaWiseBookingDaterange').data('daterangepicker').endDate.format('YYYY-MM-DD'));
 
-    document.addEventListener("DOMContentLoaded", function () {
-        $('#AreaWiseStaffAndPatientDaterange').daterangepicker({
-            opens: 'left',
-            locale: {
-                format: 'DD/MM/YYYY'
-            },
-            startDate: moment().startOf('week').format('DD/MM/YYYY'),
-            endDate: moment().endOf('week').format('DD/MM/YYYY')
-        }, function(start, end, label) {
-            $.ajax({
-                url: '{{ route("area_wise_booking_chart") }}',
-                method: 'GET',
-                data: {
-                    start_date: start.format('YYYY-MM-DD'),
-                    end_date: end.format('YYYY-MM-DD')
-                },
-                success: function (data) {
-                    chart.updateOptions({
-                        series: data.series,
-                        xaxis: {
-                            categories: data.categories
-                        }
-                    });
-                },
-                error: function (error) {
-                    console.error('Error fetching chart data:', error);
-                }
-            });
-        });
-
+    function fetchPSData() {
         var options = {
             series: [],
             chart: {
@@ -1071,13 +893,18 @@
 
         var chart = new ApexCharts(document.querySelector("#barChart2"), options);
         chart.render();
+        
+        var state = $('#State').val();
+        var city = $('#City').val();
 
         $.ajax({
             url: '{{ route("area_wise_patient_and_staff_chart") }}',
             method: 'GET',
             data: {
                 start_date: moment().startOf('week').format('YYYY-MM-DD'),
-                end_date: moment().endOf('week').format('YYYY-MM-DD')
+                end_date: moment().endOf('week').format('YYYY-MM-DD'),
+                state: state,
+                city: city
             },
             success: function (data) {
                 chart.updateOptions({
@@ -1091,6 +918,18 @@
                 console.error('Error fetching chart data:', error);
             }
         });
+    }
+    $('#State').select2({
+        placeholder: 'Select a state'
+    });
+    $('#City').select2({
+        placeholder: 'Select a city'
+    });
+    $('#State2').select2({
+        placeholder: 'Select a state'
+    });
+    $('#City2').select2({
+        placeholder: 'Select a city'
     });
 </script>
     
