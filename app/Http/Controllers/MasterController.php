@@ -178,6 +178,17 @@ class MasterController extends Controller
         }
         abort(403);
     }
+    public function change_equipment_status(Request $request)
+    {
+        $data = Equipment::find($request->id);
+        if($data->status == 1){
+            $data->status = 0;
+        }else{
+            $data->status = 1;
+        }
+        $data->update();
+        return "Changed";
+    }
     public function delete_equipment(Request $request)
     {
         $data = Equipment::find($request->id)->delete();
@@ -186,7 +197,7 @@ class MasterController extends Controller
     public function create_equipment(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/|unique:equipment,name',
             'type' => 'required',
             'cost_price' => 'required|numeric|min:0|digits_between:1,12',
             'sell_price' => 'required|numeric|min:0|digits_between:1,12',
@@ -208,7 +219,7 @@ class MasterController extends Controller
     public function update_equipment(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255|regex:/^([^0-9]*)$/',
+            'name' => 'required|max:255|regex:/^([^0-9]*)$/|unique:equipment,name,'.$request->id,
             'type' => 'required',
             'cost_price' => 'required|numeric|min:0|digits_between:1,12',
             'sell_price' => 'required|numeric|min:0|digits_between:1,12',

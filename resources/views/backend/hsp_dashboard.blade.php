@@ -150,55 +150,57 @@
                                       $staff_found = false;
                                     @endphp
                                     @foreach($booking->staff_data as $stf)
-                                      @if($stf->staff_details)
-                                        @if($stf->type == $st->title && $date == date('Y-m-d', strtotime($stf->date)))
-                                          <div class="row p-1">
-                                            <div class="col-8 text-start">
-                                                {{$stf->staff_details->f_name}} {{$stf->staff_details->m_name}} {{$stf->staff_details->l_name}}<br>
-                                                <b style="font-size: 12px;"> {{$stf->shiftt->name}}</b>
-                                                @if($stf->att_marked == 0)
-                                                  <span class="badge bg-label-secondary" style="font-size: 10px;">Not Marked</span>
-                                                @else
-                                                  @if($stf->status == 0)
-                                                    <span class="badge bg-label-primary" style="font-size: 10px;">Marked</span>
-                                                  @elseif($stf->status == 1)
-                                                    <span class="badge bg-label-success" style="font-size: 10px;">Approved</span>
-                                                  @elseif($stf->status == 2)
-                                                    <span class="badge bg-label-danger" style="font-size: 10px;">Rejected</span>
+                                      @if($stf->is_cancled == 0)
+                                        @if($stf->staff_details)
+                                          @if($stf->type == $st->title && $date == date('Y-m-d', strtotime($stf->date)))
+                                            <div class="row p-1">
+                                              <div class="col-8 text-start">
+                                                  {{$stf->staff_details->f_name}} {{$stf->staff_details->m_name}} {{$stf->staff_details->l_name}}<br>
+                                                  <b style="font-size: 12px;"> {{$stf->shiftt->name}}</b>
+                                                  @if($stf->att_marked == 0)
+                                                    <span class="badge bg-label-secondary" style="font-size: 10px;">Not Marked</span>
+                                                  @else
+                                                    @if($stf->status == 0)
+                                                      <span class="badge bg-label-primary" style="font-size: 10px;">Marked</span>
+                                                    @elseif($stf->status == 1)
+                                                      <span class="badge bg-label-success" style="font-size: 10px;">Approved</span>
+                                                    @elseif($stf->status == 2)
+                                                      <span class="badge bg-label-danger" style="font-size: 10px;">Rejected</span>
+                                                    @endif
                                                   @endif
+                                              </div>
+                                              <div class="col-4">
+                                                @if(in_array('assign_bookings',$permissions))
+                                                    <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit Staff" data-bs-custom-class="tooltip-dark" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 10px;"><i class="ri-pencil-line"></i></button>
                                                 @endif
+                                                @if($date < date('Y-m-d'))
+                                                @if($stf->att_marked == 0)
+                                                  <button class="badge badge-center bg-label-primary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Mark Attendance" data-bs-custom-class="tooltip-dark" onclick="markAttendance('{{$stf->id}}')" type="button" style="line-height: 10px;"><i class="ri-calendar-check-line"></i></button>
+                                                @endif
+                                                @endif
+                                                <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Staff Details" data-bs-custom-class="tooltip-dark" onclick="openStaffDetailsModal('{{$stf->staff_details}}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
+                                              </div>
                                             </div>
-                                            <div class="col-4">
-                                              @if(in_array('assign_bookings',$permissions))
-                                                  <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit Staff" data-bs-custom-class="tooltip-dark" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 10px;"><i class="ri-pencil-line"></i></button>
-                                              @endif
-                                              @if($date < date('Y-m-d'))
-                                              @if($stf->att_marked == 0)
-                                                <button class="badge badge-center bg-label-primary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Mark Attendance" data-bs-custom-class="tooltip-dark" onclick="markAttendance('{{$stf->id}}')" type="button" style="line-height: 10px;"><i class="ri-calendar-check-line"></i></button>
-                                              @endif
-                                              @endif
-                                              <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Staff Details" data-bs-custom-class="tooltip-dark" onclick="openStaffDetailsModal('{{$stf->staff_details}}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
+                                            @php
+                                              $staff_found = true;
+                                            @endphp
+                                          @endif
+                                        @else
+                                          @if($stf->type == $st->title && $date == date('Y-m-d', strtotime($stf->date)) && $stf->booking_status == 0)
+                                            <div class="row p-1">
+                                              <div class="col-8 pt-2 text-start">
+                                                <b style="font-size: 12px;"> {{$stf->shiftt->name}}</b>
+                                              </div>
+                                              <div class="col-4">
+                                                @if(in_array('assign_bookings',$permissions))
+                                                  <button class="badge badge-center bg-warning border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Assign Staff" data-bs-custom-class="tooltip-dark" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 0px;"><i class="ri-user-follow-line"></i></button>
+                                                @endif
+                                              </div>
                                             </div>
-                                          </div>
-                                          @php
-                                            $staff_found = true;
-                                          @endphp
-                                        @endif
-                                      @else
-                                        @if($stf->type == $st->title && $date == date('Y-m-d', strtotime($stf->date)) && $stf->booking_status == 0)
-                                          <div class="row p-1">
-                                            <div class="col-8 pt-2 text-start">
-                                              <b style="font-size: 12px;"> {{$stf->shiftt->name}}</b>
-                                            </div>
-                                            <div class="col-4">
-                                              @if(in_array('assign_bookings',$permissions))
-                                                <button class="badge badge-center bg-warning border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Assign Staff" data-bs-custom-class="tooltip-dark" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 0px;"><i class="ri-user-follow-line"></i></button>
-                                              @endif
-                                            </div>
-                                          </div>
-                                          @php
-                                            $staff_found = true;
-                                          @endphp
+                                            @php
+                                              $staff_found = true;
+                                            @endphp
+                                          @endif
                                         @endif
                                       @endif
                                     @endforeach
@@ -1268,8 +1270,8 @@
 
       $('#cust_BookingId').text(data.unique_id || '-');
       $('#cust_BookingType').text(data.booking_type || '-');
-      $('#cust_BookingStart').text(data.start_date || '-');
-      $('#cust_BookingEnd').text(data.end_date || '-');
+      $('#cust_BookingStart').text(moment(data.start_date).format('DD/MM/YYYY') || '-');
+      $('#cust_BookingEnd').text(moment(data.end_date).format('DD/MM/YYYY') || '-');
       $('#cust_BookingTotal').text('₹'+ parseInt(data.total,10).toLocaleString() || '-');
 
       var bookingData = "";
@@ -1710,7 +1712,7 @@
                 {
                     Swal.fire({
                         title: 'Marked!',
-                        text: "The attendance marked succsessfully!",
+                        text: "The attendance marked successfully!",
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonText: 'ok',

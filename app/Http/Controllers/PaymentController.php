@@ -30,7 +30,7 @@ class PaymentController extends Controller
     public function add_advance_salary()
     {
         if (in_array("advance_salary", Auth::user()->permissions())) {
-            $staff = Staff::orderBy('f_name',"ASC")->get();
+            $staff = Staff::where('status',1)->orderBy('f_name',"ASC")->get();
             return view('backend.advance_salary.add_advance_salary',['staff'=>$staff]);
         }
         abort(403);
@@ -39,7 +39,7 @@ class PaymentController extends Controller
     {
         if (in_array("advance_salary", Auth::user()->permissions())) {
             $data = AdvanceSalary::find($id);
-            $staff = Staff::orderBy('f_name',"ASC")->get();
+            $staff = Staff::where('status',1)->orderBy('f_name',"ASC")->get();
             return view('backend.advance_salary.edit_advance_salary',['staff'=>$staff,'data'=>$data]);
         }
         abort(403);
@@ -154,7 +154,7 @@ class PaymentController extends Controller
     public function salary()
     {
         if (in_array("salary", Auth::user()->permissions())) {
-            $staff = Staff::orderBy('f_name',"ASC")->get();
+            $staff = Staff::where('status',1)->orderBy('f_name',"ASC")->get();
             return view('backend.salary.salary',['staff'=>$staff]);
         }
         abort(403);
@@ -162,13 +162,13 @@ class PaymentController extends Controller
     public function get_staff_doctor_list(Request $request){
 
         if($request->type == "Doctor"){
-            $data = Doctor::orderBy('name','ASC')->get();
+            $data = Doctor::where('status',1)->orderBy('name','ASC')->get();
             foreach($data as $da){
                 $da->staff_name = $da->name;
                 $da->unique_id = $da->doctor_id;
             }
         }else{
-            $data = Staff::orderBy('f_name','ASC')->get();
+            $data = Staff::where('status',1)->orderBy('f_name','ASC')->get();
             foreach($data as $da){
                 $da->staff_name = $da->f_name . " " . $da->m_name . " " . $da->l_name;
                 $da->unique_id = $da->staff_id;
@@ -176,56 +176,6 @@ class PaymentController extends Controller
         }
         return $data;
     }
-    // public function get_staff_doctor_salary_details(Request $request) {
-    //     $data = [];
-    
-    //     foreach ($request->weeks as $week) {
-    //         // Decode the JSON string for each week
-    //         $weekData = json_decode($week, true);
-    //         $startDate = $weekData['startDate'];
-    //         $endDate = $weekData['endDate'];
-    
-    //         if ($request->type == "Doctor") {
-    //             $doctor = Doctor::find($request->staff_id);
-    //             if ($doctor) {
-    //                 $booking_assign = BookingAssign::where(['type' => $request->type, 'staff_id' => $doctor->id])->whereBetween('date', [$startDate, $endDate])->get();
-    //                 foreach($booking_assign as $ba){
-    //                     $booking_id = Booking::find($ba->booking_id);
-    //                     $shift_name = Shifts::find($ba->shift);
-    //                     if($booking_id){
-    //                         $ba->booking_unique_id = $booking_id->unique_id;
-    //                     }
-    //                     if($shift_name){
-    //                         $ba->shift_name = $shift_name->name;
-    //                     }
-    //                 }
-    //                 if (!$booking_assign->isEmpty()) {
-    //                     $data = array_merge($data, $booking_assign->toArray());
-    //                 }
-    //             }
-    //         } else {
-    //             $staff = Staff::find($request->staff_id);
-    //             if ($staff) {
-    //                 $booking_assign = BookingAssign::where('staff_id', $staff->id)->whereBetween('date', [$startDate, $endDate])->get();
-    //                 foreach($booking_assign as $ba){
-    //                     $booking_id = Booking::find($ba->booking_id);
-    //                     $shift_name = Shifts::find($ba->shift);
-    //                     if($booking_id){
-    //                         $ba->booking_unique_id = $booking_id->unique_id;
-    //                     }
-    //                     if($shift_name){
-    //                         $ba->shift_name = $shift_name->name;
-    //                     }
-    //                 }
-    //                 if (!$booking_assign->isEmpty()) {
-    //                     $data = array_merge($data, $booking_assign->toArray());
-    //                 }
-    //             }
-    //         }
-    //     }
-    
-    //     return response()->json($data);
-    // }
     public function get_staff_doctor_salary_details(Request $request) {
         $data = [];
     
@@ -250,7 +200,7 @@ class PaymentController extends Controller
                     // $startDate = $weekData['startDate'];
                     // $endDate = $weekData['endDate'];
     
-                    $booking_assign = BookingAssign::where(['staff_id' => $staff->id])->whereBetween('date', [$startDate, $endDate])->get();
+                    $booking_assign = BookingAssign::where('is_cancled',0)->where(['staff_id' => $staff->id])->whereBetween('date', [$startDate, $endDate])->get();
                     $total_assign += count($booking_assign);
     
                     foreach ($booking_assign as $ba) {
@@ -329,7 +279,7 @@ class PaymentController extends Controller
                     // $startDate = $weekData['startDate'];
                     // $endDate = $weekData['endDate'];
     
-                    $booking_assign = BookingAssign::where(['staff_id' => $staff->id, 'att_marked' => 1, 'status' => 1, 'staff_payment' => 0])->whereBetween('date', [$startDate, $endDate])->get();
+                    $booking_assign = BookingAssign::where('is_cancled',0)->where(['staff_id' => $staff->id, 'att_marked' => 1, 'status' => 1, 'staff_payment' => 0])->whereBetween('date', [$startDate, $endDate])->get();
     
                     foreach ($booking_assign as $ba) {
                         $ba->staff_payment = 1;

@@ -40,85 +40,6 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    // public function index()
-    // {   
-    //     if (in_array("dashboard", Auth::user()->permissions())) {
-    //         $staff_type = StaffType::orderBy('id',"ASC")->get();
-    //         if(Session::has('customerType')){
-    //             if(Session::get('customerType') == "CRP"){
-    //                 $bookings = Booking::where(['booking_type'=>'Corporate','booking_status'=>0])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
-    //             }elseif(Session::get('customerType') == "All"){
-    //                 $bookings = Booking::where(['booking_status'=>0])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
-    //             }else{
-    //                 $bookings = Booking::where(['booking_type'=>'Patient','booking_status'=>0])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
-    //             }
-    //         }else{
-    //             $bookings = Booking::where(['booking_status'=>0])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
-    //         }
-    //         $all_bookings = [];
-    //         foreach($bookings as $booking){
-    //             $customer_details = $booking->customerDetails();
-    //             if(Session::has('customerType')){
-    //                 if(Session::get('customerType') == "DHC"){
-    //                     if($customer_details->h_type == "DHC"){
-    //                         $all_bookings[] = $booking;
-    //                     }
-    //                 }elseif(Session::get('customerType') == "HSP"){
-    //                     if($customer_details->h_type != "DHC"){
-    //                         $all_bookings[] = $booking;
-    //                     }
-    //                 }else{
-    //                     $all_bookings[] = $booking;
-    //                 }
-    //             }else{
-    //                 $all_bookings[] = $booking;
-    //             }
-    //             $customer_details->state = State::find($customer_details->state);
-    //             $customer_details->city = City::find($customer_details->city);
-    //             $customer_details->area = Area::find($customer_details->area);
-    //             $booking->customer_details = $customer_details;
-
-    //             foreach($booking->bookingDetails as $details){
-    //                 $shift = Shifts::find($details->shift);
-    //                 if($shift){
-    //                     $details->shift_name = $shift->name;
-    //                 }
-    //             }
-
-    //             $staff_data = [];
-    //             $doctor_data = [];
-    //             foreach($booking->bookingAssigns as $book){
-    //                 $book->shiftt = Shifts::find($book->shift);
-    //                 if($book->type == "Doctor"){
-    //                     $book->staff_details = Doctor::with('state')->with('city')->with('area')->find($book->staff_id);
-    //                     $doctor_data[] = $book;
-    //                 }else{
-    //                     $book->staff_details = Staff::with('types')->with('state')->with('city')->with('area')->find($book->staff_id);
-    //                     $staff_data[] = $book;
-    //                 }
-    //             }
-    //             $booking->staff_data = $staff_data;
-    //             $booking->doctor_data = $doctor_data;
-    //         }
-
-    //         $dates = [];
-    //         $currentDate = new \DateTime();
-    //         $dates[] = $currentDate->format('Y-m-d');
-
-    //         for ($i = 1; $i <= 6; $i++) {
-    //             $nextDate = clone $currentDate;
-    //             $nextDate->add(new \DateInterval('P' . $i . 'D'));
-    //             $dates[] = $nextDate->format('Y-m-d');
-    //         }
-    //         $shifts = Shifts::orderBy('id',"DESC")->get();
-    //         $staffs = Staff::orderBy('id',"DESC")->get();
-    //         $doctors = Doctor::orderBy('id',"DESC")->get();
-    //         $equipments = Equipment::orderBy('id',"DESC")->get();
-    //         $ambulance = Ambulance::first();
-    //         return view('backend.dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $all_bookings,'dates' => $dates]);
-    //     }
-    //     abort(403);
-    // }
     public function index()
     {   
 
@@ -178,9 +99,9 @@ class HomeController extends Controller
                 $dates[] = $nextDate->format('Y-m-d');
             }
             $shifts = Shifts::orderBy('id',"DESC")->get();
-            $staffs = Staff::orderBy('id',"DESC")->get();
-            $doctors = Doctor::orderBy('id',"DESC")->get();
-            $equipments = Equipment::orderBy('id',"DESC")->get();
+            $staffs = Staff::where('status',1)->orderBy('id',"DESC")->get();
+            $doctors = Doctor::where('status',1)->orderBy('id',"DESC")->get();
+            $equipments = Equipment::where('status',1)->orderBy('id',"DESC")->get();
             $ambulance = Ambulance::first();
             return view('backend.dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $all_bookings,'dates' => $dates]);
         // }
@@ -246,9 +167,9 @@ class HomeController extends Controller
                 $dates[] = $nextDate->format('Y-m-d');
             }
             $shifts = Shifts::orderBy('id',"DESC")->get();
-            $staffs = Staff::orderBy('id',"DESC")->get();
-            $doctors = Doctor::orderBy('id',"DESC")->get();
-            $equipments = Equipment::orderBy('id',"DESC")->get();
+            $staffs = Staff::where('status',1)->orderBy('id',"DESC")->get();
+            $doctors = Doctor::where('status',1)->orderBy('id',"DESC")->get();
+            $equipments = Equipment::where('status',1)->orderBy('id',"DESC")->get();
             $ambulance = Ambulance::first();
             return view('backend.dhc_dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $all_bookings,'dates' => $dates]);
         }
@@ -314,9 +235,9 @@ class HomeController extends Controller
                 $dates[] = $nextDate->format('Y-m-d');
             }
             $shifts = Shifts::orderBy('id',"DESC")->get();
-            $staffs = Staff::orderBy('id',"DESC")->get();
-            $doctors = Doctor::orderBy('id',"DESC")->get();
-            $equipments = Equipment::orderBy('id',"DESC")->get();
+            $staffs = Staff::where('status',1)->orderBy('id',"DESC")->get();
+            $doctors = Doctor::where('status',1)->orderBy('id',"DESC")->get();
+            $equipments = Equipment::where('status',1)->orderBy('id',"DESC")->get();
             $ambulance = Ambulance::first();
             return view('backend.hsp_dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $all_bookings,'dates' => $dates]);
         }
@@ -380,9 +301,9 @@ class HomeController extends Controller
                 $dates[] = $nextDate->format('Y-m-d');
             }
             $shifts = Shifts::orderBy('id',"DESC")->get();
-            $staffs = Staff::orderBy('id',"DESC")->get();
-            $doctors = Doctor::orderBy('id',"DESC")->get();
-            $equipments = Equipment::orderBy('id',"DESC")->get();
+            $staffs = Staff::where('status',1)->orderBy('id',"DESC")->get();
+            $doctors = Doctor::where('status',1)->orderBy('id',"DESC")->get();
+            $equipments = Equipment::where('status',1)->orderBy('id',"DESC")->get();
             $ambulance = Ambulance::first();
             return view('backend.crp_dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $all_bookings,'dates' => $dates]);
         }
@@ -395,8 +316,8 @@ class HomeController extends Controller
     public function analytics()
     {
         if (in_array("analytics", Auth::user()->permissions())) {
-            $staff_count = Staff::count();
-            $doctor_count = Doctor::count();
+            $staff_count = Staff::where('status',1)->count();
+            $doctor_count = Doctor::where('status',1)->count();
             $patient_count = Patient::count();
             $corporate_count = Corporate::count();
             $booking_count = Booking::count();
@@ -448,7 +369,7 @@ class HomeController extends Controller
         $labels = [];
 
         foreach($staffType as $type){
-            $assign_data = BookingAssign::where('staff_id', '!=', null)
+            $assign_data = BookingAssign::where('is_cancled',0)->where('staff_id', '!=', null)
                 ->where(['booking_status'=>0,'type'=> $type->title])
                 ->when($startDate === $endDate, function ($query) use ($startDate) {
                     return $query->whereDate('date', $startDate);
@@ -460,7 +381,7 @@ class HomeController extends Controller
             $labels[] = $type->title;
         }
 
-        $assign_data = BookingAssign::where('staff_id', '!=', null)
+        $assign_data = BookingAssign::where('is_cancled',0)->where('staff_id', '!=', null)
             ->where(['booking_status'=>0,'type'=> 'Doctor'])
             ->when($startDate === $endDate, function ($query) use ($startDate) {
                 return $query->whereDate('date', $startDate);
@@ -489,8 +410,8 @@ class HomeController extends Controller
         $categories = [];
 
         foreach ($staffTypes as $type) {
-            $totalStaff = Staff::where('type',$type->id)->count();
-            $unavailableCount = BookingAssign::whereNotNull('staff_id')->where(['booking_status'=>0,'type'=> $type->title])->whereDate('date', $date)->distinct('staff_id')->count('staff_id');
+            $totalStaff = Staff::where('status',1)->where('type',$type->id)->count();
+            $unavailableCount = BookingAssign::where('is_cancled',0)->whereNotNull('staff_id')->where(['booking_status'=>0,'type'=> $type->title])->whereDate('date', $date)->distinct('staff_id')->count('staff_id');
             $availableCount = $totalStaff - $unavailableCount;
 
             $availableSeries[] = $availableCount;
@@ -652,7 +573,7 @@ class HomeController extends Controller
 
         // Filter areas and calculate staff and patient counts
         $filtered_areas = $areas->filter(function ($area) use (&$staff_counts, &$patient_counts) {
-            $staff_count = Staff::where('area', $area->id)->count();
+            $staff_count = Staff::where('status',1)->where('area', $area->id)->count();
             $patient_count = Patient::where('area', $area->id)->count();
 
             // Include the area only if there are staff or patients
@@ -749,11 +670,11 @@ class HomeController extends Controller
         }
 
         foreach ($all_dates as $date) {
-            $doctorSell = BookingAssign::where(['date' => $date, 'type' => 'Doctor'])->sum('sell_rate');
-            $doctorCost = BookingAssign::where(['date' => $date, 'type' => 'Doctor'])->sum('cost_rate');
+            $doctorSell = BookingAssign::where('is_cancled',0)->where(['date' => $date, 'type' => 'Doctor'])->sum('sell_rate');
+            $doctorCost = BookingAssign::where('is_cancled',0)->where(['date' => $date, 'type' => 'Doctor'])->sum('cost_rate');
 
-            $staffSell = BookingAssign::where('type', '!=', 'Doctor')->where(['att_marked' => 1, 'status' => 1, 'date' => $date])->sum('sell_rate');
-            $staffCost = BookingAssign::where('type', '!=', 'Doctor')->where(['att_marked' => 1, 'status' => 1, 'date' => $date])->sum('cost_rate');
+            $staffSell = BookingAssign::where('is_cancled',0)->where('type', '!=', 'Doctor')->where(['att_marked' => 1, 'status' => 1, 'date' => $date])->sum('sell_rate');
+            $staffCost = BookingAssign::where('is_cancled',0)->where('type', '!=', 'Doctor')->where(['att_marked' => 1, 'status' => 1, 'date' => $date])->sum('cost_rate');
 
             $equipments = BookingDetails::where(['type' => 2, 'date' => $date])->get();
             $equipmentSell = 0;
@@ -812,12 +733,12 @@ class HomeController extends Controller
         }
 
         foreach ($all_dates as $date) {
-            $doctorSell = BookingAssign::where(['date' => $date, 'type' => 'Doctor'])->sum('sell_rate');
-            $doctorCost = BookingAssign::where(['date' => $date, 'type' => 'Doctor'])->sum('cost_rate');
+            $doctorSell = BookingAssign::where('is_cancled',0)->where(['date' => $date, 'type' => 'Doctor'])->sum('sell_rate');
+            $doctorCost = BookingAssign::where('is_cancled',0)->where(['date' => $date, 'type' => 'Doctor'])->sum('cost_rate');
             $docProfit[] = $doctorSell - $doctorCost;
 
-            $staffSell = BookingAssign::where('type', '!=', 'Doctor')->where(['att_marked' => 1, 'status' => 1, 'date' => $date])->sum('sell_rate');
-            $staffCost = BookingAssign::where('type', '!=', 'Doctor')->where(['att_marked' => 1, 'status' => 1, 'date' => $date])->sum('cost_rate');
+            $staffSell = BookingAssign::where('is_cancled',0)->where('type', '!=', 'Doctor')->where(['att_marked' => 1, 'status' => 1, 'date' => $date])->sum('sell_rate');
+            $staffCost = BookingAssign::where('is_cancled',0)->where('type', '!=', 'Doctor')->where(['att_marked' => 1, 'status' => 1, 'date' => $date])->sum('cost_rate');
             $stProfit[] = $staffSell - $staffCost;
 
             $equipments = BookingDetails::where(['type' => 2, 'date' => $date])->get();

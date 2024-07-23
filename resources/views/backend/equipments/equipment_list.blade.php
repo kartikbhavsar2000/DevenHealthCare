@@ -135,14 +135,61 @@
             {
                 "data": "id",
                 "render": function (data, type, row, meta) {
+                    var checked = "";
+                    if(row.status == 1){
+                        checked = "checked";
+                    }
                     return type === 'display' ?
-                    '<a href="{{asset("/")}}edit_equipment/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-edit-box-line ri-20px"></i></a><button onClick="deleted('+data+')" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-delete-bin-7-line ri-20px"></i></button>' :
+                    '<a href="{{asset("/")}}edit_equipment/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light"><i class="ri-edit-box-line ri-20px"></i></a><label class="switch"><input type="checkbox" class="switch-input" '+checked+' onclick="changeStatus('+row.id+')"/><span class="switch-toggle-slider"><span class="switch-on"></span><span class="switch-off"></span></span></label>' :
                     data;
                 }
             },
         ],
         
     });
+
+    function changeStatus(id){
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to change the status!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        customClass: {
+          confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+          cancelButton: 'btn btn-outline-secondary waves-effect'
+        },
+        buttonsStyling: false
+        }).then(function(result) {
+            if(result.dismiss != 'cancel'){
+                $.ajax({
+                    url:"{{route('change_equipment_status')}}",
+                    method:"POST",
+                    data:{'id':id,_token:"{{ csrf_token() }}"},
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success:function(result)
+                    {
+                        Swal.fire({
+                            title: 'Updated!',
+                            text: "The status changed succsessfully!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'ok',
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+                            },
+                            buttonsStyling: false
+                        }); 
+                        // setTimeout(function(){ window.location.reload(); }, 500);
+                    }
+                }); 
+            }else{
+                setTimeout(function(){ window.location.reload(); }, 500);
+            }
+        }); 
+    }
 
     function deleted(id){
         Swal.fire({

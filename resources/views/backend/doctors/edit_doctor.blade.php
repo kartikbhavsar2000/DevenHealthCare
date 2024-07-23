@@ -191,7 +191,7 @@
                         <div class="col-3 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Bank Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control mb-1" value="{{$data->bank_name}}" name="bank_name" placeholder="Enter bank name">
+                                <input type="text" class="form-control mb-1" value="{{$data->bank_name}}" name="bank_name" placeholder="Enter bank name"  onkeyup="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')">
                                 @error('bank_name')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
@@ -200,7 +200,7 @@
                         <div class="col-3 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Account Number <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control mb-1" value="{{$data->acc_no}}" name="acc_no" placeholder="Enter account number">
+                                <input type="text" class="form-control mb-1" value="{{$data->acc_no}}" name="acc_no" placeholder="Enter account number" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
                                 @error('acc_no')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
@@ -209,7 +209,7 @@
                         <div class="col-3 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Branch <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control mb-1" value="{{$data->branch}}" name="branch" placeholder="Enter branch">
+                                <input type="text" class="form-control mb-1" value="{{$data->branch}}" name="branch" placeholder="Enter branch"  onkeyup="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')">
                                 @error('branch')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
@@ -218,7 +218,7 @@
                         <div class="col-3 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">IFSC Code <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control mb-1" value="{{$data->ifsc_code}}" name="ifsc_code" placeholder="Enter IFSC code">
+                                <input type="text" class="form-control mb-1" value="{{$data->ifsc_code}}" name="ifsc_code" placeholder="Enter IFSC code" onkeyup="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')">
                                 @error('ifsc_code')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror

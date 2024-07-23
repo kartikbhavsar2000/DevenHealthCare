@@ -45,12 +45,13 @@
                             <th>Staff Id</th>
                             <th>Type</th>
                             <th>Name</th>
-                            <th style="width: 150px;">Rating</th>
+                            <th style="width: 200px;">Rating</th>
                             <th>Mobile</th>
                             <th>Area</th>
                             <th>Gender</th>
                             <th>Age</th>
-                            <th>Experience</th>
+                            <th>Exp</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -82,7 +83,7 @@
             "defaultContent": "-",
             "targets": "_all",
         },{ 
-            width: "150px", 
+            width: "200px", 
             targets: 4 
         }],
         initComplete: function() {
@@ -211,6 +212,18 @@
             //     }
             // },
             {
+                "data": "status",
+                "render": function (data, type, row, meta) {
+                    var checked = "";
+                    if(data == 1){
+                        checked = "checked";
+                    }
+                    return type === 'display' ?
+                    '<label class="switch"><input type="checkbox" class="switch-input" '+checked+' onclick="changeStatus('+row.id+')"/><span class="switch-toggle-slider"><span class="switch-on"></span><span class="switch-off"></span></span></label>' :
+                    data;
+                }
+            },
+            {
                 "data": "id",
                 "render": function (data, type, row, meta) {
                     return type === 'display' ?
@@ -230,6 +243,49 @@
             },
         ],
     });
+
+    function changeStatus(id){
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to change the status!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        customClass: {
+          confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+          cancelButton: 'btn btn-outline-secondary waves-effect'
+        },
+        buttonsStyling: false
+        }).then(function(result) {
+            if(result.dismiss != 'cancel'){
+                $.ajax({
+                    url:"{{route('change_staff_status')}}",
+                    method:"POST",
+                    data:{'id':id,_token:"{{ csrf_token() }}"},
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success:function(result)
+                    {
+                        Swal.fire({
+                            title: 'Updated!',
+                            text: "The status changed succsessfully!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'ok',
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+                            },
+                            buttonsStyling: false
+                        }); 
+                        // setTimeout(function(){ window.location.reload(); }, 500);
+                    }
+                }); 
+            }else{
+                setTimeout(function(){ window.location.reload(); }, 500);
+            }
+        }); 
+    }
 
     function deleted(id){
         Swal.fire({

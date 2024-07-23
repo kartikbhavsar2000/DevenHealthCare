@@ -76,7 +76,7 @@ class ApiController extends Controller
             ]);
         }
 
-        $booking_assign = BookingAssign::where(['staff_id' => $staff->id,'booking_status'=>0])->get();
+        $booking_assign = BookingAssign::where('is_cancled',0)->where(['staff_id' => $staff->id,'booking_status'=>0])->get();
 
         foreach($booking_assign as $book){
             $shift = Shifts::find($book->shift);

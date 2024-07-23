@@ -133,6 +133,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::post('/delete_equipment', [App\Http\Controllers\MasterController::class, 'delete_equipment'])->name('delete_equipment');
     Route::post('/create_equipment', [App\Http\Controllers\MasterController::class, 'create_equipment'])->name('create_equipment');
     Route::post('/update_equipment', [App\Http\Controllers\MasterController::class, 'update_equipment'])->name('update_equipment');
+    Route::post('/change_equipment_status', [App\Http\Controllers\MasterController::class, 'change_equipment_status'])->name('change_equipment_status');
 
     Route::get('/ambulance', [App\Http\Controllers\MasterController::class, 'ambulance'])->name('ambulance');
     Route::get('/get_ambulance_list', [App\Http\Controllers\MasterController::class, 'get_ambulance_list'])->name('get_ambulance_list');
@@ -146,7 +147,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::post('/delete_staff_type', [App\Http\Controllers\MasterController::class, 'delete_staff_type'])->name('delete_staff_type');
     Route::post('/create_staff_type', [App\Http\Controllers\MasterController::class, 'create_staff_type'])->name('create_staff_type');
     Route::post('/update_staff_type', [App\Http\Controllers\MasterController::class, 'update_staff_type'])->name('update_staff_type');
-
+    
     Route::get('/states', [App\Http\Controllers\MasterController::class, 'states'])->name('states');
     Route::get('/get_states_list', [App\Http\Controllers\MasterController::class, 'get_states_list'])->name('get_states_list');
     Route::post('/change_state_status', [App\Http\Controllers\MasterController::class, 'change_state_status'])->name('change_state_status');
@@ -158,12 +159,12 @@ Route::group(['middleware' => ['admin']], function() {
 
     Route::get('/cities', [App\Http\Controllers\MasterController::class, 'cities'])->name('cities');
     Route::get('/get_cities_list', [App\Http\Controllers\MasterController::class, 'get_cities_list'])->name('get_cities_list');
-    Route::post('/change_city_status', [App\Http\Controllers\MasterController::class, 'change_city_status'])->name('change_city_status');
     Route::get('/add_city', [App\Http\Controllers\MasterController::class, 'add_city'])->name('add_city');
     Route::get('/edit_city/{id}', [App\Http\Controllers\MasterController::class, 'edit_city'])->name('edit_city');
     Route::post('/delete_city', [App\Http\Controllers\MasterController::class, 'delete_city'])->name('delete_city');
     Route::post('/create_city', [App\Http\Controllers\MasterController::class, 'create_city'])->name('create_city');
     Route::post('/update_city', [App\Http\Controllers\MasterController::class, 'update_city'])->name('update_city');
+    Route::post('/change_city_status', [App\Http\Controllers\MasterController::class, 'change_city_status'])->name('change_city_status');
 
     Route::get('/area', [App\Http\Controllers\MasterController::class, 'area'])->name('area');
     Route::get('/get_area_list', [App\Http\Controllers\MasterController::class, 'get_area_list'])->name('get_area_list');
@@ -198,6 +199,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::post('/remove_staff_document', [App\Http\Controllers\MenuController::class, 'remove_staff_document'])->name('remove_staff_document');
     Route::post('/get_staff_salary_slip_data', [App\Http\Controllers\MenuController::class, 'get_staff_salary_slip_data'])->name('get_staff_salary_slip_data');
     Route::post('/change_staff_password_post', [App\Http\Controllers\MenuController::class, 'change_staff_password_post'])->name('change_staff_password_post');
+    Route::post('/change_staff_status', [App\Http\Controllers\MenuController::class, 'change_staff_status'])->name('change_staff_status');
 
     Route::get('/corporates', [App\Http\Controllers\MenuController::class, 'corporates'])->name('corporates');
     Route::get('/get_corporates_list', [App\Http\Controllers\MenuController::class, 'get_corporates_list'])->name('get_corporates_list');
@@ -217,6 +219,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::post('/delete_doctor', [App\Http\Controllers\MenuController::class, 'delete_doctor'])->name('delete_doctor');
     Route::post('/create_doctor', [App\Http\Controllers\MenuController::class, 'create_doctor'])->name('create_doctor');
     Route::post('/update_doctor', [App\Http\Controllers\MenuController::class, 'update_doctor'])->name('update_doctor');
+    Route::post('/change_doctor_status', [App\Http\Controllers\MenuController::class, 'change_doctor_status'])->name('change_doctor_status');
 
     Route::get('/advance_salary', [App\Http\Controllers\PaymentController::class, 'advance_salary'])->name('advance_salary');
     Route::get('/get_advance_salary_list', [App\Http\Controllers\PaymentController::class, 'get_advance_salary_list'])->name('get_advance_salary_list');

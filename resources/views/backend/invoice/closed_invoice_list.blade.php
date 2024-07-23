@@ -50,7 +50,6 @@
                             <th>Closed By</th>
                             <th>Pending Amount</th>
                             <th>Total</th>
-                            <th>Reason To Pause</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -75,7 +74,7 @@
             extend: 'excel',
             title: 'Closed Invoice List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10]
+                columns: [1,2,3,4,5,6,7,8,9]
             }
         }],
         columnDefs: [{
@@ -182,7 +181,6 @@
             //         data;
             //     }
             // },
-            { "data": "pause_reason" ,"defaultContent": "-"},
             {
                 "data": "id",
                 "render": function (data, type, row, meta) {

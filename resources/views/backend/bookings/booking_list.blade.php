@@ -55,7 +55,6 @@
                             <th>Added By</th>
                             <th>Pending Amount</th>
                             <th>Total</th>
-                            <th>Reason To Pause</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -81,7 +80,7 @@
             extend: 'excel',
             title: 'Active Bookings List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14]
             }
         }],
         columnDefs: [{
@@ -208,7 +207,6 @@
             {"data": "total" , render : function ( data, type, row, meta ) {
                 return '₹'+ parseInt(data, 10).toLocaleString();
             }},
-            { "data": "pause_reason" ,"defaultContent": "-"},
             {
                 "data": "booking_status",
                 "render": function (data, type, row, meta) {
@@ -255,9 +253,6 @@
         buttonsStyling: false,
         input:'textarea',
         inputPlaceholder: 'Enter reason for pause...',
-        inputAttributes: {
-            maxlength: 50
-        },
         buttonsStyling: false,
         }).then(function(result) {
             if (result.isConfirmed) {
@@ -291,6 +286,18 @@
                             Swal.fire({
                                 title: 'Error',
                                 text: 'The booking has expired and cannot be paused.',
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'ok',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+                                },
+                                buttonsStyling: false
+                            });
+                        }else if(result == "Date2"){
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'You can not pause this booking.',
                                 icon: 'error',
                                 showCancelButton: false,
                                 confirmButtonText: 'ok',

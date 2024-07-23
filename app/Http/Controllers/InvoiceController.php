@@ -43,7 +43,7 @@ class InvoiceController extends Controller
     {
         if (in_array("active_invoice", Auth::user()->permissions())) {
             $booking = Booking::with('bookingDetails')->find($id);
-            $booking_amount_diffrence = BookingAssign::where('type','!=','Doctor')->where('status','!=',1)->where(['booking_id'=>$booking->id,'att_marked'=>0])->sum('sell_rate');
+            $booking_amount_diffrence = BookingAssign::where('is_cancled',0)->where('type','!=','Doctor')->where('status','!=',1)->where(['booking_id'=>$booking->id,'att_marked'=>0])->sum('sell_rate');
             $booking->customer_details = $booking->customerDetails();
             $booking->state = State::where('id',$booking->customer_details->state)->pluck('name')->first();
             $booking->city = City::where('id',$booking->customer_details->city)->pluck('name')->first();
@@ -76,7 +76,7 @@ class InvoiceController extends Controller
             if ($payments->isEmpty() && $data->total > 0) {
                 return "Error";
             }else{
-                $assign_data = BookingAssign::where('booking_id',$data->id)->get();
+                $assign_data = BookingAssign::where('is_cancled',0)->where('booking_id',$data->id)->get();
                 foreach($assign_data as $ad){
                     $ad->booking_status = 1;
                     $ad->update();
@@ -120,13 +120,13 @@ class InvoiceController extends Controller
                         return $query->whereDate('date', $startDate);
                     }, function ($query) use ($startDate, $endDate) {
                         return $query->whereBetween('date', [$startDate, $endDate]);
-                    })->where(['booking_id' => $booking->id,'booking_detail_id'=> $details->id,'att_marked'=>1,'status'=>1])->count();
+                    })->where('is_cancled',0)->where(['booking_id' => $booking->id,'booking_detail_id'=> $details->id,'att_marked'=>1,'status'=>1])->count();
 
                     $total_price = BookingAssign::when($startDate && $startDate === $endDate, function ($query) use ($startDate) {
                         return $query->whereDate('date', $startDate);
                     }, function ($query) use ($startDate, $endDate) {
                         return $query->whereBetween('date', [$startDate, $endDate]);
-                    })->where(['booking_id' => $booking->id,'booking_detail_id'=> $details->id,'att_marked'=>1,'status'=>1])->sum('sell_rate');
+                    })->where('is_cancled',0)->where(['booking_id' => $booking->id,'booking_detail_id'=> $details->id,'att_marked'=>1,'status'=>1])->sum('sell_rate');
 
                     $qnt = $staff_assign_count;
                     $total = $total_price;
@@ -180,7 +180,7 @@ class InvoiceController extends Controller
                     return $query->whereDate('date', $startDate);
                 }, function ($query) use ($startDate, $endDate) {
                     return $query->whereBetween('date', [$startDate, $endDate]);
-                })->where(['booking_id' => $booking->id,'type'=>'Doctor'])->get();
+                })->where('is_cancled',0)->where(['booking_id' => $booking->id,'type'=>'Doctor'])->get();
 
             foreach($booking_assign as $doctor){
                 $price = (int)$doctor->sell_rate;

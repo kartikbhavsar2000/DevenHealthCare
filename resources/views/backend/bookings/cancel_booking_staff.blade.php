@@ -82,7 +82,7 @@
                                 </div>
                                 <div class="col-4">
                                     <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->gender ?? "-"}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->address ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"  style="overflow: hidden; text-overflow: ellipsis;"><span class="me-5">:</span> {{$booking->customer_details->address ?? "-"}}</p>
                                     <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->state ?? "-"}}</p>
                                     <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->city ?? "-"}}</p>
                                     <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->area ?? "-"}}</p>
@@ -103,7 +103,7 @@
                                 </div>
                                 <div class="col-4">
                                     <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->name ?? "-"}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->address ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"  style="overflow: hidden; text-overflow: ellipsis;"><span class="me-5">:</span> {{$booking->customer_details->address ?? "-"}}</p>
                                     <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile1 ?? "-"}}</p>
                                     <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile2 ?? "-"}}</p>
                                     <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->state ?? "-"}}</p>
@@ -148,13 +148,13 @@
                                                 <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0 bg-primary text-white p-2 text-center">
                                                     Type
                                                 </div>
-                                                <div class="mb-2 col-lg-3 col-xl-3 col-12 mb-0 bg-primary text-white p-2 text-center">
+                                                <div class="mb-2 col-lg-4 col-xl-4 col-12 mb-0 bg-primary text-white p-2 text-center">
                                                     Shift
                                                 </div>
                                                 <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0 bg-primary text-white p-2 text-center">
                                                     Customer Rate
                                                 </div>
-                                                <div class="mb-2 col-lg-3 col-xl-3 col-12 mb-0 bg-primary text-white p-2 text-center">
+                                                <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0 bg-primary text-white p-2 text-center">
                                                     From Date
                                                 </div>
                                                 <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0 bg-primary text-white p-2 text-center">
@@ -228,12 +228,43 @@
                         </div>
                     </div>
                 </div>
-                <hr class="mt-12">
-                <div class="card-footer">
+                <div class="card-footer mt-10">
                     <button type="submit" id="Submit" class="btn btn-flex btn-primary h-40px fs-7 fw-bold me-1">Submit</button>
                     <a href="{{route('bookings')}}" class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body h-40px fs-7 fw-bold">Back</a>
                 </div>
             </form>
+            <hr>
+            <div class="mt-5 container">
+                <h6><i class="ri-close-circle-line ri-22px"></i> Canceled Dates</h6>
+            </div>
+            <div class="my-3 container">
+                <table id="kt_datatable5" class="table table-row-bordered table-row-gray-300">
+                    <thead>
+                        <tr>
+                            <th>Sr No.</th>
+                            <th>Type</th>
+                            <th>Staff Id</th>
+                            <th>Staff Name</th>
+                            <th>Shift</th>
+                            <th>Date</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($cancled_staff as $key => $staff)
+                        <tr>
+                            <td>{{$key+1}}</td>
+                            <td>{{$staff->type ?? "-"}}</td>
+                            <td>{{$staff->staff->staff_id ?? "-"}}</td>
+                            <td>{{$staff->staff_name ?? "-"}}</td>
+                            <td>{{$staff->shift_name ?? "-"}}</td>
+                            <td>{{date('d/m/Y',strtotime($staff->date)) ?? "-"}}</td>
+                            <td>₹{{number_format($staff->sell_rate) ?? "0"}}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -244,6 +275,51 @@
 <script src="{{asset('public')}}/assets/vendor/libs/jquery-repeater/jquery-repeater.js"></script>
 
 <script>
+    $('#kt_datatable5').DataTable({
+        dom: `<'row'<'col-sm-12'lBtr>>
+			<'row'<'col-sm-12 col-md-8'i><'col-sm-12 col-md-4 d-flex justify-content-end align-items-center'p>>`,
+        pageLength: 10,
+        buttons: [{
+            extend: 'excel',
+            title: 'Active Bookings List',
+            exportOptions: {
+                columns: [1,2,3,4,5]
+            }
+        }],
+        columnDefs: [{
+            "defaultContent": "-",
+            "targets": "_all",
+        }],
+        initComplete: function() {
+            var api = this.api();
+            var row = $('<tr>').appendTo($(api.table().header()));
+            api.columns().every(function() {
+                var column = this;
+                var title = $(column.header()).text(); // Get the title from the original header
+                var input = $('<input>', {
+                    type: 'text',
+                    placeholder: 'Search ' + title,
+                    class: 'form-control form-control-sm my-2'
+                }).appendTo($('<th>').appendTo(row));
+
+                input.on('keyup change clear', function() {
+                    if (column.search() !== this.value) {
+                        column.search(this.value).draw();
+                    }
+                });
+            });
+
+            var $buttons = $('.dt-buttons').hide();
+            $('#exportLink').on('click', function() {
+                var btnClass = ".buttons-excel";
+                if (btnClass) $buttons.find(btnClass).click();
+            })
+        },
+        scrollX: true,
+        processing: true,
+        serverSide: false,
+    });
+
     function startDateChange(id){
         var end_date = @json($booking->end_date);
         var mindate = $('#BookingStartDate_'+id).val();
@@ -466,6 +542,14 @@
 
         
         
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        dataTable = $('#kt_datatable5').DataTable();
+    });
+    $(window).on('load', function() {
+        dataTable.columns.adjust().draw();
     });
 </script>
 @endsection

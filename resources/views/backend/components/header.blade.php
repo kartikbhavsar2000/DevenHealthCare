@@ -390,7 +390,7 @@
                     <li class="menu-item  @if (Route::currentRouteName() == 'staff_salary_report') active @endif">
                         <a href="{{route('staff_salary_report')}}" class="menu-link">
                             <i class="menu-icon tf-icons ri-file-list-line"></i>
-                            <div>Staff Salary Report</div>
+                            <div>Staff Salary</div>
                         </a>
                     </li>
                     @endif
@@ -398,7 +398,7 @@
                     <li class="menu-item  @if (Route::currentRouteName() == 'paused_booking_report') active @endif">
                         <a href="{{route('paused_booking_report')}}" class="menu-link">
                             <i class="menu-icon tf-icons ri-file-list-line"></i>
-                            <div>Paused Booking Report</div>
+                            <div>Paused Bookings</div>
                         </a>
                     </li>
                     @endif

@@ -30,13 +30,13 @@ class ReportController extends Controller
             $data = [];
             foreach($staff as $st){
                 $st->staff_name = $st->f_name . " " . $st->m_name . " " . $st->l_name;
-                $total = BookingAssign::where([
+                $total = BookingAssign::where('is_cancled',0)->where([
                     'staff_id' => $st->id,
                     'att_marked' => 1,
                     'status' => 1,
                     'staff_payment' => 1
                 ])->whereBetween('date', [$startDate, $endDate])->pluck('cost_rate')->sum();
-                $total_days = BookingAssign::where([
+                $total_days = BookingAssign::where('is_cancled',0)->where([
                     'staff_id' => $st->id,
                     'att_marked' => 1,
                     'status' => 1,

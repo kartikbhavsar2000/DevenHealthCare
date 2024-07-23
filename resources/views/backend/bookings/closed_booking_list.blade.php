@@ -55,7 +55,6 @@
                             <th>Closed By</th>
                             <th>Pending Amount</th>
                             <th>Total</th>
-                            <th>Reason To Pause</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -80,7 +79,7 @@
             extend: 'excel',
             title: 'Closed Bookings List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13]
             }
         }],
         columnDefs: [{
@@ -207,7 +206,6 @@
             {"data": "total" , render : function ( data, type, row, meta ) {
                 return '₹'+ parseInt(data, 10).toLocaleString();
             }},
-            { "data": "pause_reason" ,"defaultContent": "-"},
             {
                 "data": "id",
                 "render": function (data, type, row, meta) {

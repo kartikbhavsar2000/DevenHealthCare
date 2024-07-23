@@ -50,7 +50,6 @@
                             <th>Added By</th>
                             <th>Pending Amount</th>
                             <th>Total</th>
-                            <th>Reason To Pause</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
@@ -76,7 +75,7 @@
             extend: 'excel',
             title: 'Active Invoice List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11]
+                columns: [1,2,3,4,5,6,7,8,9,10]
             }
         }],
         columnDefs: [{
@@ -174,7 +173,6 @@
             {"data": "total" , render : function ( data, type, row, meta ) {
                 return '₹'+ parseInt(data, 10).toLocaleString();
             }},
-            { "data": "pause_reason" ,"defaultContent": "-"},
             {
                 "data": "booking_status",
                 "render": function (data, type, row, meta) {

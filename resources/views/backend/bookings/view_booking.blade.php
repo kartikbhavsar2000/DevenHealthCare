@@ -23,6 +23,14 @@
 @endif
 <div class="row">
     <div class="col-12">
+        @if($booking->pause_reason && $booking->booking_status == 2)
+        <div class="alert alert-warning d-flex align-items-center p-3 mt-4" role="alert">
+            <b>Pause Reason : <span style="font-weight: 400; color:black;">{{$booking->pause_reason ?? '-'}}</span></b>
+            <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                <i class="ri-close-line text-warning pt-3"><span class="path1"></span><span class="path2"></span></i>
+            </button>
+        </div>
+        @endif
         <div class="card py-5">
             <div class="mx-5 row">
                 <div class="col-6 p-0 pt-1">
@@ -67,7 +75,7 @@
                             </div>
                             <div class="col-4">
                                 <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->gender ?? "-"}}</p>
-                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->address ?? "-"}}</p>
+                                <p class="text-nowrap mb-2" style="overflow: hidden; text-overflow: ellipsis;"><span class="me-5">:</span> {{$booking->customer_details->address ?? "-"}}</p>
                                 <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->state ?? "-"}}</p>
                                 <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->city ?? "-"}}</p>
                                 <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->area ?? "-"}}</p>
@@ -88,7 +96,7 @@
                             </div>
                             <div class="col-4">
                                 <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->name ?? "-"}}</p>
-                                <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->address ?? "-"}}</p>
+                                <p class="text-nowrap mb-2"  style="overflow: hidden; text-overflow: ellipsis;"><span class="me-5">:</span> {{$booking->customer_details->address ?? "-"}}</p>
                                 <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile1 ?? "-"}}</p>
                                 <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile2 ?? "-"}}</p>
                                 <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->state ?? "-"}}</p>
@@ -128,14 +136,14 @@
                             <div data-repeater-list="staff_data">
                                 @foreach($staff_data as $staff)
                                 <div data-repeater-item class="StaffRow">
-                                    <div class="row">
-                                        <div class="mb-2 col-lg-5 col-xl-5 col-12 mb-0">
+                                    <div class="row mb-5">
+                                        <div class="col-lg-5 col-xl-5 col-12">
                                             <div class="form-floating form-floating-outline">
                                                 <input type="text" class="form-control staff-rate-input" value="{{$staff->name ?? ""}}" readonly>
                                                 <label for="StaffRate">Staff Type</label>
                                             </div>
                                         </div>
-                                        <div class="mb-2 col-lg-5 col-xl-5 col-12 mb-0">
+                                        <div class="col-lg-5 col-xl-5 col-12">
                                             <div class="form-floating form-floating-outline">
                                                 <select class="ShiftSelect select2 form-select" name="doctor_shift" onchange="ShowItemsInTable()" disabled>
                                                     <option disabled selected>Select shift</option>
@@ -148,7 +156,7 @@
                                                 <label for="StaffRate">Shift</label>
                                             </div>
                                         </div>
-                                        <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
+                                        <div class="col-lg-2 col-xl-2 col-12">
                                             <div class="input-group input-group-merge">
                                                 <span class="input-group-text">₹</span>
                                                 <div class="form-floating form-floating-outline">
@@ -172,20 +180,20 @@
                             @foreach($equipment_data as $equipment)
                             <div data-repeater-list="equipment_data">
                                 <div data-repeater-item>
-                                    <div class="row">
-                                        <div class="mb-2 col-lg-8 col-xl-8 col-12 mb-0">
+                                    <div class="row mb-5">
+                                        <div class="col-lg-8 col-xl-8 col-12">
                                             <div class="form-floating form-floating-outline">
                                                 <input type="text" class="form-control staff-rate-input" value="{{$equipment->name ?? ""}}" readonly>
                                                 <label for="StaffRate">Equipment Type</label>
                                             </div>
                                         </div>
-                                        <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
-                                            <div class="form-floating form-floating-outline mb-6">
+                                        <div class="col-lg-2 col-xl-2 col-12">
+                                            <div class="form-floating form-floating-outline">
                                                 <input type="text" class="form-control staff-rate-input" value="{{$equipment->qnt ?? 1}}" readonly>
                                                 <label for="EquipmentQnt">Quantity</label>
                                             </div>
                                         </div>
-                                        <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
+                                        <div class="col-lg-2 col-xl-2 col-12">
                                             <div class="input-group input-group-merge">
                                                 <span class="input-group-text">₹</span>
                                                 <div class="form-floating form-floating-outline">
@@ -209,14 +217,14 @@
                             @foreach($doctor_data as $doctor)
                             <div data-repeater-list="doctor_data">
                                 <div data-repeater-item>
-                                    <div class="row">
-                                        <div class="mb-2 col-lg-4 col-xl-4 col-12 mb-0">
+                                    <div class="row mb-5">
+                                        <div class="col-lg-4 col-xl-4 col-12">
                                             <div class="form-floating form-floating-outline">
                                                 <input type="text" class="form-control DoctorSelect" name="doctor_name[]" value="{{$doctor->name ?? ""}}" readonly>
                                                 <label for="form-repeater-1-1">Type</label>
                                             </div>
                                         </div>
-                                        <div class="mb-2 col-lg-4 col-xl-4 col-12 mb-0">
+                                        <div class="col-lg-4 col-xl-4 col-12">
                                             <div class="form-floating form-floating-outline">
                                                 <select class="ShiftSelect select2 form-select" name="doctor_shift" onchange="ShowItemsInTable()" disabled>
                                                     <option disabled selected>Select shift</option>
@@ -229,13 +237,13 @@
                                                 <label for="StaffRate">Shift</label>
                                             </div>
                                         </div>
-                                        <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
+                                        <div class="col-lg-2 col-xl-2 col-12">
                                             <div class="form-floating form-floating-outline">
-                                                <input type="text" class="form-control mb-1 Doc_Date" value="{{$doctor->date ?? ""}}" onchange="ShowItemsInTable()" name="date" placeholder="DD-MM-YYYY" disabled />
+                                                <input type="text" class="form-control Doc_Date" value="{{$doctor->date ?? ""}}" onchange="ShowItemsInTable()" name="date" placeholder="DD-MM-YYYY" disabled />
                                                 <label for="form-repeater-1-3">Date</label>
                                             </div>
                                         </div>
-                                        <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
+                                        <div class="col-lg-2 col-xl-2 col-12">
                                             <div class="input-group input-group-merge">
                                                 <span class="input-group-text">₹</span>
                                                 <div class="form-floating form-floating-outline">
@@ -259,14 +267,14 @@
                             @foreach($ambulance_data as $ambulance)
                             <div data-repeater-list="ambulance_data">
                                 <div data-repeater-item>
-                                    <div class="row">
-                                        <div class="mb-2 col-lg-5 col-xl-5 col-12 mb-0">
+                                    <div class="row mb-5">
+                                        <div class=" col-lg-5 col-xl-5 col-12">
                                             <div class="form-floating form-floating-outline">
                                                 <input type="text" class="form-control" name="ambulance_name" value="{{$ambulance->name ?? ""}}" readonly>
                                                 <label for="form-repeater-1-1">Type</label>
                                             </div>
                                         </div>
-                                        <div class="mb-2 col-lg-5 col-xl-5 col-12 mb-0">
+                                        <div class="col-lg-5 col-xl-5 col-12">
                                             <div class="form-floating form-floating-outline">
                                                 <select class="ShiftSelect select2 form-select" name="doctor_shift" onchange="ShowItemsInTable()" disabled>
                                                     <option disabled selected>Select shift</option>
@@ -279,7 +287,7 @@
                                                 <label for="StaffRate">Shift</label>
                                             </div>
                                         </div>
-                                        <div class="mb-2 col-lg-2 col-xl-2 col-12 mb-0">
+                                        <div class="col-lg-2 col-xl-2 col-12">
                                             <div class="input-group input-group-merge">
                                                 <span class="input-group-text">₹</span>
                                                 <div class="form-floating form-floating-outline">

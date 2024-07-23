@@ -37,7 +37,7 @@
                             <div class="mb-4">
                                 <label class="form-label">Name <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control d-none" value="{{$data->id}}" name="id"/>
-                                <input type="text" class="form-control mb-1" value="{{$data->name}}" name="name"  placeholder="Enter equipment name"/>
+                                <input type="text" class="form-control mb-1" value="{{$data->name}}" name="name"  placeholder="Enter equipment name" readonly/>
                                 @error('name')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
@@ -46,11 +46,7 @@
                         <div class="col-6 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Type <span class="text-danger">*</span></label>
-                                <select class="form-select equipment-days-qnt-input" name="type" id="Type">
-                                    <option disabled selected>Select quantity</option>
-                                    <option value="Sale" @if($data->type == "Sale") selected @endif>Sale</option>
-                                    <option value="Rent" @if($data->type == "Rent") selected @endif>Rent</option>
-                                </select>
+                                <input type="text" class="form-control mb-1" value="{{$data->type}}" name="type"  placeholder="Enter equipment type" readonly/>
                                 @error('type')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror

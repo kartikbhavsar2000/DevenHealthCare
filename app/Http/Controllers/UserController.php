@@ -52,17 +52,15 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|max:255|regex:/^([^0-9]*)$/|unique:roles,name',
         ]);
-
+        if(!$request->permission){
+            return redirect()->back()->with('error','To create a role, at least one permission must be selected.');
+        }
         $data = new Role();
         $data->name = $request->name;
-        if($request->permission){
-            $data->permission = json_encode($request->permission);
-        }else{
-            $data->permission = json_encode([]);
-        }
+        $data->permission = json_encode($request->permission);
         $data->save();
 
-        return redirect('roles')->with('success','The Role Added Successfully');
+        return redirect('roles')->with('success','The role created successfully.');
     }
     public function update_role(Request $request)
     {
@@ -70,22 +68,24 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|max:255|unique:roles,name,'.$request->id,
         ]);
+
+        if(!$request->permission){
+            return redirect()->back()->with('error','To update a role, at least one permission must be selected.');
+        }
+
         $data = Role::where('id',$request->id)->first();
+
         if($data){
             $data->permission = json_encode([]);
             $data->update();
 
             $data->name = $request->name;
-            if($request->permission){
-                $data->permission = json_encode($request->permission);
-            }else{
-                $data->permission = json_encode([]);
-            }
+            $data->permission = json_encode($request->permission);
             $data->update();
     
-            return redirect()->back()->with('success','The Role Updated Successfully');
+            return redirect('roles')->with('success','The role updated successfully.');
         }else{
-            return redirect()->back()->with('error','Data Not Found');
+            return redirect()->back()->with('error','Data not found.');
         }
     }
     public function users()

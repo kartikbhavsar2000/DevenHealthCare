@@ -249,6 +249,17 @@ class MenuController extends Controller
         }
         abort(403);
     }
+    public function change_staff_status(Request $request)
+    {
+        $data = Staff::find($request->id);
+        if($data->status == 1){
+            $data->status = 0;
+        }else{
+            $data->status = 1;
+        }
+        $data->update();
+        return "Changed";
+    }
     public function view_staff_reviews($id)
     {
         if (in_array("staff", Auth::user()->permissions())) {
@@ -285,7 +296,7 @@ class MenuController extends Controller
             $startDate = date('Y-m-01', strtotime($requestMonth));
             $endDate = date('Y-m-t', strtotime($requestMonth));
             
-            $total = BookingAssign::where([
+            $total = BookingAssign::where('is_cancled',0)->where([
                 'staff_id' => $request->staff_id,
                 'att_marked' => 1,
                 'status' => 1,
@@ -694,6 +705,17 @@ class MenuController extends Controller
             return view('backend.doctors.edit_doctor',['states'=>$states,'cities'=>$cities,'area'=>$area,'data'=>$data]);
         }
         abort(403);
+    }
+    public function change_doctor_status(Request $request)
+    {
+        $data = Doctor::find($request->id);
+        if($data->status == 1){
+            $data->status = 0;
+        }else{
+            $data->status = 1;
+        }
+        $data->update();
+        return "Changed";
     }
     public function view_doctor_details($id)
     {
