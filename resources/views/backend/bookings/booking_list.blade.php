@@ -272,7 +272,7 @@
                         if(result == "Done"){
                             Swal.fire({
                                 title:'Done!',
-                                text: 'the attendance marked as pending successfully!',
+                                text: 'The booking paused successfully!',
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'ok',

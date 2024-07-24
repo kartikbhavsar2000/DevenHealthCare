@@ -345,13 +345,13 @@
               Gender
             </div>
             <div class="mt-1">
-              State
+              Area
             </div>
             <div class="mt-1">
               City
             </div>
             <div class="mt-1">
-              Area
+              State
             </div>
             <div class="mt-1">
               Address
@@ -386,13 +386,13 @@
               : <span id="st_Gender">-</span>
             </div>
             <div class="mt-1">
-              : <span id="st_State">-</span>
+              : <span id="st_Area">-</span>
             </div>
             <div class="mt-1">
               : <span id="st_City">-</span>
             </div>
             <div class="mt-1">
-              : <span id="st_Area">-</span>
+              : <span id="st_State">-</span>
             </div>
             <div class="mt-1">
               : <span id="st_Address">-</span>
@@ -438,13 +438,13 @@
               Gender
             </div>
             <div class="mt-1">
-              State
+              Area
             </div>
             <div class="mt-1">
               City
             </div>
             <div class="mt-1">
-              Area
+              State
             </div>
             <div class="mt-1">
               Address
@@ -476,13 +476,13 @@
               : <span id="doc_Gender">-</span>
             </div>
             <div class="mt-1">
-              : <span id="doc_State">-</span>
+              : <span id="doc_Area">-</span>
             </div>
             <div class="mt-1">
               : <span id="doc_City">-</span>
             </div>
             <div class="mt-1">
-              : <span id="doc_Area">-</span>
+              : <span id="doc_State">-</span>
             </div>
             <div class="mt-1">
               : <span id="doc_Address">-</span>
@@ -587,10 +587,10 @@
             </div>
             <div class="mt-1 row">
               <div class="col-2">
-                <b>State</b>
+                <b>Area</b>
               </div>
               <div class="col-10">
-                : <span id="cust_State">-</span>
+                : <span id="cust_Area">-</span>
               </div>
             </div>
             <div class="mt-1 row">
@@ -603,10 +603,10 @@
             </div>
             <div class="mt-1 row">
               <div class="col-2">
-                <b>Area</b>
+                <b>State</b>
               </div>
               <div class="col-10">
-                : <span id="cust_Area">-</span>
+                : <span id="cust_State">-</span>
               </div>
             </div>
           </div>
@@ -722,10 +722,10 @@
           <div class="col-6">
             <div class="mt-1 row">
               <div class="col-2">
-                <b>State</b>
+                <b>Area</b>
               </div>
               <div class="col-10">
-                : <span id="corp_State">-</span>
+                : <span id="corp_Area">-</span>
               </div>
             </div>
             <div class="mt-1 row">
@@ -738,10 +738,10 @@
             </div>
             <div class="mt-1 row">
               <div class="col-2">
-                <b>Area</b>
+                <b>State</b>
               </div>
               <div class="col-10">
-                : <span id="corp_Area">-</span>
+                : <span id="corp_State">-</span>
               </div>
             </div>
           </div>
@@ -1101,7 +1101,7 @@
             <select class="StaffSelect2 select2 form-select" name="staff_id" id="Staff2" required onchange="changeStaffRate2()">
                 <option></option>
             </select>
-            <label>Select Doctor</label>
+            <label>Select Staff</label>
           </div>
         </div>
         <div class="col-12 mt-5">

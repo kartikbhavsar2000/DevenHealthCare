@@ -68,7 +68,7 @@
                                     @endif
                                     <td>{{$da->description ?? "-"}}</td>
                                     <td>{{$da->created_by_user->name ?? "-"}}</td>
-                                    <td>{{date('d/m/Y H:s A',strtotime($da->created_at))}}</td>
+                                    <td>{{ \Carbon\Carbon::parse($da->created_at)->setTimezone('Asia/Kolkata')->format('d/m/Y h:i A') }}</td>
                                 </tr>
                             @endforeach
                         @endif

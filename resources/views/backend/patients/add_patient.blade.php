@@ -121,7 +121,7 @@
                         <div class="col-4 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Date Of Birth</label>
-                                <input type="text" class="form-control mb-1" value="{{old('dob')}}"  name="dob" placeholder="Month DD, YYYY" id="dob" readonly />
+                                <input type="text" class="form-control mb-1" value="{{old('dob')}}"  name="dob" placeholder="DD-MM-YYYY" id="dob" readonly />
                                 @error('dob')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror

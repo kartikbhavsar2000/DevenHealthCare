@@ -296,7 +296,7 @@
                   </div>
                 </div>
                 <div class="card-body py-6 px-3">
-                  <div class="d-flex justify-content-between flex-wrap gap-6">
+                  {{-- <div class="d-flex justify-content-between flex-wrap gap-6">
                     <div>
                       <h6>Invoice To:</h6>
                       @if($booking->booking_type == "Patient")
@@ -308,11 +308,55 @@
                         <p class="mb-1">{{$booking->customer_details->name ?? ""}} (<b>{{$booking->booking_type ?? ""}}</b>)</p>
                       @endif
                       <p class="mb-1">{{$booking->customer_details->address ?? ""}}</p>
-                      <p class="mb-1">{{$booking->state ?? ""}} , {{$booking->city ?? ""}}, {{$booking->area ?? ""}}</p>
+                      <p class="mb-1">{{$booking->area ?? ""}}, {{$booking->city ?? ""}}, {{$booking->state ?? ""}}</p>
                       <p class="mb-1">{{$booking->customer_details->mobile ?? ""}} @if($booking->customer_details->mobile2) , @endif {{$booking->customer_details->mobile2 ?? ""}}</p>
                       <p class="mb-0">{{$booking->customer_details->email ?? ""}}</p>
                     </div>
                     <div>
+                      <h6>Booking & Invoice</h6>
+                      <table>
+                        <tbody>
+                            <tr>
+                                <td class="pe-4">Invoice No.:</td>
+                                <td>{{$booking->unique_id ?? ""}}</td>
+                            </tr>
+                            <tr>
+                                <td class="pe-4">Date Issues:</td>
+                                <td>{{date('d/m/Y')}}</td>
+                            </tr>
+                            <tr>
+                                <td class="pe-4">Service Period:</td>
+                                <td>{{date('d/m/Y',strtotime($booking->start_date))}} To {{date('d/m/Y',strtotime($booking->end_date))}}</td>
+                            </tr>
+                            <tr>
+                                <td class="pe-4">Invoice Start Date:</td>
+                                <td id="DataStartDate">{{date('d/m/Y',strtotime($booking->start_date))}}</td>
+                            </tr>
+                            <tr>
+                              <td class="pe-4">Invoice End Date:</td>
+                              <td id="DataEndDate">{{date('d/m/Y',strtotime($booking->end_date))}}</td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div> --}}
+                  <div class="d-flex justify-content-between flex-wrap gap-6">
+                    <div style="flex: 1; min-width: 45%;">
+                      <h6>Invoice To:</h6>
+                      @if($booking->booking_type == "Patient")
+                        <p class="mb-1">{{$booking->customer_details->name ?? ""}} (@if($booking->customer_details->h_type != "DHC") HSP @else DHC @endif)</p>
+                        @if($booking->customer_details->h_type != "DHC")
+                          <p class="mb-1">{{$booking->customer_details->h_type ?? ""}}</p>
+                        @endif
+                      @else
+                        <p class="mb-1">{{$booking->customer_details->name ?? ""}} (<b>{{$booking->booking_type ?? ""}}</b>)</p>
+                      @endif
+                      <p class="mb-1">{{$booking->customer_details->address ?? ""}}</p>
+                      <p class="mb-1">{{$booking->area ?? ""}}, {{$booking->city ?? ""}}, {{$booking->state ?? ""}}</p>
+                      <p class="mb-1">{{$booking->customer_details->mobile ?? ""}} @if($booking->customer_details->mobile2) , @endif {{$booking->customer_details->mobile2 ?? ""}}</p>
+                      <p class="mb-0">{{$booking->customer_details->email ?? ""}}</p>
+                    </div>
+                    <div style="flex: 1; min-width: 45%; padding-left:10rem;">
                       <h6>Booking & Invoice</h6>
                       <table>
                         <tbody>

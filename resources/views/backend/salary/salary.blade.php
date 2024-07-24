@@ -46,7 +46,7 @@
                             </div>
                             <div id="typeError" class="text-danger"></div>
                         </div> --}}
-                        <div class="col-10">
+                        <div class="col-9">
                             <div class="mb-4">
                                 <label class="form-label">Select Staff <span class="text-danger">*</span></label>
                                 <select class="form-control" name="staff_id[]" id="StaffId"  multiple="multiple">
@@ -59,19 +59,19 @@
                                 <div id="staffError" class="text-danger"></div>
                             </div>
                         </div>
-                        <div class="col-2 mt-8">
+                        <div class="col-3 mt-8">
                             <button type="button" class="btn btn-white w-100" id="selectAll">Select All Staff</button>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label class="form-label" for="monthpicker">Select Month <span class="text-danger">*</span> :</label>
+                                <label class="form-label" for="monthpicker">Select Month <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="monthpicker" name="month" placeholder="Select Month" readonly>
                                 <div id="monthError" class="text-danger"></div>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label class="form-label" for="weekselector">Select Weeks <span class="text-danger">*</span> :</label>
+                                <label class="form-label" for="weekselector">Select Weeks <span class="text-danger">*</span></label>
                                 <select class="form-control" id="weekselector" name="weeks[]" multiple="multiple"></select>
                                 <div id="weeksError" class="text-danger"></div>
                             </div>

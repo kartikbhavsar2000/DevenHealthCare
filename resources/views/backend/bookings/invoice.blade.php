@@ -64,7 +64,7 @@
                 <p class="mb-1">{{$booking->customer_details->name ?? ""}} (<b>{{$booking->booking_type ?? ""}}</b>)</p>
               @endif
               <p class="mb-1">{{$booking->customer_details->address ?? ""}}</p>
-              <p class="mb-1">{{$booking->state ?? ""}} , {{$booking->city ?? ""}}, {{$booking->area ?? ""}}</p>
+              <p class="mb-1">{{$booking->area ?? ""}}, {{$booking->city ?? ""}}, {{$booking->state ?? ""}}</p>
               <p class="mb-1">{{$booking->customer_details->mobile ?? ""}}</p>
               <p class="mb-0">{{$booking->customer_details->email ?? ""}}</p>
             </div>

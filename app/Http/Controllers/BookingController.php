@@ -769,7 +769,7 @@ class BookingController extends Controller
                 }
             }
         }else{
-            return redirect()->back()->with('error','Please Enter Start Date & End Date.');
+            return redirect()->back()->with('error','Please Enter Start Date and End Date.');
         }
 
     }
@@ -867,7 +867,7 @@ class BookingController extends Controller
             $booking->is_staff = 1;
             $booking->update();
     
-            return redirect()->back()->with('success','Staff Added & Assign Successfully.');
+            return redirect()->back()->with('success','Staff Added and Assign Successfully.');
         }else{
             return redirect()->back()->with('error','Data Not Found.');
         }
@@ -912,7 +912,7 @@ class BookingController extends Controller
             $booking->is_doctor = 1;
             $booking->update();
     
-            return redirect()->back()->with('success','Doctor Added & Assign Successfully.');
+            return redirect()->back()->with('success','Doctor Added and Assign Successfully.');
         }else{
             return redirect()->back()->with('error','Data Not Found.');
         }
@@ -1336,6 +1336,13 @@ class BookingController extends Controller
             $booking->pause_reason = $request->reason;
         }
         $booking->update();
+
+        foreach($bookingDetails as $details){
+            $assignCount = BookingAssign::where('is_cancled',0)->where(['booking_id' => $booking->id,'booking_detail_id' => $details->id])->get();
+            if($assignCount->isEmpty()){
+                $details->delete();
+            }
+        }
 
         return "Done";
     }

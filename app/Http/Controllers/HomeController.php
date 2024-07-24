@@ -340,9 +340,11 @@ class HomeController extends Controller
     {
         $data = BookingAssign::find($request->id);
         if($data){
+            $dateTime = now()->setTimezone('Asia/Kolkata');
+
             $data->att_marked = 1;
             $data->status = 1;
-            $data->att_date_time = date('Y-m-d H:i:s');
+            $data->att_date_time = $dateTime->format('Y-m-d H:i:s');
             $data->updated_by = Auth::user()->id;
             $data->update();
         }
