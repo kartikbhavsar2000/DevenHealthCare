@@ -374,6 +374,10 @@ class MenuController extends Controller
     }
     public function create_staff(Request $request)
     {
+        $checkStaff = Staff::where(['f_name'=>$request->f_name,'m_name'=>$request->m_name,'l_name'=>$request->l_name])->first();
+        if($checkStaff){
+            return redirect()->back()->with('error','The Staff is already exist');
+        }
         $request->validate([
             'f_name' => 'required|max:255|alpha',
             'm_name' => 'nullable|max:255|alpha',
@@ -458,6 +462,11 @@ class MenuController extends Controller
     }
     public function update_staff(Request $request)
     {
+        $checkStaff = Staff::where(['f_name'=>$request->f_name,'m_name'=>$request->m_name,'l_name'=>$request->l_name])->first();
+        if($checkStaff){
+            return redirect()->back()->with('error','The Staff is already exist');
+        }
+        
         $request->validate([
             'f_name' => 'required|max:255|alpha',
             'm_name' => 'nullable|max:255|alpha',

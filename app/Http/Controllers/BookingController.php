@@ -773,6 +773,70 @@ class BookingController extends Controller
         }
 
     }
+    public function change_staff_and_customer_rate(Request $request)
+    {
+        $booking_assign = BookingAssign::find($request->id);
+        // dd($request->all());
+        if($booking_assign){
+
+            $updateCounts = BookingDetails::find($booking_assign->booking_detail_id);
+            $updateCounts->qnt = $updateCounts->qnt - 1;
+            if($updateCounts->qnt <= 0){
+                $updateCounts->delete();
+            }else{
+                $updateCounts->update();
+
+            }
+
+            $booking = Booking::find($booking_assign->booking_id);
+
+            if($booking){
+                if($booking_assign->sell_rate > $request->sell_price){
+                    $amountLess = $booking_assign->sell_rate - $request->sell_price;
+
+                    $sub_total = $booking->sub_total - $amountLess;
+                    $total = $booking->total - $amountLess;
+                    $pending_payment = $booking->pending_payment - $amountLess;
+                }else{
+                    $amountLess = $request->sell_price - $booking_assign->sell_rate;
+
+                    $sub_total = $booking->sub_total + $amountLess;
+                    $total = $booking->total + $amountLess;
+                    $pending_payment = $booking->pending_payment + $amountLess;
+                }
+    
+                $booking->sub_total = $sub_total;
+                $booking->total = $total;
+                $booking->pending_payment = $pending_payment;
+                $booking->update();
+
+                $booking_details = BookingDetails::where(['booking_id'=>$booking->id,'type'=>1,'shift'=>$booking_assign->shift,'sell_rate'=>$request->sell_price,'name'=>$booking_assign->type])->first();
+                if($booking_details){
+                    $booking_details->qnt = $booking_details->qnt + 1;
+                    $booking_details->update();
+                }else{
+                    $booking_details = new BookingDetails();
+                    $booking_details->booking_id = $booking->id;
+                    $booking_details->type = 1;
+                    $booking_details->shift = $booking_assign->shift;
+                    $booking_details->sell_rate = $request->sell_price;
+                    $booking_details->name = $booking_assign->type;
+                    $booking_details->qnt = 1;
+                    $booking_details->save();
+                }
+
+                $booking_assign->cost_rate = $request->cost_price;
+                $booking_assign->sell_rate = $request->sell_price;
+                $booking_assign->booking_detail_id = $booking_details->id;
+                $booking_assign->update();
+
+            }
+            return redirect()->back()->with('success','Price Changed Successfully.');
+        }else{
+            return redirect()->back()->with('error','Data Not Found.');
+        }
+
+    }
     public function assign_single_staff(Request $request)
     {
         $booking_assign = BookingAssign::find($request->id);
@@ -780,6 +844,11 @@ class BookingController extends Controller
         if($booking_assign){
             $booking_assign->cost_rate = $request->rate;
             $booking_assign->staff_id = $request->staff_id;
+            $booking_assign->lat = NULL;
+            $booking_assign->lng = NULL;
+            $booking_assign->att_proof = NULL;
+            $booking_assign->att_marked = 0;
+            $booking_assign->status = 0;
             $booking_assign->update();
 
             $booking = Booking::find($booking_assign->booking_id);
@@ -821,7 +890,6 @@ class BookingController extends Controller
             // return $count2;
             if($checkIfAvailable && $count > $count2){
                 $check = BookingDetails::where(['booking_id'=>$booking->id,'type'=>1,'shift'=>$request->shift,'sell_rate'=>$request->sell_rate,'name'=>$request->staff_type])->get();
-                $abc = [];
                 $booking_detail_id = "";
                 foreach($check as $k => $ch){
                     if($k == $count2){

@@ -51,6 +51,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/view_booking_assign_details/{id}', [App\Http\Controllers\BookingController::class, 'view_booking_assign_details'])->name('view_booking_assign_details');
     Route::get('/get_booking_assign_details', [App\Http\Controllers\BookingController::class, 'get_booking_assign_details'])->name('get_booking_assign_details');
     Route::post('/create_booking', [App\Http\Controllers\BookingController::class, 'create_booking'])->name('create_booking');
+    Route::post('/change_staff_and_customer_rate', [App\Http\Controllers\BookingController::class, 'change_staff_and_customer_rate'])->name('change_staff_and_customer_rate');
 
     Route::get('/closed_bookings', [App\Http\Controllers\BookingController::class, 'closed_bookings'])->name('closed_bookings');
     Route::get('/get_closed_bookings_list', [App\Http\Controllers\BookingController::class, 'get_closed_bookings_list'])->name('get_closed_bookings_list');

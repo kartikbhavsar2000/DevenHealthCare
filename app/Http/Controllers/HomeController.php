@@ -45,7 +45,7 @@ class HomeController extends Controller
 
         // if (in_array("dashboard", Auth::user()->permissions())) {
             $staff_type = StaffType::orderBy('id',"ASC")->get();
-            $bookings = Booking::whereIn('booking_status',[0,2])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
+            $bookings = Booking::whereIn('booking_status',[0,2])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->paginate(50);
             $all_bookings = [];
             foreach($bookings as $booking){
                 $customer_details = $booking->customerDetails();
@@ -344,6 +344,9 @@ class HomeController extends Controller
 
             $data->att_marked = 1;
             $data->status = 1;
+            $data->lat = NULL;
+            $data->lng = NULL;
+            $data->att_proof = NULL;
             $data->att_date_time = $dateTime->format('Y-m-d H:i:s');
             $data->updated_by = Auth::user()->id;
             $data->update();

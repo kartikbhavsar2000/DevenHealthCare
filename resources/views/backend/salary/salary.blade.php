@@ -256,77 +256,147 @@
 
         return validate;
     }
-    $(document).ready(function() {
-        var selectedWeeks = [];
+    // $(document).ready(function() {
+    //     var selectedWeeks = [];
 
-        function formatDate(date) {
-            var year = date.getFullYear();
-            var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Add leading zero
-            var day = date.getDate().toString().padStart(2, '0'); // Add leading zero
-            return day + '-' + month + '-' + year;
-        }
+    //     function formatDate(date) {
+    //         var year = date.getFullYear();
+    //         var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Add leading zero
+    //         var day = date.getDate().toString().padStart(2, '0'); // Add leading zero
+    //         return day + '-' + month + '-' + year;
+    //     }
        
-        function getWeeksInMonth(year, month) {
-            var weeks = [];
-            var firstDate = new Date(year, month, 1);
-            var lastDate = new Date(year, month + 1, 0);
-            var currentWeekStart = firstDate;
+    //     function getWeeksInMonth(year, month) {
+    //         var weeks = [];
+    //         var firstDate = new Date(year, month, 1);
+    //         var lastDate = new Date(year, month + 1, 0);
+    //         var currentWeekStart = firstDate;
 
-            while (currentWeekStart <= lastDate) {
-                var currentWeekEnd = new Date(currentWeekStart);
-                currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
-                if (currentWeekEnd > lastDate) {
-                    currentWeekEnd = lastDate;
-                }
-                weeks.push({
-                    startDate: new Date(currentWeekStart),
-                    endDate: new Date(currentWeekEnd)
-                });
-                currentWeekStart.setDate(currentWeekEnd.getDate() + 1);
-            }
-            return weeks;
-        }
+    //         while (currentWeekStart <= lastDate) {
+    //             var currentWeekEnd = new Date(currentWeekStart);
+    //             currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
+    //             if (currentWeekEnd > lastDate) {
+    //                 currentWeekEnd = lastDate;
+    //             }
+    //             weeks.push({
+    //                 startDate: new Date(currentWeekStart),
+    //                 endDate: new Date(currentWeekEnd)
+    //             });
+    //             currentWeekStart.setDate(currentWeekEnd.getDate() + 1);
+    //         }
+    //         return weeks;
+    //     }
         
-        function populateWeekSelector(weeks) {
-            var weekSelector = $('#weekselector');
-            weekSelector.empty();
-            weeks.forEach(function(week, index) {
-                var formattedStartDate = formatDate(week.startDate);
-                var formattedEndDate = formatDate(week.endDate);
+    //     function populateWeekSelector(weeks) {
+    //         var weekSelector = $('#weekselector');
+    //         weekSelector.empty();
+    //         weeks.forEach(function(week, index) {
+    //             var formattedStartDate = formatDate(week.startDate);
+    //             var formattedEndDate = formatDate(week.endDate);
                 
-                var option = new Option(
-                    "Week " + (index + 1) + " (" + formattedStartDate + " to " + formattedEndDate + ")",
-                    JSON.stringify({ startDate: formattedStartDate, endDate: formattedEndDate })
-                );
-                weekSelector.append(option);
-            });
-        }
+    //             var option = new Option(
+    //                 "Week " + (index + 1) + " (" + formattedStartDate + " to " + formattedEndDate + ")",
+    //                 JSON.stringify({ startDate: formattedStartDate, endDate: formattedEndDate })
+    //             );
+    //             weekSelector.append(option);
+    //         });
+    //     }
 
-        $('#monthpicker').datepicker({
-            format: "mm-yyyy",
-            startView: "months",
-            minViewMode: "months",
-            autoclose: true
-        }).on("changeDate", function(e) {
-            var selectedDate = e.date;
-            var year = selectedDate.getFullYear();
-            var month = selectedDate.getMonth();
-            var weeks = getWeeksInMonth(year, month);
-            populateWeekSelector(weeks);
-            $('#weekselector').val(null).trigger('change');
-        });
+    //     $('#monthpicker').datepicker({
+    //         format: "mm-yyyy",
+    //         startView: "months",
+    //         minViewMode: "months",
+    //         autoclose: true
+    //     }).on("changeDate", function(e) {
+    //         var selectedDate = e.date;
+    //         var year = selectedDate.getFullYear();
+    //         var month = selectedDate.getMonth();
+    //         var weeks = getWeeksInMonth(year, month);
+    //         populateWeekSelector(weeks);
+    //         $('#weekselector').val(null).trigger('change');
+    //     });
 
-        $('#weekselector').select2({
-            placeholder: "Select Weeks",
-            allowClear: true,
-            closeOnSelect: false
-        }).on("change", function() {
-            var selectedOptions = $(this).val();
-            selectedWeeks = selectedOptions ? selectedOptions.map(function(option) {
-                return JSON.parse(option);
-            }) : [];
+    //     $('#weekselector').select2({
+    //         placeholder: "Select Weeks",
+    //         allowClear: true,
+    //         closeOnSelect: false
+    //     }).on("change", function() {
+    //         var selectedOptions = $(this).val();
+    //         selectedWeeks = selectedOptions ? selectedOptions.map(function(option) {
+    //             return JSON.parse(option);
+    //         }) : [];
+    //     });
+    // });
+    $(document).ready(function() {
+    var selectedWeeks = [];
+
+    function formatDate(date) {
+        var year = date.getFullYear();
+        var month = (date.getMonth() + 1).toString().padStart(2, '0'); // Add leading zero
+        var day = date.getDate().toString().padStart(2, '0'); // Add leading zero
+        return day + '-' + month + '-' + year;
+    }
+    
+    function getTwoPeriodsInMonth(year, month) {
+        var firstPeriodStart = new Date(year, month, 1);
+        var firstPeriodEnd = new Date(year, month, 15);
+        var secondPeriodStart = new Date(year, month, 16);
+        var lastDate = new Date(year, month + 1, 0);
+        var secondPeriodEnd = lastDate;
+
+        return [
+            {
+                startDate: firstPeriodStart,
+                endDate: firstPeriodEnd
+            },
+            {
+                startDate: secondPeriodStart,
+                endDate: secondPeriodEnd
+            }
+        ];
+    }
+    
+    function populateWeekSelector(periods) {
+        var weekSelector = $('#weekselector');
+        weekSelector.empty();
+        periods.forEach(function(period, index) {
+            var formattedStartDate = formatDate(period.startDate);
+            var formattedEndDate = formatDate(period.endDate);
+            
+            var option = new Option(
+                "Period " + (index + 1) + " (" + formattedStartDate + " to " + formattedEndDate + ")",
+                JSON.stringify({ startDate: formattedStartDate, endDate: formattedEndDate })
+            );
+            weekSelector.append(option);
         });
+    }
+
+    $('#monthpicker').datepicker({
+        format: "mm-yyyy",
+        startView: "months",
+        minViewMode: "months",
+        autoclose: true
+    }).on("changeDate", function(e) {
+        var selectedDate = e.date;
+        var year = selectedDate.getFullYear();
+        var month = selectedDate.getMonth();
+        var periods = getTwoPeriodsInMonth(year, month);
+        populateWeekSelector(periods);
+        $('#weekselector').val(null).trigger('change');
     });
+
+    $('#weekselector').select2({
+        placeholder: "Select Periods",
+        allowClear: true,
+        closeOnSelect: false
+    }).on("change", function() {
+        var selectedOptions = $(this).val();
+        selectedWeeks = selectedOptions ? selectedOptions.map(function(option) {
+            return JSON.parse(option);
+        }) : [];
+    });
+});
+
 </script>
 
 <script>

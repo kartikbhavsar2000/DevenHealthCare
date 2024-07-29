@@ -53,7 +53,9 @@
                             <th>Staff Name</th>
                             <th>Shift</th>
                             <th>Date</th>
-                            <th>Price</th>
+                            <th>Cost Price</th>
+                            <th>Sell Price</th>
+                            <th>Edit</th>
                         </tr>
                     </thead>
                     <tbody id="TData">
@@ -63,6 +65,46 @@
             </div>
         </div>
         <!--/ Role Table -->
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Change Price</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{{route('change_staff_and_customer_rate')}}" method="POST">
+            @csrf
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <div class="mb-4">
+                        <label class="form-label">Cost Price <span class="text-danger">*</span></label>
+                        <div class="input-group mb-1">
+                            <span class="input-group-text">₹</span>
+                            <input type="text" name="cost_price" id="cost_price"  class="form-control" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" required/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 mb-3">
+                    <div class="mb-4">
+                        <label class="form-label">Selling Price <span class="text-danger">*</span></label>
+                        <div class="input-group mb-1">
+                            <span class="input-group-text">₹</span>
+                            <input type="text" name="sell_price" id="sell_price"  class="form-control" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" required/>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="ID" name="id"/> 
+                <div class="col-12">
+                    <button type="submit" id="Submit" class="btn btn-flex btn-primary h-40px fs-7 fw-bold me-1">Submit</button>
+                </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
 </div>
 @endsection
@@ -94,7 +136,7 @@
                 extend: 'excel',
                 title: '{{$data->unique_id}} -{{$data->customer_details->name}} - Booking Assign Details',
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7]
+                    columns: [1,2,3,4,5,6,7,8]
                 }
             }],
             columnDefs: [{
@@ -150,6 +192,9 @@
                 $.each(result, function(index, item) {
                     var grandTotal = parseInt(item.total, 10) - parseInt(item.deduct, 10);
                     var day = item.days == 1 ? item.days + " Shift" : item.days + " Shifts";
+                    var edit = `<button type="button" class="btn btn-sm btn-icon btn-text-secondary rounded-pill delete-record waves-effect waves-light" onclick="changeModalData('`+item.id+`','`+item.cost_rate+`','`+item.sell_rate+`')" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    <i class="ri-edit-box-line ri-20px"></i>
+                                </button>`;
                     table.row.add([
                         index + 1,
                         item.month,
@@ -158,7 +203,9 @@
                         item.staff_name,
                         item.shift.name,
                         moment(new Date(item.date)).format("DD/MM/YYYY"),
-                        '₹' + parseInt(item.sell_rate, 10).toLocaleString()
+                        '₹' + parseInt(item.cost_rate, 10).toLocaleString(),
+                        '₹' + parseInt(item.sell_rate, 10).toLocaleString(),
+                        edit
                     ]).draw(false);
                 });
             }
@@ -166,6 +213,11 @@
     }
 </script>
 <script>
+    function changeModalData(id,cost_rate,sell_rate){
+        $('#ID').val(id);
+        $('#cost_price').val(cost_rate);
+        $('#sell_price').val(sell_rate);
+    }
     $(document).ready(function() {
         dataTable = $('#kt_datatable5').DataTable();
     });
