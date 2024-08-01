@@ -87,6 +87,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/add_booking_reviews/{id}', [App\Http\Controllers\BookingController::class, 'add_booking_reviews'])->name('add_booking_reviews');
     Route::post('/create_booking_reviews', [App\Http\Controllers\BookingController::class, 'create_booking_reviews'])->name('create_booking_reviews');
 
+    Route::get('/testing/{id}', [App\Http\Controllers\InvoiceController::class, 'testing'])->name('testing');
     Route::get('/active_invoice', [App\Http\Controllers\InvoiceController::class, 'active_invoice'])->name('active_invoice');
     Route::get('/get_active_invoice_list', [App\Http\Controllers\InvoiceController::class, 'get_active_invoice_list'])->name('get_active_invoice_list');
     Route::get('/generate_invoice/{id}', [App\Http\Controllers\InvoiceController::class, 'generate_invoice'])->name('generate_invoice');
@@ -94,6 +95,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::post('/invoice_details_by_dates', [App\Http\Controllers\InvoiceController::class, 'invoice_details_by_dates'])->name('invoice_details_by_dates');
     Route::post('/add_booking_payment', [App\Http\Controllers\InvoiceController::class, 'add_booking_payment'])->name('add_booking_payment');
     Route::post('/send_invoice_in_mail', [App\Http\Controllers\InvoiceController::class, 'send_invoice_in_mail'])->name('send_invoice_in_mail');
+    Route::post('/store_invoice', [App\Http\Controllers\InvoiceController::class, 'store_invoice'])->name('store_invoice');
 
     Route::get('/closed_invoice', [App\Http\Controllers\InvoiceController::class, 'closed_invoice'])->name('closed_invoice');
     Route::get('/get_closed_invoice_list', [App\Http\Controllers\InvoiceController::class, 'get_closed_invoice_list'])->name('get_closed_invoice_list');

@@ -38,7 +38,7 @@
         <div class="collapse" id="collapseExample">
             <div class="card">
                 <h5 class="card-header"><i class="ri-history-line ri-22px"></i>&nbsp;Payment History</h5>
-                <div class="card-bodd">
+                <div class="card-body">
                     <table class="kt_datatable table table-row-bordered table-row-gray-300" style="margin-bottom: 0px!important">
                         <thead>
                           <tr>
@@ -227,8 +227,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        
+        </div> 
     </div>
     <div class="col-12 mt-5">
         <div class="card mb-6">
@@ -261,18 +260,61 @@
             </div>
         </div>
     </div>
+    <div class="col-12 mb-5">
+        <div class="card">
+            <h5 class="card-header"><i class="ri-file-list-3-line ri-22px"></i>&nbsp;Invoice History</h5>
+            <div class="card-body">
+                <table class="kt_datatable table table-row-bordered table-row-gray-300" style="margin-bottom: 0px!important">
+                    <thead>
+                        <tr>
+                        <th>Sr No.</th>
+                        <th>Invoice No</th>
+                        <th>Invoice Start Date</th>
+                        <th>Invoice End Date</th>
+                        <th>Added By</th>
+                        <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(!empty($invoices))
+                        @foreach($invoices as $key => $invoice)
+                            <tr>
+                            <td class="text-nowrap text-heading">{{$key+1}}</td>
+                            <td class="text-nowrap">{{$invoice->inv_no ?? "-"}}</td>
+                            <td class="text-nowrap">{{date('d/m/Y',strtotime($invoice->start_date)) ?? "-"}}</td>
+                            <td class="text-nowrap">{{date('d/m/Y',strtotime($invoice->end_date)) ?? "-"}}</td>
+                            <td>{{$invoice->created_by->name ?? "-"}}</td>
+                            @if($invoice->file)
+                                <td>
+                                    <a href="{{asset("/")}}public/invoices/{{$invoice->file}}" target="_blank" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-eye-line ri-20px"></i></a>
+                                    <a href="{{asset("/")}}public/invoices/{{$invoice->file}}" download class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-download-line ri-20px"></i></a>
+                                    @if($booking->customer_details->email)
+                                        <button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light" onclick="sendEmailWithPDF('{{$invoice->id}}','{{$booking->customer_details->email}}')"><i class="ri-mail-line"></i></button>
+                                    @endif
+                                </td>
+                            @else
+                                <td><button disabled class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-eye-line ri-20px"></i></button><button disabled class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-download-line ri-20px"></i></button></td>
+                            @endif
+                            </tr>
+                        @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     <div class="col-12 d-none" id="InvoicePreview">
         <div class="row invoice-preview">
             <div class="col-6 mb-5">
                 <h4 class="mt-1 mb-1">Invoice</h4>
             </div>
-            <div class="col-6 mb-5 text-end pt-1 pe-5">
+            {{-- <div class="col-6 mb-5 text-end pt-1 pe-5">
                 @if($booking->customer_details->email)
                 <button class="btn btn-info waves-effect me-2" onclick="sendEmailWithPDF('{{$booking->customer_details->email}}')"><i class="ri-mail-line"></i>&nbsp; Send to the mail</button>
                 @endif
                 <button class="btn btn-danger waves-effect me-2" onclick="PrintInvoice()"><i class="ri-printer-line"></i>&nbsp; Print</button>
                 <button class="btn btn-dark waves-effect me-2" onclick="DownloadInvoice()"><i class="ri-download-2-line"></i>&nbsp; Download</button>
-            </div>
+            </div> --}}
             <!-- Invoice -->
             <div class="col-12 mb-md-0 mb-6" id="invoiceContent">
               <div class="card invoice-preview-card p-sm-12 p-6" >
@@ -353,8 +395,6 @@
                       @endif
                       <p class="mb-1">{{$booking->customer_details->address ?? ""}}</p>
                       <p class="mb-1">{{$booking->area ?? ""}}, {{$booking->city ?? ""}}, {{$booking->state ?? ""}}</p>
-                      <p class="mb-1">{{$booking->customer_details->mobile ?? ""}} @if($booking->customer_details->mobile2) , @endif {{$booking->customer_details->mobile2 ?? ""}}</p>
-                      <p class="mb-0">{{$booking->customer_details->email ?? ""}}</p>
                     </div>
                     <div style="flex: 1; min-width: 45%; padding-left:10rem;">
                       <h6>Booking & Invoice</h6>
@@ -362,7 +402,7 @@
                         <tbody>
                             <tr>
                                 <td class="pe-4">Invoice No.:</td>
-                                <td>{{$booking->unique_id ?? ""}}</td>
+                                <td id="INV_NO"></td>
                             </tr>
                             <tr>
                                 <td class="pe-4">Date Issues:</td>
@@ -567,71 +607,65 @@
             };
         });
     }
-    function sendEmailWithPDF(email) {
-            var element = document.getElementById('invoiceContent');
+    function sendEmailWithPDF(id,email) {
+        var formData = new FormData();
+        formData.append('_token', '{{ csrf_token() }}');
+        formData.append('email', email);
+        formData.append('id', id);
 
-            html2pdf().from(element).toPdf().get('pdf').then(function (pdf) {
-                var pdfBlob = pdf.output('blob');
-
-                var formData = new FormData();
-                formData.append('pdf', pdfBlob, 'document.pdf');
-                formData.append('_token', '{{ csrf_token() }}');
-                formData.append('email', email);
-                console.log(email);
-                $.ajax({
-                    url: '{{ route("send_invoice_in_mail") }}',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        $.ajax({
+            url: '{{ route("send_invoice_in_mail") }}',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                if(response == "Error"){
+                    Swal.fire({
+                        title: 'Error!',
+                        text: "Email sending failed!",
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'ok',
+                        customClass: {
+                            confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+                        },
+                        buttonsStyling: false
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: "Email sent successfully!",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'ok',
+                        customClass: {
+                            confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+                        },
+                        buttonsStyling: false
+                    });
+                    setTimeout(function(){ window.location.reload(); }, 500);
+                }
+                console.log(response);
+            },
+            error: function (error) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Error sending email: ' + error.responseText,
+                    icon: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'ok',
+                    customClass: {
+                        confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
                     },
-                    success: function (response) {
-                        if(response == "Error"){
-                            Swal.fire({
-                                title: 'Error!',
-                                text: "Email sending failed!",
-                                icon: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'ok',
-                                customClass: {
-                                    confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
-                                },
-                                buttonsStyling: false
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: "Email sent successfully!",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'ok',
-                                customClass: {
-                                    confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
-                                },
-                                buttonsStyling: false
-                            });
-                            setTimeout(function(){ window.location.reload(); }, 500);
-                        }
-                        console.log(response);
-                    },
-                    error: function (error) {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'Error sending email: ' + error.responseText,
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'ok',
-                            customClass: {
-                                confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
-                            },
-                            buttonsStyling: false
-                        });
-                    }
+                    buttonsStyling: false
                 });
-            });
-        }
+            }
+        });
+    }
 
     function DownloadInvoice(){
         const { jsPDF } = window.jspdf;
@@ -687,49 +721,116 @@
         return day + '/' + month + '/' + year;
     }
     function formatDate(dateString) {
-        // Helper function to pad day and month with leading zeros
-        function pad(num) {
-            return num < 10 ? '0' + num : num;
-        }
+            // Helper function to pad day and month with leading zeros
+            function pad(num) {
+                return num < 10 ? '0' + num : num;
+            }
 
-        // Split the date string into components
-        var parts = dateString.split('-');
-        if (parts.length !== 3) {
-            console.error("Invalid date format:", dateString);
-            return dateString;
-        }
+            // Split the date string into components
+            var parts = dateString.split('-');
+            if (parts.length !== 3) {
+                console.error("Invalid date format:", dateString);
+                return dateString;
+            }
 
-        var day, month, year;
+            var day, month, year;
 
-        // Check if the format is YYYY-MM-DD or DD-MM-YYYY
-        if (parseInt(parts[0], 10) > 31) {
-            // Assuming YYYY-MM-DD
-            year = parseInt(parts[0], 10);
-            month = parseInt(parts[1], 10) - 1; // Months are zero-based in JavaScript Date
-            day = parseInt(parts[2], 10);
-        } else {
-            // Assuming DD-MM-YYYY
-            day = parseInt(parts[0], 10);
-            month = parseInt(parts[1], 10) - 1; // Months are zero-based in JavaScript Date
-            year = parseInt(parts[2], 10);
-        }
+            // Check if the format is YYYY-MM-DD or DD-MM-YYYY
+            if (parseInt(parts[0], 10) > 31) {
+                // Assuming YYYY-MM-DD
+                year = parseInt(parts[0], 10);
+                month = parseInt(parts[1], 10) - 1; // Months are zero-based in JavaScript Date
+                day = parseInt(parts[2], 10);
+            } else {
+                // Assuming DD-MM-YYYY
+                day = parseInt(parts[0], 10);
+                month = parseInt(parts[1], 10) - 1; // Months are zero-based in JavaScript Date
+                year = parseInt(parts[2], 10);
+            }
 
-        // Create a new date object
-        var date = new Date(year, month, day);
+            // Create a new date object
+            var date = new Date(year, month, day);
 
-        // Check if the parsed date is valid
-        if (isNaN(date.getTime())) {
-            console.error("Invalid date:", dateString);
-            return dateString; // or handle the error appropriately
-        }
+            // Check if the parsed date is valid
+            if (isNaN(date.getTime())) {
+                console.error("Invalid date:", dateString);
+                return dateString; // or handle the error appropriately
+            }
 
-        // Format the date as DD/MM/YYYY
-        var formattedDay = pad(day);
-        var formattedMonth = pad(month + 1); // Adjust month back to 1-based
-        var formattedYear = year;
+            // Format the date as DD/MM/YYYY
+            var formattedDay = pad(day);
+            var formattedMonth = pad(month + 1); // Adjust month back to 1-based
+            var formattedYear = year;
 
-        return formattedDay + '/' + formattedMonth + '/' + formattedYear;
+            return formattedDay + '/' + formattedMonth + '/' + formattedYear;
     }
+
+    function StoreInvoice(id) {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+
+        const padding = 0;
+
+        html2canvas(document.querySelector("#invoiceContent")).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pageWidth = 210;
+            const pageHeight = 295;
+            const imgWidth = pageWidth - 2 * padding;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            let heightLeft = imgHeight;
+
+            let position = padding;
+
+            pdf.addImage(imgData, 'PNG', padding, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft >= 0) {
+                position = heightLeft - imgHeight + padding;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', padding, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            // Create a blob from the PDF
+            const blob = pdf.output('blob');
+            const formData = new FormData();
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('file', blob, 'invoice.pdf');
+            formData.append('id', id);  // Append other necessary data
+
+            $('#InvoicePreview').addClass('d-none');
+
+            // Send the blob to the server via AJAX
+            $.ajax({
+                url: "{{route('store_invoice')}}",
+                method: "POST",
+                data:formData,
+                processData: false, // Prevent jQuery from processing the data
+                contentType: false, // Prevent jQuery from setting content type
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(result) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: "Invoice Generated Successfully!",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'ok',
+                        customClass: {
+                            confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+                        },
+                        buttonsStyling: false
+                    });
+                    setTimeout(function(){ window.location.reload(); }, 500);
+                },
+                error: function(err) {
+                    console.error(err);
+                }
+            });
+        });
+    }
+
 
     function submit(id){
         var startDate = $('#BookingStartDate').val();
@@ -758,6 +859,8 @@
                     $('#DataStartDate').text(formatDate(startDate));
                     $('#DataEndDate').text(formatDate(endDate));
                     console.log(result);
+                    var data = result['data'];
+                    var invoice = result['invoice'];
 
                     // Clear the table body
                     $('#table-body').empty();
@@ -765,7 +868,7 @@
                     var grandTotal = 0;
 
                     // Populate the table with the data received
-                    $.each(result, function(index, item) {
+                    $.each(data, function(index, item) {
                         $('#table-body').append(
                             '<tr>' +
                             '<td>' + (index + 1) + '</td>' +
@@ -780,9 +883,30 @@
 
                     $('#grand-sub-total').text('₹' + grandTotal.toLocaleString());
                     $('#grand-total').text('₹' + grandTotal.toLocaleString());
+                    $('#InvoicePreview').removeClass('d-none');
+                    if(invoice != null){
+                        $('#INV_NO').text(invoice.inv_no);
+                        setTimeout(function() 
+                        {
+                            StoreInvoice(invoice.id);
+                        }, 1000);
+                    }else{
+                        $('#InvoicePreview').addClass('d-none');
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Invoice not generated!',
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'ok',
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+                            },
+                            buttonsStyling: false
+                        });
+                        setTimeout(function(){ window.location.reload(); }, 500);
+                    }
                 }
             });
-            $('#InvoicePreview').removeClass('d-none');
         }
     }
     $(document).ready(function() {

@@ -221,20 +221,50 @@
                     }
                 }
             },
+            // {
+            //     "data": "id",
+            //     "render": function (data, type, row, meta) {
+            //         if(row.booking_status == 0){
+            //             return type === 'display' ?
+            //             '<a href="{{asset("/")}}view_booking_assign_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-list-view ri-20px"></i></a><a href="{{asset("/")}}view_booking_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-information-2-line ri-20px"></i></a><a href="{{asset("/")}}cancel_booking_staff/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-user-unfollow-line ri-20px"></i></a><button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light" onclick="pauseBooking('+data+')"><i class="ri-pause-circle-line ri-20px"></i></button>' :
+            //             data;
+            //         }else{
+            //             return type === 'display' ?
+            //             '<a href="{{asset("/")}}view_booking_assign_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-list-view ri-20px"></i></a><a href="{{asset("/")}}view_booking_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-information-2-line ri-20px"></i></a>' :
+            //             data;
+            //         }
+            //     }
+            // },
             {
                 "data": "id",
                 "render": function (data, type, row, meta) {
                     if(row.booking_status == 0){
                         return type === 'display' ?
-                        '<a href="{{asset("/")}}view_booking_assign_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-list-view ri-20px"></i></a><a href="{{asset("/")}}view_booking_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-information-2-line ri-20px"></i></a><a href="{{asset("/")}}cancel_booking_staff/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-user-unfollow-line ri-20px"></i></a><button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light" onclick="pauseBooking('+data+')"><i class="ri-pause-circle-line ri-20px"></i></button>' :
+                        `<div class="d-inline-block"><a href="javascript:;"
+                                class="btn btn-sm btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
+                                aria-expanded="false"><i class="ri-more-2-line"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end m-0" style="">
+                                <li><a href="{{asset("/")}}view_booking_assign_details/` + data + `" class="dropdown-item"><i class="ri-list-view ri-20px"></i> View Staff List</a></li>
+                                <li><a href="{{asset("/")}}view_booking_details/` + data + `" class="dropdown-item"><i class="ri-information-2-line ri-20px"></i> View Booking Details</a></li>
+                                <li><a href="{{asset("/")}}cancel_booking_staff/` + data + `" class="dropdown-item"><i class="ri-user-unfollow-line ri-20px"></i> Remove Staff</a></li>
+                                <li><button onclick="pauseBooking('`+data+`')" class="dropdown-item"><i class="ri-pause-circle-line"></i> Pause Booking</button></li>
+                            </ul>
+                        </div>` :
                         data;
                     }else{
                         return type === 'display' ?
-                        '<a href="{{asset("/")}}view_booking_assign_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-list-view ri-20px"></i></a><a href="{{asset("/")}}view_booking_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-information-2-line ri-20px"></i></a>' :
+                        `<div class="d-inline-block"><a href="javascript:;"
+                                class="btn btn-sm btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
+                                aria-expanded="false"><i class="ri-more-2-line"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end m-0" style="">
+                                <li><a href="{{asset("/")}}view_booking_assign_details/` + data + `" class="dropdown-item"><i class="ri-list-view ri-20px"></i> View Staff List</a></li>
+                                <li><a href="{{asset("/")}}view_booking_details/` + data + `" class="dropdown-item"><i class="ri-information-2-line ri-20px"></i> View Booking Details</a></li>
+                            </ul>
+                        </div>` :
                         data;
                     }
                 }
-            },
+            }
         ],
         
     });

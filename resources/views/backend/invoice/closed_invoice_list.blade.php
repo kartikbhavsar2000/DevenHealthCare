@@ -177,7 +177,7 @@
             //     "data": "id",
             //     "render": function (data, type, row, meta) {
             //         return type === 'display' ?
-            //         '<a href="{{asset("/")}}view_booking_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-information-2-line ri-20px"></i></a>' :
+            //         '<a href="{{asset("/")}}view_booking_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-information-2-line ri-20px"></i></a><a href="{{asset("/")}}generate_invoice/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-file-list-3-line ri-20px"></i></a>' :
             //         data;
             //     }
             // },
@@ -185,10 +185,17 @@
                 "data": "id",
                 "render": function (data, type, row, meta) {
                     return type === 'display' ?
-                    '<a href="{{asset("/")}}view_booking_details/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-information-2-line ri-20px"></i></a><a href="{{asset("/")}}generate_invoice/' + data + '" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-file-list-3-line ri-20px"></i></a>' :
+                    `<div class="d-inline-block"><a href="javascript:;"
+                            class="btn btn-sm btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
+                            aria-expanded="false"><i class="ri-more-2-line"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end m-0" style="">
+                            <li><a href="{{asset("/")}}view_booking_details/` + data + `" class="dropdown-item"><i class="ri-information-2-line ri-20px"></i> View Booking Details</a></li>
+                            <li><a href="{{asset("/")}}generate_invoice/` + data + `" class="dropdown-item"><i class="ri-file-list-3-line ri-20px"></i> Generate Invoice</a></li>
+                        </ul>
+                    </div>` :
                     data;
                 }
-            },
+            }
         ],
         
     });
