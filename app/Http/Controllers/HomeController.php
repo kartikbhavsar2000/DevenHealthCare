@@ -40,121 +40,146 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+    // public function index()
+    // {   
+    //     // $bookings = Booking::whereIn('booking_status',[0,2])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
+    //     // foreach($bookings as $booking){
+    //     //     $staff_data = [];
+    //     //     $doctor_data = [];
+    //     //     foreach($booking->bookingAssigns as $book){
+    //     //         $book->shiftt = Shifts::find($book->shift);
+    //     //         if($book->type == "Doctor"){
+    //     //             // $book->staff_details = Doctor::with('state')->with('city')->with('area')->find($book->staff_id);
+    //     //             $doctor_data[] = $book;
+    //     //         }else{
+    //     //             // $book->staff_details = Staff::with('types')->with('state')->with('city')->with('area')->find($book->staff_id);
+    //     //             $staff_data[] = $book;
+    //     //         }
+    //     //     }
+    //     //     $booking->staff_data = $staff_data;
+    //     //     $booking->doctor_data = $doctor_data;
+    //     // }
+    //     $allBookings = [];
+
+    //     Booking::whereIn('booking_status', [0, 2])
+    //         ->with('bookingAssigns', 'bookingDetails')
+    //         ->orderBy('id', 'DESC')
+    //         ->chunk(10, function ($bookings) use (&$allBookings) {
+    //             foreach ($bookings as $booking) {
+    //                 $staff_data = [];
+    //                 $doctor_data = [];
+    //                 foreach ($booking->bookingAssigns as $book) {
+    //                     $book->shiftt = Shifts::find($book->shift);
+    //                     if ($book->type == "Doctor") {
+    //                         $doctor_data[] = $book;
+    //                     } else {
+    //                         $staff_data[] = $book;
+    //                     }
+    //                 }
+    //                 $booking->staff_data = $staff_data;
+    //                 $booking->doctor_data = $doctor_data;
+    //                 $allBookings[] = $booking;
+    //             }
+    //         });
+
+    //     // dd($allBookings);
+
+    //     // dd($bookings);
+    //     // $dates = [];
+    //     // $currentDate = new \DateTime();
+    //     // $dates[] = $currentDate->format('Y-m-d');
+
+    //     // for ($i = 1; $i <= 6; $i++) {
+    //     //     $nextDate = clone $currentDate;
+    //     //     $nextDate->add(new \DateInterval('P' . $i . 'D'));
+    //     //     $dates[] = $nextDate->format('Y-m-d');
+    //     // }
+    //     $dates = [];
+    //     $currentDate = new \DateTime();
+    //     $pastDate = clone $currentDate;
+    //     $pastDate->sub(new \DateInterval('P6D')); // 7 days before today
+    //     $dates[] = $pastDate->format('Y-m-d');
+
+    //     for ($i = 1; $i <= 12; $i++) { // 13 days total to include 7 days before and 6 days ahead
+    //         $nextDate = clone $pastDate;
+    //         $nextDate->add(new \DateInterval('P' . $i . 'D'));
+    //         $dates[] = $nextDate->format('Y-m-d');
+    //     }
+    //     $shifts = Shifts::orderBy('id',"DESC")->get();
+    //     $staffs = Staff::where('status',1)->orderBy('id',"DESC")->get();
+    //     $doctors = Doctor::where('status',1)->orderBy('id',"DESC")->get();
+    //     $equipments = Equipment::where('status',1)->orderBy('id',"DESC")->get();
+    //     $ambulance = Ambulance::first();
+    //     $staff_type = StaffType::orderBy('id',"ASC")->get();
+    //     return view('backend.dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $allBookings,'dates' => $dates]);
+    // }
+   
     public function index()
     {   
+        $dates = [];
+        $currentDate = new \DateTime();
+        $pastDate = clone $currentDate;
+        $pastDate->sub(new \DateInterval('P6D')); // 7 days before today
+        $dates[] = $pastDate->format('Y-m-d');
 
-        // if (in_array("dashboard", Auth::user()->permissions())) {
-            $staff_type = StaffType::orderBy('id',"ASC")->get();
-            $bookings = Booking::whereIn('booking_status',[0,2])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->paginate(50);
-            $all_bookings = [];
-            foreach($bookings as $booking){
+        for ($i = 1; $i <= 12; $i++) { // 13 days total to include 7 days before and 6 days ahead
+            $nextDate = clone $pastDate;
+            $nextDate->add(new \DateInterval('P' . $i . 'D'));
+            $dates[] = $nextDate->format('Y-m-d');
+        }
+        $shifts = Shifts::orderBy('id',"DESC")->get();
+        $staffs = Staff::where('status',1)->orderBy('id',"DESC")->get();
+        $doctors = Doctor::where('status',1)->orderBy('id',"DESC")->get();
+        $equipments = Equipment::where('status',1)->orderBy('id',"DESC")->get();
+        $ambulance = Ambulance::first();
+        $staff_type = StaffType::orderBy('id',"ASC")->get();
+        return view('backend.dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'dates' => $dates]);
+    }
+    public function get_dashboard_booking_data(Request $request){
+        $allBookings = [];
+
+        Booking::whereIn('booking_status', [0, 2])
+            ->with('bookingAssigns', 'bookingDetails')
+            ->where(function ($query) use ($request) {
+                $query->where('start_date', $request->date)
+                    ->orWhere('end_date', $request->date)
+                    ->orWhere(function ($query) use ($request) {
+                        $query->where('start_date', '<=', $request->date)
+                                ->where('end_date', '>=', $request->date);
+                    });
+            })
+            ->orderBy('id', 'DESC')
+            ->chunk(10, function ($bookings) use (&$allBookings) {
+            foreach ($bookings as $booking) {
                 $customer_details = $booking->customerDetails();
-                $all_bookings[] = $booking;
                 $customer_details->state = State::find($customer_details->state);
                 $customer_details->city = City::find($customer_details->city);
                 $customer_details->area = Area::find($customer_details->area);
                 $booking->customer_details = $customer_details;
 
-                foreach($booking->bookingDetails as $details){
-                    $shift = Shifts::find($details->shift);
-                    if($shift){
-                        $details->shift_name = $shift->name;
-                    }
-                }
-
                 $staff_data = [];
                 $doctor_data = [];
-                foreach($booking->bookingAssigns as $book){
+                foreach ($booking->bookingAssigns as $book) {
                     $book->shiftt = Shifts::find($book->shift);
-                    if($book->type == "Doctor"){
-                        $book->staff_details = Doctor::with('state')->with('city')->with('area')->find($book->staff_id);
+                    if ($book->type == "Doctor") {
                         $doctor_data[] = $book;
-                    }else{
-                        $book->staff_details = Staff::with('types')->with('state')->with('city')->with('area')->find($book->staff_id);
+                    } else {
                         $staff_data[] = $book;
                     }
                 }
                 $booking->staff_data = $staff_data;
                 $booking->doctor_data = $doctor_data;
+                $allBookings[] = $booking;
             }
-            
-            // $dates = [];
-            // $currentDate = new \DateTime();
-            // $dates[] = $currentDate->format('Y-m-d');
+        });
 
-            // for ($i = 1; $i <= 6; $i++) {
-            //     $nextDate = clone $currentDate;
-            //     $nextDate->add(new \DateInterval('P' . $i . 'D'));
-            //     $dates[] = $nextDate->format('Y-m-d');
-            // }
-            $dates = [];
-            $currentDate = new \DateTime();
-            $pastDate = clone $currentDate;
-            $pastDate->sub(new \DateInterval('P6D')); // 7 days before today
-            $dates[] = $pastDate->format('Y-m-d');
+        $staff_type = StaffType::orderBy('id',"ASC")->get();
 
-            for ($i = 1; $i <= 12; $i++) { // 13 days total to include 7 days before and 6 days ahead
-                $nextDate = clone $pastDate;
-                $nextDate->add(new \DateInterval('P' . $i . 'D'));
-                $dates[] = $nextDate->format('Y-m-d');
-            }
-            $shifts = Shifts::orderBy('id',"DESC")->get();
-            $staffs = Staff::where('status',1)->orderBy('id',"DESC")->get();
-            $doctors = Doctor::where('status',1)->orderBy('id',"DESC")->get();
-            $equipments = Equipment::where('status',1)->orderBy('id',"DESC")->get();
-            $ambulance = Ambulance::first();
-            return view('backend.dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $all_bookings,'dates' => $dates]);
-        // }
-        // abort(403);
+        return response()->json(['bookings'=>$allBookings,'staff_type'=>$staff_type]);
     }
     public function dhc_dashboard()
     {   
         if (in_array("dhc_dashboard", Auth::user()->permissions())) {
-            $staff_type = StaffType::orderBy('id',"ASC")->get();
-            $bookings = Booking::whereIn('booking_status',[0,2])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
-            $all_bookings = [];
-            foreach($bookings as $booking){
-                $customer_details = $booking->customerDetails();
-                if($customer_details->h_type == "DHC"){
-                    $all_bookings[] = $booking;
-                }
-                $customer_details->state = State::find($customer_details->state);
-                $customer_details->city = City::find($customer_details->city);
-                $customer_details->area = Area::find($customer_details->area);
-                $booking->customer_details = $customer_details;
-
-                foreach($booking->bookingDetails as $details){
-                    $shift = Shifts::find($details->shift);
-                    if($shift){
-                        $details->shift_name = $shift->name;
-                    }
-                }
-
-                $staff_data = [];
-                $doctor_data = [];
-                foreach($booking->bookingAssigns as $book){
-                    $book->shiftt = Shifts::find($book->shift);
-                    if($book->type == "Doctor"){
-                        $book->staff_details = Doctor::with('state')->with('city')->with('area')->find($book->staff_id);
-                        $doctor_data[] = $book;
-                    }else{
-                        $book->staff_details = Staff::with('types')->with('state')->with('city')->with('area')->find($book->staff_id);
-                        $staff_data[] = $book;
-                    }
-                }
-                $booking->staff_data = $staff_data;
-                $booking->doctor_data = $doctor_data;
-            }
-
-            // $dates = [];
-            // $currentDate = new \DateTime();
-            // $dates[] = $currentDate->format('Y-m-d');
-
-            // for ($i = 1; $i <= 6; $i++) {
-            //     $nextDate = clone $currentDate;
-            //     $nextDate->add(new \DateInterval('P' . $i . 'D'));
-            //     $dates[] = $nextDate->format('Y-m-d');
-            // }
             $dates = [];
             $currentDate = new \DateTime();
             $pastDate = clone $currentDate;
@@ -171,58 +196,58 @@ class HomeController extends Controller
             $doctors = Doctor::where('status',1)->orderBy('id',"DESC")->get();
             $equipments = Equipment::where('status',1)->orderBy('id',"DESC")->get();
             $ambulance = Ambulance::first();
-            return view('backend.dhc_dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $all_bookings,'dates' => $dates]);
+            $staff_type = StaffType::orderBy('id',"ASC")->get();
+            return view('backend.dhc_dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'dates' => $dates]);
         }
         abort(403);
+    }
+    public function get_dhc_dashboard_booking_data(Request $request){
+        $allBookings = [];
+
+        Booking::whereIn('booking_status', [0, 2])
+            ->with('bookingAssigns', 'bookingDetails')
+            ->where(function ($query) use ($request) {
+                $query->where('start_date', $request->date)
+                    ->orWhere('end_date', $request->date)
+                    ->orWhere(function ($query) use ($request) {
+                        $query->where('start_date', '<=', $request->date)
+                                ->where('end_date', '>=', $request->date);
+                    });
+            })
+            ->orderBy('id', 'DESC')
+            ->chunk(10, function ($bookings) use (&$allBookings) {
+            foreach ($bookings as $booking) {
+                $customer_details = $booking->customerDetails();
+                $customer_details->state = State::find($customer_details->state);
+                $customer_details->city = City::find($customer_details->city);
+                $customer_details->area = Area::find($customer_details->area);
+                $booking->customer_details = $customer_details;
+
+                $staff_data = [];
+                $doctor_data = [];
+                foreach ($booking->bookingAssigns as $book) {
+                    $book->shiftt = Shifts::find($book->shift);
+                    if ($book->type == "Doctor") {
+                        $doctor_data[] = $book;
+                    } else {
+                        $staff_data[] = $book;
+                    }
+                }
+                $booking->staff_data = $staff_data;
+                $booking->doctor_data = $doctor_data;
+                if($customer_details->h_type == "DHC"){
+                    $allBookings[] = $booking;
+                }
+            }
+        });
+
+        $staff_type = StaffType::orderBy('id',"ASC")->get();
+
+        return response()->json(['bookings'=>$allBookings,'staff_type'=>$staff_type]);
     }
     public function hsp_dashboard()
     {   
         if (in_array("hsp_dashboard", Auth::user()->permissions())) {
-            $staff_type = StaffType::orderBy('id',"ASC")->get();
-            $bookings = Booking::where('booking_type','!=','Corporate')->whereIn('booking_status',[0,2])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
-            $all_bookings = [];
-            foreach($bookings as $booking){
-                $customer_details = $booking->customerDetails();
-                if($customer_details->h_type != "DHC"){
-                    $all_bookings[] = $booking;
-                }
-                $customer_details->state = State::find($customer_details->state);
-                $customer_details->city = City::find($customer_details->city);
-                $customer_details->area = Area::find($customer_details->area);
-                $booking->customer_details = $customer_details;
-
-                foreach($booking->bookingDetails as $details){
-                    $shift = Shifts::find($details->shift);
-                    if($shift){
-                        $details->shift_name = $shift->name;
-                    }
-                }
-
-                $staff_data = [];
-                $doctor_data = [];
-                foreach($booking->bookingAssigns as $book){
-                    $book->shiftt = Shifts::find($book->shift);
-                    if($book->type == "Doctor"){
-                        $book->staff_details = Doctor::with('state')->with('city')->with('area')->find($book->staff_id);
-                        $doctor_data[] = $book;
-                    }else{
-                        $book->staff_details = Staff::with('types')->with('state')->with('city')->with('area')->find($book->staff_id);
-                        $staff_data[] = $book;
-                    }
-                }
-                $booking->staff_data = $staff_data;
-                $booking->doctor_data = $doctor_data;
-            }
-
-            // $dates = [];
-            // $currentDate = new \DateTime();
-            // $dates[] = $currentDate->format('Y-m-d');
-
-            // for ($i = 1; $i <= 6; $i++) {
-            //     $nextDate = clone $currentDate;
-            //     $nextDate->add(new \DateInterval('P' . $i . 'D'));
-            //     $dates[] = $nextDate->format('Y-m-d');
-            // }
             $dates = [];
             $currentDate = new \DateTime();
             $pastDate = clone $currentDate;
@@ -239,56 +264,60 @@ class HomeController extends Controller
             $doctors = Doctor::where('status',1)->orderBy('id',"DESC")->get();
             $equipments = Equipment::where('status',1)->orderBy('id',"DESC")->get();
             $ambulance = Ambulance::first();
-            return view('backend.hsp_dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $all_bookings,'dates' => $dates]);
+            $staff_type = StaffType::orderBy('id',"ASC")->get();
+            return view('backend.hsp_dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'dates' => $dates]);
         }
         abort(403);
     }
-    public function crp_dashboard()
-    {   
-        if (in_array("crp_dashboard", Auth::user()->permissions())) {
-            $staff_type = StaffType::orderBy('id',"ASC")->get();
-            $bookings = Booking::where(['booking_type'=>'Corporate'])->whereIn('booking_status',[0,2])->with('bookingAssigns')->with('bookingDetails')->orderBy('id',"DESC")->get();
-            $all_bookings = [];
-            foreach($bookings as $booking){
+
+    public function get_hsp_dashboard_booking_data(Request $request){
+        $allBookings = [];
+
+        Booking::where('booking_type','!=','Corporate')->whereIn('booking_status', [0, 2])
+            ->with('bookingAssigns', 'bookingDetails')
+            ->where(function ($query) use ($request) {
+                $query->where('start_date', $request->date)
+                    ->orWhere('end_date', $request->date)
+                    ->orWhere(function ($query) use ($request) {
+                        $query->where('start_date', '<=', $request->date)
+                                ->where('end_date', '>=', $request->date);
+                    });
+            })
+            ->orderBy('id', 'DESC')
+            ->chunk(10, function ($bookings) use (&$allBookings) {
+            foreach ($bookings as $booking) {
                 $customer_details = $booking->customerDetails();
-                $all_bookings[] = $booking;
                 $customer_details->state = State::find($customer_details->state);
                 $customer_details->city = City::find($customer_details->city);
                 $customer_details->area = Area::find($customer_details->area);
                 $booking->customer_details = $customer_details;
 
-                foreach($booking->bookingDetails as $details){
-                    $shift = Shifts::find($details->shift);
-                    if($shift){
-                        $details->shift_name = $shift->name;
-                    }
-                }
-
                 $staff_data = [];
                 $doctor_data = [];
-                foreach($booking->bookingAssigns as $book){
+                foreach ($booking->bookingAssigns as $book) {
                     $book->shiftt = Shifts::find($book->shift);
-                    if($book->type == "Doctor"){
-                        $book->staff_details = Doctor::with('state')->with('city')->with('area')->find($book->staff_id);
+                    if ($book->type == "Doctor") {
                         $doctor_data[] = $book;
-                    }else{
-                        $book->staff_details = Staff::with('types')->with('state')->with('city')->with('area')->find($book->staff_id);
+                    } else {
                         $staff_data[] = $book;
                     }
                 }
                 $booking->staff_data = $staff_data;
                 $booking->doctor_data = $doctor_data;
+                if($customer_details->h_type != "DHC"){
+                    $allBookings[] = $booking;
+                }
             }
+        });
 
-            // $dates = [];
-            // $currentDate = new \DateTime();
-            // $dates[] = $currentDate->format('Y-m-d');
+        $staff_type = StaffType::orderBy('id',"ASC")->get();
 
-            // for ($i = 1; $i <= 6; $i++) {
-            //     $nextDate = clone $currentDate;
-            //     $nextDate->add(new \DateInterval('P' . $i . 'D'));
-            //     $dates[] = $nextDate->format('Y-m-d');
-            // }
+        return response()->json(['bookings'=>$allBookings,'staff_type'=>$staff_type]);
+    }
+    
+    public function crp_dashboard()
+    {   
+        if (in_array("crp_dashboard", Auth::user()->permissions())) {
             $dates = [];
             $currentDate = new \DateTime();
             $pastDate = clone $currentDate;
@@ -305,9 +334,52 @@ class HomeController extends Controller
             $doctors = Doctor::where('status',1)->orderBy('id',"DESC")->get();
             $equipments = Equipment::where('status',1)->orderBy('id',"DESC")->get();
             $ambulance = Ambulance::first();
-            return view('backend.crp_dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'bookings' => $all_bookings,'dates' => $dates]);
+            $staff_type = StaffType::orderBy('id',"ASC")->get();
+            return view('backend.crp_dashboard',['ambulance' => $ambulance,'equipments' => $equipments, 'shifts' => $shifts,'staffs' => $staffs,'doctors' => $doctors,'staff_type' => $staff_type,'dates' => $dates]);
         }
         abort(403);
+    }
+    public function get_crp_dashboard_booking_data(Request $request){
+        $allBookings = [];
+
+        Booking::where(['booking_type'=>'Corporate'])->whereIn('booking_status', [0, 2])
+            ->with('bookingAssigns', 'bookingDetails')
+            ->where(function ($query) use ($request) {
+                $query->where('start_date', $request->date)
+                    ->orWhere('end_date', $request->date)
+                    ->orWhere(function ($query) use ($request) {
+                        $query->where('start_date', '<=', $request->date)
+                                ->where('end_date', '>=', $request->date);
+                    });
+            })
+            ->orderBy('id', 'DESC')
+            ->chunk(10, function ($bookings) use (&$allBookings) {
+            foreach ($bookings as $booking) {
+                $customer_details = $booking->customerDetails();
+                $customer_details->state = State::find($customer_details->state);
+                $customer_details->city = City::find($customer_details->city);
+                $customer_details->area = Area::find($customer_details->area);
+                $booking->customer_details = $customer_details;
+
+                $staff_data = [];
+                $doctor_data = [];
+                foreach ($booking->bookingAssigns as $book) {
+                    $book->shiftt = Shifts::find($book->shift);
+                    if ($book->type == "Doctor") {
+                        $doctor_data[] = $book;
+                    } else {
+                        $staff_data[] = $book;
+                    }
+                }
+                $booking->staff_data = $staff_data;
+                $booking->doctor_data = $doctor_data;
+                $allBookings[] = $booking;
+            }
+        });
+
+        $staff_type = StaffType::orderBy('id',"ASC")->get();
+
+        return response()->json(['bookings'=>$allBookings,'staff_type'=>$staff_type]);
     }
     // public function change_customer_type(Request $request){
     //     Session::put('customerType', $request->type);

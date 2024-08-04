@@ -26,11 +26,11 @@ class Booking extends Model
     }
     public function bookingDetails()
     {
-        return $this->hasMany(BookingDetails::class,'booking_id','id');
+        return $this->hasMany(BookingDetails::class,'booking_id','id')->with('shift');
     }
     public function bookingAssigns()
     {
-        return $this->hasMany(BookingAssign::class,'booking_id','id');
+        return $this->hasMany(BookingAssign::class,'booking_id','id')->with('shift')->with('staff')->with('doctor');
     }
     public function customerDetails()
     {
@@ -39,7 +39,6 @@ class Booking extends Model
         } elseif ($this->booking_type == 'Corporate') {
             return Corporate::where('id', $this->customer_id)->first();
         }
-
         return null;
     }
 
@@ -56,20 +55,30 @@ class Booking extends Model
         $year = date('Y');
         $prefix = 'DHCB' . $year;
 
-        $lastBooking = self::where('unique_id', 'like', $prefix . '%')->orderBy('unique_id', 'desc')->first();
+        $lastBooking = self::where('unique_id', 'like', $prefix . '%')->orderBy('id', 'desc')->first();
         $nextNumber = 1;
 
         if ($lastBooking) {
-            $lastNumber = (int) substr($lastBooking->unique_id, strlen($prefix));
-            $nextNumber = $lastNumber + 1;
+            // Extract the numeric part of the inv_no if it matches the current year and booking ID
+            if (strpos($lastBooking->unique_id, $prefix) === 0) {
+                // Get the remaining part as the numeric count
+                $latestInvNo = (int)substr($lastBooking->unique_id, strlen($prefix));
+                $latestInvNo++; // Increment the count
+            } else {
+                // If the prefix does not match, start a new count
+                $latestInvNo = 1;
+            }
+        } else {
+            // No previous invoice, start with 1
+            $latestInvNo = 1;
         }
 
-        $newId = $prefix . str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
+        $newId = $prefix .  $latestInvNo;
 
         if (!self::where('unique_id', $newId)->exists()) {
             return $newId;
         }
 
-        throw new \Exception('Unable to generate a unique staff ID');
+        throw new \Exception('Unable to generate a unique booking ID');
     }
 }

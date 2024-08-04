@@ -46,15 +46,25 @@ class Staff extends Model
         $year = date('Y');
         $prefix = 'DHCS' . $year;
 
-        $lastStaff = self::where('staff_id', 'like', $prefix . '%')->orderBy('staff_id', 'desc')->first();
+        $lastStaff = self::where('staff_id', 'like', $prefix . '%')->orderBy('id', 'desc')->first();
         $nextNumber = 1;
 
         if ($lastStaff) {
-            $lastNumber = (int) substr($lastStaff->staff_id, strlen($prefix));
-            $nextNumber = $lastNumber + 1;
+            // Extract the numeric part of the inv_no if it matches the current year and booking ID
+            if (strpos($lastStaff->staff_id, $prefix) === 0) {
+                // Get the remaining part as the numeric count
+                $latestInvNo = (int)substr($lastStaff->staff_id, strlen($prefix));
+                $latestInvNo++; // Increment the count
+            } else {
+                // If the prefix does not match, start a new count
+                $latestInvNo = 1;
+            }
+        } else {
+            // No previous invoice, start with 1
+            $latestInvNo = 1;
         }
 
-        $newId = $prefix . str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
+        $newId = $prefix .  $latestInvNo;
 
         if (!self::where('staff_id', $newId)->exists()) {
             return $newId;

@@ -38,15 +38,25 @@ class Doctor extends Model
         $year = date('Y');
         $prefix = 'DHCD' . $year;
 
-        $lastDoctor = self::where('doctor_id', 'like', $prefix . '%')->orderBy('doctor_id', 'desc')->first();
+        $lastDoctor = self::where('doctor_id', 'like', $prefix . '%')->orderBy('id', 'desc')->first();
         $nextNumber = 1;
 
         if ($lastDoctor) {
-            $lastNumber = (int) substr($lastDoctor->doctor_id, strlen($prefix));
-            $nextNumber = $lastNumber + 1;
+            // Extract the numeric part of the inv_no if it matches the current year and booking ID
+            if (strpos($lastDoctor->doctor_id, $prefix) === 0) {
+                // Get the remaining part as the numeric count
+                $latestInvNo = (int)substr($lastDoctor->doctor_id, strlen($prefix));
+                $latestInvNo++; // Increment the count
+            } else {
+                // If the prefix does not match, start a new count
+                $latestInvNo = 1;
+            }
+        } else {
+            // No previous invoice, start with 1
+            $latestInvNo = 1;
         }
 
-        $newId = $prefix . str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
+        $newId = $prefix .  $latestInvNo;
 
         if (!self::where('doctor_id', $newId)->exists()) {
             return $newId;

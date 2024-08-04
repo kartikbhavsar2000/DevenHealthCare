@@ -37,15 +37,25 @@ class Patient extends Model
         $year = date('Y');
         $prefix = 'DHCP' . $year;
 
-        $lastPatient = self::where('patient_id', 'like', $prefix . '%')->orderBy('patient_id', 'desc')->first();
+        $lastPatient = self::where('patient_id', 'like', $prefix . '%')->orderBy('id', 'desc')->first();
         $nextNumber = 1;
 
         if ($lastPatient) {
-            $lastNumber = (int) substr($lastPatient->patient_id, strlen($prefix));
-            $nextNumber = $lastNumber + 1;
+            // Extract the numeric part of the inv_no if it matches the current year and booking ID
+            if (strpos($lastPatient->patient_id, $prefix) === 0) {
+                // Get the remaining part as the numeric count
+                $latestInvNo = (int)substr($lastPatient->patient_id, strlen($prefix));
+                $latestInvNo++; // Increment the count
+            } else {
+                // If the prefix does not match, start a new count
+                $latestInvNo = 1;
+            }
+        } else {
+            // No previous invoice, start with 1
+            $latestInvNo = 1;
         }
 
-        $newId = $prefix . str_pad($nextNumber, 2, '0', STR_PAD_LEFT);
+        $newId = $prefix .  $latestInvNo;
 
         if (!self::where('patient_id', $newId)->exists()) {
             return $newId;

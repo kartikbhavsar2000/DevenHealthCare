@@ -68,6 +68,27 @@
   @php
       $permissions = Auth::user() ? Auth::user()->permissions() : [];
   @endphp
+
+  @if(!in_array('dashboard',$permissions))
+  <div class="col-12">
+    <div class="card">
+      <div class="d-flex align-items-end row">
+        <div class="col-md-6 order-2 order-md-1">
+          <div class="card-body">
+            <h2 class="card-title mb-4">Welcome,<br><span class="fw-bold">{{Auth::user()->name ?? ""}}</span> 👋</h2>
+            <h3>{{Auth::user()->role->name ?? ""}}</h3>
+            <p class="mb-0">Sorry! You do not have the access in viewing the rest fortes as disciplined by the Super Admin.</p>
+          </div>
+        </div>
+        <div class="col-md-6 text-center text-md-end order-1 order-md-2">
+          <div class="card-body pb-0 px-0 pt-2">
+            <img src="{{asset('public')}}/assets/img/illustrations/illustration-john-light.png" height="186" class="scaleX-n1-rtl" alt="View Profile" data-app-light-img="illustrations/illustration-john-light.png" data-app-dark-img="illustrations/illustration-john-dark.png">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  @else
   <div class="col-sm-12 col-lg-12">
     <div class="card text-center mb-4">
       <div class="card-header p-0">
@@ -76,7 +97,7 @@
             @if(!empty($dates))
               @foreach($dates as $key => $date)
                 <li class="nav-item" role="presentation">
-                  <button type="button" style="height: 60px; background: #4cb7e5; color:#c5eeff; border:2px solid #4cb7e5;" class="nav-link d-flex flex-column gap-1 waves-effect  @if($key == 6)active @endif" role="tab" data-bs-toggle="tab" data-bs-target="#navs-card-{{$key}}" aria-controls="navs-profile-{{$key}}" aria-selected="@if($key == 6) true @else false @endif" @if($key != 6) tabindex="-1" @endif>{{date('M d', strtotime($date))}}</button>
+                  <button type="button" style="height: 60px; background: #4cb7e5; color:#c5eeff; border:2px solid #4cb7e5;" class="nav-link d-flex flex-column gap-1 waves-effect  @if($key == 6)active @endif" onclick="getBookingDetailsByDate('{{$date}}','{{date('Y-m-d')}}')" role="tab" data-bs-toggle="tab" data-bs-target="#navs-card" aria-controls="navs-profile" aria-selected="true" tabindex="-1">{{date('M d', strtotime($date))}}</button>
                 </li>
               @endforeach
             @endif
@@ -85,205 +106,32 @@
       </div>
       <div class="card-body p-0">
         <div class="tab-content p-0 pb-0">
-          @if(!empty($dates))
-            @foreach($dates as $key => $date)
-              <div class="tab-pane fade text-start @if($key == 6)active show @endif" id="navs-card-{{$key}}" role="tabpanel">
-                <table class="kt_datatable table table-row-bordered table-row-gray-300" style="margin-bottom: 0px!important">
-                  <thead>
-                      <tr>
-                        <th rowspan="2" style="border:1px solid #4cb7e5; background:#c5eeff; width:15%!important;">Customer Name</th>
-                        <th colspan="{{count($staff_type)}}" style="border-bottom:1px solid #dfdfe2;">Staff</th>
-                        <th rowspan="2" style="border-bottom:1px solid #dfdfe2; width:15%!important;">Doctor</th>
-                      </tr>
-                      <tr>
-                        @if(!empty($staff_type))
-                          @foreach($staff_type as $st)
-                            <th colspan="1" style="border-bottom:1px solid #dfdfe2;">{{$st->title}}</th>
-                          @endforeach
-                        @endif
-                      </tr>
-                  </thead>
-                  <tbody>
-                      @if(!empty($bookings))
-                        @foreach($bookings as $booking)
-                          @if($date >= date('Y-m-d', strtotime($booking->start_date)) && $date <= date('Y-m-d', strtotime($booking->end_date)))
-                          <tr>
-                            <td style="background: #c5eeff;  border:1px solid #4cb7e5; text-align:center; width:15%!important;">
-                              <div class="row">
-                                <div class="col-12">
-                                  <div class="row">
-                                    <div class="col-8 text-start">
-                                      {{$booking->customer_details->name}}
-                                      <b style="font-size: 12px;">
-                                        @if($booking->booking_type == "Patient")
-                                          @if($booking->customer_details->h_type == "DHC")
-                                            (DHC)
-                                          @else
-                                            (HSP)
-                                          @endif
-                                        @else
-                                          (CRP)
-                                        @endif
-                                      </b>
-                                      <br><span style="font-size: 12px;">{{$booking->unique_id}}</span><br>
-                                    </div>
-                                    <div class="col-4 d-flex justify-content-center align-items-center">
-                                      <button class="badge badge-center bg-primary border-none" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Customer Details" data-bs-custom-class="tooltip-dark" onclick="openCustomerDetailsModal('{{$booking}}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
-                                    </div>
-                                  </div>
-                                </div>
-                                @if(in_array('bookings',$permissions))
-                                  @if($date >= date('Y-m-d'))
-                                  <div class="col-12 text-center mt-2">
-                                    <button class="badge badge-center bg-white border border-primary text-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Ambulance" data-bs-custom-class="tooltip-dark" onclick="addAmbulanceCanvas('{{$booking->id}}','{{$date}}')" type="button" style="line-height: 10px;"><i class="ri-taxi-line"></i></button>
-                                    <button class="badge badge-center bg-white border border-primary text-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Equipments" data-bs-custom-class="tooltip-dark" onclick="addEquipmentsCanvas('{{$booking->id}}','{{$date}}')" type="button" style="line-height: 10px;"><i class="ri-syringe-line"></i></button>
-                                  </div>
-                                  @endif
-                                @endif
-                              </div>
-                            </td>
-                            @if(!empty($staff_type))
-                              @foreach($staff_type as $st)
-                                <td  style="width:{{70 / count($staff_type)}}%!important;">
-                                  @if(!empty($booking->staff_data))
-                                    @php
-                                      $staff_found = false;
-                                    @endphp
-                                    @foreach($booking->staff_data as $stf)
-                                      @if($stf->is_cancled == 0)
-                                        @if($stf->staff_details)
-                                          @if($stf->type == $st->title && $date == date('Y-m-d', strtotime($stf->date)))
-                                            <div class="row p-1">
-                                              <div class="col-8 text-start">
-                                                  {{$stf->staff_details->f_name}} {{$stf->staff_details->m_name}} {{$stf->staff_details->l_name}}<br>
-                                                  <b style="font-size: 12px;"> {{$stf->shiftt->name}}</b>
-                                                  @if($stf->att_marked == 0)
-                                                    <span class="badge bg-label-secondary" style="font-size: 10px;">Not Marked</span>
-                                                  @else
-                                                    @if($stf->status == 0)
-                                                      <span class="badge bg-label-primary" style="font-size: 10px;">Marked</span>
-                                                    @elseif($stf->status == 1)
-                                                      <span class="badge bg-label-success" style="font-size: 10px;">Approved</span>
-                                                    @elseif($stf->status == 2)
-                                                      <span class="badge bg-label-danger" style="font-size: 10px;">Rejected</span>
-                                                    @endif
-                                                  @endif
-                                              </div>
-                                              <div class="col-4">
-                                                @if(in_array('assign_bookings',$permissions))
-                                                    <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit Staff" data-bs-custom-class="tooltip-dark" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 10px;"><i class="ri-pencil-line"></i></button>
-                                                @endif
-                                                @if($date < date('Y-m-d'))
-                                                @if($stf->att_marked == 0)
-                                                  <button class="badge badge-center bg-label-primary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Mark Attendance" data-bs-custom-class="tooltip-dark" onclick="markAttendance('{{$stf->id}}')" type="button" style="line-height: 10px;"><i class="ri-calendar-check-line"></i></button>
-                                                @endif
-                                                @endif
-                                                <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Staff Details" data-bs-custom-class="tooltip-dark" onclick="openStaffDetailsModal('{{$stf->staff_details}}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
-                                              </div>
-                                            </div>
-                                            @php
-                                              $staff_found = true;
-                                            @endphp
-                                          @endif
-                                        @else
-                                          @if($stf->type == $st->title && $date == date('Y-m-d', strtotime($stf->date)) && $stf->booking_status == 0)
-                                            <div class="row p-1">
-                                              <div class="col-8 pt-2 text-start">
-                                                <b style="font-size: 12px;"> {{$stf->shiftt->name}}</b>
-                                              </div>
-                                              <div class="col-4">
-                                                @if(in_array('assign_bookings',$permissions))
-                                                  <button class="badge badge-center bg-warning border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Assign Staff" data-bs-custom-class="tooltip-dark" onclick="openStaffAssignModal('{{$stf->id}}','{{date('Y-m-d', strtotime($stf->date))}}','{{$st->id}}', {{$stf->shiftt->id}}, {{$stf->sell_rate}})" type="button" style="line-height: 0px;"><i class="ri-user-follow-line"></i></button>
-                                                @endif
-                                              </div>
-                                            </div>
-                                            @php
-                                              $staff_found = true;
-                                            @endphp
-                                          @endif
-                                        @endif
-                                      @endif
-                                    @endforeach
-                                    {{-- @if(!$staff_found)
-                                    __
-                                    @endif
-                                  @else
-                                  __ --}}
-                                  @endif
-                                  @if(in_array('assign_bookings',$permissions) && in_array('bookings',$permissions))
-                                    <div class="text-center mt-2 py-3" style="background:#c5eeff;">
-                                      <button class="badge badge-center bg-primary border-none" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add {{$st->title}}" data-bs-custom-class="tooltip-dark" onclick="openAddStaffAssignModal('{{$booking->id}}','{{date('Y-m-d', strtotime($date))}}','{{$st->title}}','{{$st->id}}')" style="line-height: 0px;"><i class="ri-add-line"></i></button>
-                                    </div>
-                                  @endif
-                                </td>
-                              @endforeach
-                            @else
-                              <td> __</td>
-                            @endif
-                            <td style="width:15%!important;">
-                              @if(!empty($booking->doctor_data))
-                                @php
-                                  $doctor_found = false;
-                                @endphp
-                                @foreach($booking->doctor_data as $dct)
-                                  @if($dct->staff_details)
-                                    @if($date == date('Y-m-d', strtotime($dct->date)) && $dct->booking_status == 0)
-                                      <div class="row p-1">
-                                        <div class="col-8 text-start">
-                                          {{$dct->staff_details->name}}<br><b style="font-size: 12px;">{{$dct->shiftt->name}}</b>
-                                        </div>
-                                        <div class="col-4">
-                                          @php
-                                              $staffDetailsJson = json_encode($dct->staff_details);
-                                          @endphp
-                                          @if(in_array('assign_bookings',$permissions))
-                                              <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit Doctor" data-bs-custom-class="tooltip-dark" onclick="openDoctorAssignModal('{{$dct->id}}','{{date('Y-m-d', strtotime($dct->date))}}','Doctor', {{$dct->shiftt->id}}, {{$dct->sell_rate}})"  style="line-height: 10px;"><i class="ri-pencil-line"></i></button>
-                                          @endif
-                                          <button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Doctor Details" data-bs-custom-class="tooltip-dark" onclick="openDoctorDetailsModal('{{ addslashes($staffDetailsJson) }}')" type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>
-                                        </div>
-                                      </div>
-                                      @php
-                                        $doctor_found = true;
-                                      @endphp
-                                    @endif
-                                  @else
-                                    @if($date == date('Y-m-d', strtotime($dct->date)) && $dct->booking_status == 0)
-                                      <div class="row p-1">
-                                        <div class="col-8 pt-2 text-start">
-                                          <b style="font-size: 12px;"> {{$dct->shiftt->name}}</b>
-                                        </div>
-                                        <div class="col-4">
-                                          @if(in_array('assign_bookings',$permissions))
-                                            <button class="badge badge-center bg-warning border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Assign Doctor" data-bs-custom-class="tooltip-dark" onclick="openDoctorAssignModal('{{$dct->id}}','{{date('Y-m-d', strtotime($dct->date))}}','Doctor', {{$dct->shiftt->id}}, {{$dct->sell_rate}})"  style="line-height: 0px;"><i class="ri-user-follow-line"></i></button>
-                                          @endif
-                                        </div>
-                                      </div>
-                                      @php
-                                        $doctor_found = true;
-                                      @endphp
-                                    @endif
-                                  @endif
-                                @endforeach
-                              @endif
-                              @if(in_array('assign_bookings',$permissions) && in_array('bookings',$permissions))
-                                <div class="text-center mt-2 py-3" style="background:#c5eeff;">
-                                  <button class="badge badge-center bg-primary border-none" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Doctor" data-bs-custom-class="tooltip-dark" onclick="openAddDoctorAssignModal('{{$booking->id}}','{{date('Y-m-d', strtotime($date))}}')" style="line-height: 0px;"><i class="ri-add-line"></i></button>
-                                </div>
-                              @endif
-                            </td>
-                          </tr>
-                          @endif
-                        @endforeach
-                      @endif
-                  </tbody>
-                </table>
-              </div>
-            @endforeach
-          @endif
+          <div class="tab-pane fade text-start active show" id="navs-card" role="tabpanel">
+            <table class="kt_datatable_main table table-row-bordered table-row-gray-300" style="margin-bottom: 0px!important">
+              <thead>
+                  <tr>
+                    <th rowspan="2" style="border:1px solid #4cb7e5; background:#c5eeff; width:15%!important;">Customer Name</th>
+                    <th colspan="{{count($staff_type)}}" style="border-bottom:1px solid #dfdfe2;">Staff</th>
+                    <th rowspan="2" style="border-bottom:1px solid #dfdfe2; width:15%!important;">Doctor</th>
+                  </tr>
+                  <tr>
+                    @if(!empty($staff_type))
+                      @foreach($staff_type as $st)
+                        <th colspan="1" style="border-bottom:1px solid #dfdfe2;">{{$st->title}}</th>
+                      @endforeach
+                    @endif
+                  </tr>
+              </thead>
+              <tbody id="BookingsTable">
+                  
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
+  @endif
 </div>
 <div class="modal fade" id="staffDetailsCanvas" tabindex="-1" aria-labelledby="staffDetailsCanvasLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -802,7 +650,7 @@
           <div class="form-floating form-floating-outline">
               <input type="text" class="form-control d-none" name="id" id="Staff_Assign_Id">
               <input type="text" class="form-control" placeholder="DD-MM-YYYY" id="AssignDateShow" readonly/>
-              <input type="text" class="form-control" name="date" placeholder="DD-MM-YYYY" id="AssignDate" readonly/>
+              <input type="text" class="form-control d-none" name="date" placeholder="DD-MM-YYYY" id="AssignDate" readonly/>
               <label for="AssignDate">Assign Date</label>
           </div>
           @error('date')
@@ -1219,6 +1067,34 @@
 <script src="{{asset('public')}}/assets/vendor/libs/apex-charts/apexcharts.js"></script>
 <script src="{{asset('public')}}/assets/js/app-logistics-dashboard.js"></script>
 <script>
+   $(document).ready(function() {
+    var date = new Date();
+
+    // Helper function to pad single digit numbers with leading zero
+    function pad(number) {
+        return number < 10 ? '0' + number : number;
+    }
+
+    // Extract year, month, and day
+    var year = date.getFullYear();
+    var month = pad(date.getMonth() + 1); // getMonth() is zero-based
+    var day = pad(date.getDate());
+
+    // Format date as yyyy-mm-dd
+    var formattedDate = year + '-' + month + '-' + day;
+    getBookingDetailsByDate(formattedDate, formattedDate);
+  });
+  var table = $('.kt_datatable_main').DataTable({
+      dom:'',
+      paging: false,
+      // processing: true,
+      // lengthMenu: [[ 5, 15, 25, 100, -1 ], [ 5, 15, 25, 100, "All" ]],
+      columnDefs: [{
+          "defaultContent": "-",
+          "targets": "_all",
+      }],
+      deferRender: true,
+  });
   $('.kt_datatable').DataTable({
     dom:'',
     columnDefs: [{
@@ -1226,8 +1102,225 @@
         "targets": "_all",
     }],
   });
-</script>
-<script>
+ 
+  function getBookingDetailsByDate(date, today){
+    $("#loader").fadeIn("slow");
+    $("#DATAAA").fadeOut("slow");
+    table.clear().draw();
+    console.log(date);
+    $.ajax({
+        url:"{{route('get_crp_dashboard_booking_data')}}",
+        method:"POST",
+        data:{'date':date,_token:"{{ csrf_token() }}"},
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success:function(result)
+        {
+          table.clear().draw();
+          console.log(result);
+          populateTable(result.bookings, result.staff_type, date, today, table);
+          $("#loader").fadeOut("slow");
+          $("#DATAAA").fadeIn("slow");
+        }
+    }); 
+  }
+  function populateTable(bookings, staff_type, date, today, table) {
+
+    var permissions = @json($permissions);
+    // Check if bookings are available
+    if (bookings && bookings.length > 0) {
+        $.each(bookings, function(index, booking) {
+            if (date >= booking.start_date && date <= booking.end_date) {
+                var row = '<tr>';
+
+                // Customer details column
+                var customerDetails = '<td style="background: #c5eeff; border:1px solid #4cb7e5; text-align:center; width:15%!important;">';
+                customerDetails += '<div class="row">';
+                customerDetails += '<div class="col-12">';
+                customerDetails += '<div class="row">';
+                customerDetails += '<div class="col-8 text-start">';
+                customerDetails += booking.customer_details.name;
+
+                // Booking type
+                customerDetails += '<br><b style="font-size: 12px;">';
+                if (booking.booking_type == "Patient") {
+                    if (booking.customer_details.h_type == "DHC") {
+                        customerDetails += '(DHC)';
+                    } else {
+                        customerDetails += '(HSP)';
+                    }
+                } else {
+                    customerDetails += '(CRP)';
+                }
+                customerDetails += '</b><br><span style="font-size: 12px;">' + booking.unique_id + '</span><br>';
+                customerDetails += '</div>';
+
+                // Customer details button
+                customerDetails += '<div class="col-4 d-flex justify-content-center align-items-center">';
+                customerDetails += '<button class="badge badge-center bg-primary border-none" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Customer Details" data-bs-custom-class="tooltip-dark" onclick=\'openCustomerDetailsModal(' + JSON.stringify(booking) + ')\'' + ' type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>';
+                customerDetails += '</div>';
+                customerDetails += '</div>';
+                customerDetails += '</div>';
+
+                // Add Ambulance and Equipments buttons
+                if ($.inArray('bookings', permissions) !== -1) {
+                    if (date >= today) {
+                        customerDetails += '<div class="col-12 text-center mt-2">';
+                        customerDetails += `<button class="badge badge-center bg-white border border-primary text-primary me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Ambulance" data-bs-custom-class="tooltip-dark" onclick="addAmbulanceCanvas('` + booking.id + `', '` + date + `')" type="button" style="line-height: 10px;"><i class="ri-taxi-line"></i></button>`;
+                        customerDetails += `<button class="badge badge-center bg-white border border-primary text-primary" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Equipments" data-bs-custom-class="tooltip-dark" onclick="addEquipmentsCanvas('` + booking.id + `', '` + date + `')" type="button" style="line-height: 10px;"><i class="ri-syringe-line"></i></button>`;
+                        customerDetails += '</div>';
+                    }
+                }
+                customerDetails += '</div>';
+                customerDetails += '</td>';
+                row += customerDetails;
+
+                // Staff details columns
+                if (staff_type && staff_type.length > 0) {
+                  $.each(staff_type, function(stIndex, st) {
+                    var staffDetails = '<td style="width:' + (70 / staff_type.length) + '%!important;">';
+                    if (booking.staff_data && booking.staff_data.length > 0) {
+                        var staff_found = false;
+                        $.each(booking.staff_data, function(stfIndex, stf) {
+                          if(stf.is_cancled == 0 ){
+                            if(stf.staff){
+                              if (stf.type == st.title && date == stf.date) {
+                                  staffDetails += '<div class="row p-1">';
+                                  staffDetails += '<div class="col-8 text-start">';
+                                  if (stf.staff) {
+                                      staffDetails += `${stf.staff.f_name || ""}${stf.staff.m_name ? " " + stf.staff.m_name : ""}${stf.staff.l_name ? " " + stf.staff.l_name : ""}` + '<br>';
+                                  }
+                                  staffDetails += '<b style="font-size: 12px;" class="me-1">' + stf.shiftt.name + '</b>';
+                                  if (stf.att_marked == 0) {
+                                      staffDetails += '<span class="badge bg-label-secondary" style="font-size: 10px;">Not Marked</span>';
+                                  } else {
+                                      if (stf.status == 0) {
+                                          staffDetails += '<span class="badge bg-label-primary" style="font-size: 10px;">Marked</span>';
+                                      } else if (stf.status == 1) {
+                                          staffDetails += '<span class="badge bg-label-success" style="font-size: 10px;">Approved</span>';
+                                      } else if (stf.status == 2) {
+                                          staffDetails += '<span class="badge bg-label-danger" style="font-size: 10px;">Rejected</span>';
+                                      }
+                                  }
+                                  staffDetails += '</div>';
+                                  staffDetails += '<div class="col-4">';
+                                  if ($.inArray('assign_bookings', permissions) !== -1) {
+                                      staffDetails += `<button class="badge badge-center bg-label-secondary border-none mt-1 me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit Staff" data-bs-custom-class="tooltip-dark" onclick="openStaffAssignModal('`+ stf.id +`','`+ stf.date +`','`+ st.id +`', '`+ stf.shiftt.id +`' , '`+ stf.sell_rate +`')" type="button" style="line-height: 10px;"><i class="ri-pencil-line"></i></button>`;
+                                  }
+                                  if (date < today && stf.att_marked == 0) {
+                                      staffDetails += `<button class="badge badge-center bg-label-primary border-none mt-1  me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Mark Attendance" data-bs-custom-class="tooltip-dark" onclick="markAttendance('` + stf.id + `', '`+ date +`','`+ today +`')" type="button" style="line-height: 10px;"><i class="ri-calendar-check-line"></i></button>`;
+                                  }
+                                  staffDetails += '<button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Staff Details" data-bs-custom-class="tooltip-dark" onclick=\'openStaffDetailsModal(' + JSON.stringify(stf.staff) + ')\'' + ' type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>';
+                                  staffDetails += '</div>';
+                                  staffDetails += '</div>';
+                                  staff_found = true;
+                              }
+                            }else{
+                              if(stf.type == st.title && date == stf.date && stf.booking_status == 0){
+                                staffDetails += `<div class="row p-1">
+                                    <div class="col-8 pt-2 text-start">
+                                      <b style="font-size: 12px;"> ` + stf.shiftt.name + `</b>
+                                    </div>
+                                    <div class="col-4">`;
+                                      if ($.inArray('assign_bookings', permissions) !== -1) {
+                                        staffDetails += `<button class="badge badge-center bg-warning border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Assign Staff" data-bs-custom-class="tooltip-dark" onclick="openStaffAssignModal('`+ stf.id +`','`+ stf.date +`','`+ st.id +`', '`+ stf.shiftt.id +`' , '`+ stf.sell_rate +`')" type="button" style="line-height: 0px;"><i class="ri-user-follow-line"></i></button>`;
+                                      }
+                                    staffDetails += `</div></div>`
+                                  staff_found = true;
+                              }
+                            }
+                          }
+                        });
+                        if ($.inArray('assign_bookings', permissions) !== -1 && $.inArray('bookings', permissions) !== -1) {
+                            staffDetails += '<div class="text-center mt-2 py-3" style="background:#c5eeff;">';
+                            staffDetails += `<button class="badge badge-center bg-primary border-none" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add ` + st.title + `" data-bs-custom-class="tooltip-dark" onclick="openAddStaffAssignModal('`+ booking.id +`', '`+ date +`', '`+ st.title +`', '`+ st.id +`')" type="button" style="line-height: 0px;"><i class="ri-add-line"></i></button>`;
+                            staffDetails += '</div>';
+                        }
+                    }
+                    staffDetails += '</td>';
+                    row += staffDetails;
+                  });
+                } else {
+                    row += '<td> __</td>';
+                }
+
+                // Doctor details column
+                var doctorDetails = '<td style="width:15%!important;">';
+                if (booking.doctor_data && booking.doctor_data.length > 0) {
+                  var doctor_found = false;
+                  $.each(booking.doctor_data, function(dctIndex, dct) {
+                    if(dct.doctor){
+                      if (dct.is_cancled == 0 && date == dct.date) {
+                        doctorDetails += '<div class="row p-1">';
+                        doctorDetails += '<div class="col-8 text-start">';
+                        if (dct.doctor) {
+                            doctorDetails += dct.doctor.name + '<br>';
+                        }
+                        doctorDetails += '<b style="font-size: 12px;">' + dct.shiftt.name + '</b>';
+                        if (dct.att_marked == 0) {
+                            doctorDetails += '<span class="badge bg-label-secondary" style="font-size: 10px;">Not Marked</span>';
+                        } else {
+                            if (dct.status == 0) {
+                                doctorDetails += '<span class="badge bg-label-primary" style="font-size: 10px;">Marked</span>';
+                            } else if (dct.status == 1) {
+                                doctorDetails += '<span class="badge bg-label-success" style="font-size: 10px;">Approved</span>';
+                            } else if (dct.status == 2) {
+                                doctorDetails += '<span class="badge bg-label-danger" style="font-size: 10px;">Rejected</span>';
+                            }
+                        }
+                        doctorDetails += '</div>';
+                        doctorDetails += '<div class="col-4">';
+                        if ($.inArray('assign_bookings', permissions) !== -1) {
+                            doctorDetails += `<button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Edit Staff" data-bs-custom-class="tooltip-dark" onclick="openDoctorAssignModal('`+ dct.id +`','`+ dct.date +`','Doctor', '`+ dct.shiftt.id +`', '`+ dct.sell_rate +`')" type="button" style="line-height: 10px;"><i class="ri-pencil-line"></i></button>`;
+                        }
+                        if (date < booking.start_date && dct.att_marked == 0) {
+                            doctorDetails += `<button class="badge badge-center bg-label-primary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Mark Attendance" data-bs-custom-class="tooltip-dark" onclick="markDoctorAttendance('` + dct.id + `')" type="button" style="line-height: 10px;"><i class="ri-calendar-check-line"></i></button>`;
+                        }
+                        doctorDetails += '<button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Staff Details" data-bs-custom-class="tooltip-dark" onclick=\'openDoctorDetailsModal(' + JSON.stringify(dct.doctor) + ')\'' + ' type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>';
+                        doctorDetails += '</div>';
+                        doctorDetails += '</div>';
+                        doctor_found = true;
+                      }
+                    }else{
+                      if(date == dct.date && dct.booking_status == 0){
+                        doctorDetails += `<div class="row p-1">
+                          <div class="col-8 pt-2 text-start">
+                            <b style="font-size: 12px;">`+ dct.shiftt.name + `</b>
+                          </div>
+                          <div class="col-4">`;
+                            if ($.inArray('assign_bookings', permissions) !== -1) {
+                              doctorDetails += `<button class="badge badge-center bg-warning border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Assign Doctor" data-bs-custom-class="tooltip-dark" onclick="openDoctorAssignModal('`+ dct.id +`','`+ dct.date +`','Doctor', '`+ dct.shiftt.id +`', '`+ dct.sell_rate +`')"  style="line-height: 0px;"><i class="ri-user-follow-line"></i></button>`;
+                            }
+                        doctorDetails += `</div></div>`;
+                        doctor_found = true;
+                      }
+                    }
+                  });
+                }
+                if ($.inArray('assign_bookings', permissions) !== -1 && $.inArray('bookings', permissions) !== -1) {
+                  doctorDetails += '<div class="text-center mt-2 py-3" style="background:#c5eeff;">';
+                  doctorDetails += `<button class="badge badge-center bg-primary border-none" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Add Doctor" data-bs-custom-class="tooltip-dark" onclick="openAddDoctorAssignModal('` + booking.id + `','` + date + `')" type="button" style="line-height: 0px;"><i class="ri-add-line"></i></button>`;
+                  doctorDetails += '</div>';
+                }
+                doctorDetails += '</td>';
+                row += doctorDetails;
+                row += '</tr>';
+
+                // Append row to DataTable
+                table.row.add($(row));
+              }
+        });
+
+        // Redraw the table
+        table.draw();
+    } else {
+        table.row.add(['<tr><td colspan="100%">No bookings found for this date.</td></tr>']);
+    }
+
+    // Redraw the table
+    // table.draw();
+  }
   // function changeCustomerType(thiss){
   //   var select = $(thiss);
   //   var type = select.find(':selected').val();
@@ -1245,8 +1338,8 @@
   //       }
   //   }); 
   // }
-  function openCustomerDetailsModal(customer) {
-    var data = JSON.parse(customer);
+  function openCustomerDetailsModal(data) {
+    // var data = JSON.parse(customer);
     console.log(data);
     if(data.customer_details.dob){
       var date = moment(data.customer_details.dob).format('DD/MM/YYYY');
@@ -1291,11 +1384,16 @@
           if(item.type == 1){
             rate *= item.qnt;
           }
+          if(item.shift){
+            var shift_name = item.shift.name;
+          }else{
+            var shift_name = "-";
+          }
           bookingData += `<tr>
                               <td>`+ srno +`</td>
                               <td>`+ (item.name ?? "-") +`</td>
                               <td>`+ type +`</td>
-                              <td>`+ (item.shift_name ?? "-") +`</td>
+                              <td>`+ (shift_name ?? "-") +`</td>
                               <td>`+ (item.qnt ?? "-") +`</td>
                               <td>`+ ('₹'+  parseInt(rate,10).toLocaleString() ?? "-") +`</td>
                           </tr>`;
@@ -1341,9 +1439,9 @@
                               <td>`+ srno +`</td>
                               <td>`+ (item.name ?? "-") +`</td>
                               <td>`+ type +`</td>
-                              <td>`+ (item.shift_name ?? "-") +`</td>
+                              <td>`+ (item.shift.name ?? "-") +`</td>
                               <td>`+ (item.qnt ?? "-") +`</td>
-                              <td>`+ ('₹'+  parseInt(rate,10).toLocaleString() ?? "-") +`</td>
+                              <td>`+ ('₹'+ parseInt(rate,10).toLocaleString() ?? "-") +`</td>
                           </tr>`;
       });
       $('#corp_BookingData').html(bookingData);
@@ -1398,8 +1496,10 @@
     qutInput.prop("disabled", false);
     sellRateInput.prop("readonly", false);
   }
-  function openStaffDetailsModal(staff) {
-    var data = JSON.parse(staff);
+  function openStaffDetailsModal(data) {
+    console.log(data);
+    // var data = JSON.parse(staff);
+    // var data = $.parseJSON(JSON.stringify(staff));
     if(data.dob){
       var date = moment(data.dob).format('DD/MM/YYYY');
     }else{
@@ -1425,8 +1525,8 @@
     $('#st_Area').text(data.area.name || '-');
     $('#staffDetailsCanvas').modal('show');
   }
-  function openDoctorDetailsModal(doctor) {
-    var data = JSON.parse(doctor);
+  function openDoctorDetailsModal(data) {
+    // var data = JSON.parse(doctor);
     if(data.dob){
       var date = moment(data.dob).format('DD/MM/YYYY');
     }else{
@@ -1547,7 +1647,7 @@
     $('#Shift').val(shift).trigger('change');
     $('#CustomerRate').val(sell_rate);
     
-    filterAndSetStaffOptions(type,shift,date);
+    filterAndSetStaffOptions(type,shift,date,'Assign');
 
     $('#AssignStaffCanvas').offcanvas('show');
   }
@@ -1570,7 +1670,7 @@
       altFormat: 'd-m-Y',
       dateFormat: 'd-m-Y'
     }).setDate(date2, true);
-    
+
     $('#DocShift').val(shift).trigger('change');
     $('#DocCustomerRate').val(sell_rate);
 
@@ -1609,6 +1709,7 @@
     $('#StaffTypeId').val(type_id);
 
     $('#Staff_Booking_Id').val(booking_id);
+
     $('#StaffAddAssignDate').flatpickr({
       minDate: date,
       maxDate: date
@@ -1688,7 +1789,7 @@
         }
       }); 
   }
-  function markAttendance(id){
+  function markAttendance(id,date,today){
     Swal.fire({
     title: 'Are you sure?',
     text: "You won't be able to revert this!",
@@ -1722,7 +1823,8 @@
                         },
                         buttonsStyling: false
                     }); 
-                    setTimeout(function(){ window.location.reload(); }, 500);
+                    getBookingDetailsByDate(date, today)
+                    // setTimeout(function(){ window.location.reload(); }, 500);
                 }
             }); 
         }

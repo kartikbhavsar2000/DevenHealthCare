@@ -28,6 +28,10 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/dhc_dashboard', [App\Http\Controllers\HomeController::class, 'dhc_dashboard'])->name('dhc_dashboard');
     Route::get('/hsp_dashboard', [App\Http\Controllers\HomeController::class, 'hsp_dashboard'])->name('hsp_dashboard');
     Route::get('/crp_dashboard', [App\Http\Controllers\HomeController::class, 'crp_dashboard'])->name('crp_dashboard');
+    Route::post('/get_dashboard_booking_data', [App\Http\Controllers\HomeController::class, 'get_dashboard_booking_data'])->name('get_dashboard_booking_data');
+    Route::post('/get_crp_dashboard_booking_data', [App\Http\Controllers\HomeController::class, 'get_crp_dashboard_booking_data'])->name('get_crp_dashboard_booking_data');
+    Route::post('/get_dhc_dashboard_booking_data', [App\Http\Controllers\HomeController::class, 'get_dhc_dashboard_booking_data'])->name('get_dhc_dashboard_booking_data');
+    Route::post('/get_hsp_dashboard_booking_data', [App\Http\Controllers\HomeController::class, 'get_hsp_dashboard_booking_data'])->name('get_hsp_dashboard_booking_data');
     Route::post('/change_customer_type', [App\Http\Controllers\HomeController::class, 'change_customer_type'])->name('change_customer_type');
     Route::post('/mark_attandance', [App\Http\Controllers\HomeController::class, 'mark_attandance'])->name('mark_attandance');
 

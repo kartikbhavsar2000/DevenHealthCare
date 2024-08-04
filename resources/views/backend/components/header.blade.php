@@ -100,10 +100,6 @@
             height: 50px;
             margin-left: -25px; 
             margin-top: -25px; 
-            /* border: 10px solid #f3f3f3; 
-            border-top: 10px solid #4cb7e5; 
-            border-radius: 50%;
-            animation: spin 2s linear infinite; */
         }
 
         @keyframes spin {

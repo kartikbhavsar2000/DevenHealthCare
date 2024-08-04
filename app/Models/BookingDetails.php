@@ -20,4 +20,8 @@ class BookingDetails extends Model
     {
         return $this->hasMany(BookingAssign::class,'booking_detail_id','id');
     }
+     public function shift()
+    {
+        return $this->hasOne(Shifts::class,'id','shift');
+    }
 }

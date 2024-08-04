@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 18, 2024 at 03:33 PM
+-- Generation Time: Aug 01, 2024 at 02:58 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -162,8 +162,8 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `unique_id`, `customer_id`, `booking_type`, `start_date`, `end_date`, `is_staff`, `is_equipment`, `is_doctor`, `is_ambulance`, `sub_total`, `total`, `pending_payment`, `pause_reason`, `status`, `booking_status`, `created_by`, `assigned_by`, `closed_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'DHCB202401', 11, 'Patient', '2024-07-12', '2024-07-17', 1, 1, 1, 1, '16700', '16700', '16700', NULL, 1, 0, 1, 1, NULL, '2024-07-18 05:59:14', '2024-07-18 05:59:35', NULL),
-(2, 'DHCB202402', 8, 'Patient', '2024-07-16', '2024-07-17', 1, 0, 0, 0, '1000', '1000', '1000', NULL, 1, 0, 1, 1, NULL, '2024-07-18 07:39:26', '2024-07-18 07:39:46', NULL);
+(1, 'DHCB202401', 11, 'Patient', '2024-07-18', '2024-07-23', 1, 0, 0, 0, '8000', '8000', '8000', NULL, 1, 0, 1, 1, NULL, '2024-07-24 00:00:33', '2024-07-29 06:24:05', NULL),
+(2, 'DHCB202402', 3, 'Corporate', '2024-07-23', '2024-07-24', 1, 0, 0, 0, '3000', '3000', '3000', NULL, 0, 0, 1, NULL, NULL, '2024-07-24 01:49:16', '2024-07-24 01:49:16', NULL);
 
 -- --------------------------------------------------------
 
@@ -190,6 +190,7 @@ CREATE TABLE `booking_assign` (
   `status` int(11) DEFAULT 0 COMMENT '0 = Pending, 1 = Approve, 2 = Rejected',
   `booking_status` int(11) NOT NULL DEFAULT 0 COMMENT '0=Open, 1=Closed',
   `staff_payment` int(11) NOT NULL DEFAULT 0 COMMENT '0=Pending, 1=Done',
+  `is_cancled` int(11) NOT NULL DEFAULT 0 COMMENT '0=No, 1=Yes',
   `updated_by` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -200,23 +201,15 @@ CREATE TABLE `booking_assign` (
 -- Dumping data for table `booking_assign`
 --
 
-INSERT INTO `booking_assign` (`id`, `booking_id`, `booking_detail_id`, `staff_id`, `type`, `shift`, `cost_rate`, `sell_rate`, `date`, `att_date_time`, `lat`, `lng`, `att_proof`, `rej_reason`, `att_marked`, `status`, `booking_status`, `staff_payment`, `updated_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 1, 6, 'Nurse', 1, '1000', '1500', '2024-07-12', '2024-07-18 11:30:49', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 1, '2024-07-18 05:59:14', '2024-07-18 06:14:41', NULL),
-(2, 1, 1, 6, 'Nurse', 1, '1000', '1500', '2024-07-13', '2024-07-18 11:31:03', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 1, '2024-07-18 05:59:14', '2024-07-18 06:14:41', NULL),
-(3, 1, 1, 6, 'Nurse', 1, '1000', '1500', '2024-07-14', '2024-07-18 11:30:35', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 1, '2024-07-18 05:59:14', '2024-07-18 06:14:41', NULL),
-(4, 1, 1, 6, 'Nurse', 1, '1000', '1500', '2024-07-15', '2024-07-18 11:30:24', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 1, '2024-07-18 05:59:14', '2024-07-18 06:14:41', NULL),
-(5, 1, 1, 6, 'Nurse', 1, '1000', '1500', '2024-07-16', '2024-07-18 11:30:11', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 1, '2024-07-18 05:59:14', '2024-07-18 06:14:41', NULL),
-(6, 1, 1, 6, 'Nurse', 1, '1000', '1500', '2024-07-17', '2024-07-18 11:29:58', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 1, '2024-07-18 05:59:14', '2024-07-18 06:14:41', NULL),
-(7, 1, 2, 4, 'Caretaker', 1, '1000', '500', '2024-07-12', '2024-07-18 11:30:55', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 1, '2024-07-18 05:59:14', '2024-07-18 06:14:41', NULL),
-(8, 1, 2, 4, 'Caretaker', 1, '1000', '500', '2024-07-13', '2024-07-18 11:30:42', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 1, '2024-07-18 05:59:14', '2024-07-18 06:14:41', NULL),
-(9, 1, 2, 4, 'Caretaker', 1, '1000', '500', '2024-07-14', '2024-07-18 11:30:30', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 1, '2024-07-18 05:59:14', '2024-07-18 06:14:41', NULL),
-(10, 1, 2, 4, 'Caretaker', 1, '1000', '500', '2024-07-15', '2024-07-18 11:30:18', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 1, '2024-07-18 05:59:14', '2024-07-18 06:14:41', NULL),
-(11, 1, 2, 4, 'Caretaker', 1, '1000', '500', '2024-07-16', '2024-07-18 11:30:04', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 1, '2024-07-18 05:59:14', '2024-07-18 06:14:41', NULL),
-(12, 1, 2, 4, 'Caretaker', 1, '1000', '500', '2024-07-17', '2024-07-18 11:29:50', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 1, '2024-07-18 05:59:14', '2024-07-18 06:14:41', NULL),
-(13, 1, 6, 1, 'Doctor', 1, '1500', '1000', '2024-07-13', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, NULL, '2024-07-18 05:59:14', '2024-07-18 06:01:40', NULL),
-(14, 1, 7, 1, 'Doctor', 1, '600', '1000', '2024-07-15', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, NULL, '2024-07-18 05:59:14', '2024-07-18 06:01:28', NULL),
-(15, 2, 9, 10, 'Caretaker', 1, '1000', '500', '2024-07-16', '2024-07-18 13:09:59', NULL, NULL, NULL, NULL, 1, 1, 0, 0, 1, '2024-07-18 07:39:26', '2024-07-18 07:39:59', NULL),
-(16, 2, 9, 10, 'Caretaker', 1, '1000', '500', '2024-07-17', '2024-07-18 13:10:05', NULL, NULL, NULL, NULL, 1, 1, 0, 0, 1, '2024-07-18 07:39:26', '2024-07-18 07:40:05', NULL);
+INSERT INTO `booking_assign` (`id`, `booking_id`, `booking_detail_id`, `staff_id`, `type`, `shift`, `cost_rate`, `sell_rate`, `date`, `att_date_time`, `lat`, `lng`, `att_proof`, `rej_reason`, `att_marked`, `status`, `booking_status`, `staff_payment`, `is_cancled`, `updated_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, 4, 8, 'Baby Care', 1, '900', '1400', '2024-07-18', '2024-07-24 11:29:09', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 0, 1, '2024-07-24 00:00:33', '2024-07-29 06:45:34', NULL),
+(2, 1, 4, 8, 'Baby Care', 1, '500', '1400', '2024-07-19', '2024-07-24 11:29:04', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 0, 1, '2024-07-24 00:00:33', '2024-07-29 06:45:34', NULL),
+(3, 1, 4, 8, 'Baby Care', 1, '1000', '1400', '2024-07-20', '2024-07-24 11:28:57', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 0, 1, '2024-07-24 00:00:33', '2024-07-29 06:45:34', NULL),
+(4, 1, 4, 8, 'Baby Care', 1, '1000', '1400', '2024-07-21', '2024-07-24 11:28:51', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 0, 1, '2024-07-24 00:00:33', '2024-07-29 06:45:34', NULL),
+(5, 1, 6, 8, 'Baby Care', 1, '1000', '1300', '2024-07-22', '2024-07-24 11:06:00', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 0, 1, '2024-07-24 00:00:33', '2024-07-29 06:45:34', NULL),
+(6, 1, 9, 8, 'Baby Care', 1, '1000', '1100', '2024-07-23', '2024-07-24 05:30:54', NULL, NULL, NULL, NULL, 1, 1, 0, 1, 0, 1, '2024-07-24 00:00:33', '2024-07-29 06:45:34', NULL),
+(7, 2, 2, NULL, 'Caretaker', 1, NULL, '1500', '2024-07-23', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, NULL, '2024-07-24 01:49:16', '2024-07-24 01:49:16', NULL),
+(8, 2, 2, 4, 'Caretaker', 1, '1000', '1500', '2024-07-24', '2024-07-29 18:03:08', NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 1, '2024-07-24 01:49:16', '2024-07-29 07:04:16', NULL);
 
 -- --------------------------------------------------------
 
@@ -245,15 +238,40 @@ CREATE TABLE `booking_details` (
 --
 
 INSERT INTO `booking_details` (`id`, `booking_id`, `type`, `shift`, `date`, `cost_rate`, `sell_rate`, `name`, `qnt`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 1, 1, 1, NULL, NULL, '1500', 'Nurse', 6, 0, '2024-07-18 05:59:14', '2024-07-18 05:59:14', NULL),
-(2, 1, 1, 1, NULL, NULL, '500', 'Caretaker', 6, 0, '2024-07-18 05:59:14', '2024-07-18 05:59:14', NULL),
-(3, 1, 2, NULL, '2024-07-12', '500', '500', 'Patient Bed', 1, 0, '2024-07-18 05:59:14', '2024-07-18 05:59:14', NULL),
-(4, 1, 2, NULL, '2024-07-12', '1200', '800', 'Glucose meter', 1, 0, '2024-07-18 05:59:14', '2024-07-18 05:59:14', NULL),
-(5, 1, 2, NULL, '2024-07-12', '900', '900', 'Oximeter', 1, 0, '2024-07-18 05:59:14', '2024-07-18 05:59:14', NULL),
-(6, 1, 3, 1, '2024-07-13', NULL, '1000', 'Doctor', 1, 0, '2024-07-18 05:59:14', '2024-07-18 05:59:14', NULL),
-(7, 1, 3, 1, '2024-07-15', NULL, '1000', 'Doctor', 1, 0, '2024-07-18 05:59:14', '2024-07-18 05:59:14', NULL),
-(8, 1, 4, 1, '2024-07-12', NULL, '500', 'Ambulance', 1, 0, '2024-07-18 05:59:14', '2024-07-18 05:59:14', NULL),
-(9, 2, 1, 1, NULL, NULL, '500', 'Caretaker', 2, 0, '2024-07-18 07:39:26', '2024-07-18 07:39:26', NULL);
+(1, 1, 1, 1, NULL, NULL, '1500', 'Baby Care', 0, 0, '2024-07-24 00:00:33', '2024-07-29 06:10:07', '2024-07-29 06:10:07'),
+(2, 2, 1, 1, NULL, NULL, '1500', 'Caretaker', 2, 0, '2024-07-24 01:49:16', '2024-07-24 01:49:16', NULL),
+(4, 1, 1, 1, NULL, NULL, '1400', 'Baby Care', 4, 0, '2024-07-29 05:48:36', '2024-07-29 06:23:14', NULL),
+(5, 1, 1, 1, NULL, NULL, '1200', 'Baby Care', 1, 0, '2024-07-29 06:10:07', '2024-07-29 06:21:31', '2024-07-29 06:21:31'),
+(6, 1, 1, 1, NULL, NULL, '1300', 'Baby Care', 1, 0, '2024-07-29 06:15:55', '2024-07-29 06:15:55', NULL),
+(8, 1, 1, 1, NULL, NULL, '1500', 'Baby Care', 1, 0, '2024-07-29 06:21:31', '2024-07-29 06:24:05', '2024-07-29 06:24:05'),
+(9, 1, 1, 1, NULL, NULL, '1100', 'Baby Care', 1, 0, '2024-07-29 06:24:05', '2024-07-29 06:24:05', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking_invoice`
+--
+
+CREATE TABLE `booking_invoice` (
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) DEFAULT NULL,
+  `inv_no` text DEFAULT NULL,
+  `file` text DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `added_by` int(11) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `booking_invoice`
+--
+
+INSERT INTO `booking_invoice` (`id`, `booking_id`, `inv_no`, `file`, `start_date`, `end_date`, `added_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 1, 'INV202411', '1722510427_invoice.pdf', '2024-07-18', '2024-07-20', 1, '2024-08-01 05:37:04', '2024-08-01 05:37:07', NULL),
+(3, 1, 'INV202412', '1722510778_invoice.pdf', '2024-07-18', '2024-07-23', 1, '2024-08-01 05:42:56', '2024-08-01 05:42:58', NULL);
 
 -- --------------------------------------------------------
 
@@ -438,7 +456,7 @@ INSERT INTO `cities` (`id`, `name`, `state_id`, `status`, `created_at`, `updated
 (122, 'West Delhi', 25, 1, NULL, NULL, NULL),
 (123, 'North Goa', 26, 1, NULL, NULL, NULL),
 (124, 'South Goa', 26, 1, NULL, NULL, NULL),
-(125, 'Ahmedabad', 5, 1, NULL, NULL, NULL),
+(125, 'Ahmedabad', 5, 1, NULL, '2024-07-22 06:06:50', NULL),
 (126, 'Amreli District', 5, 1, NULL, NULL, NULL),
 (127, 'Anand', 5, 1, NULL, NULL, NULL),
 (128, 'Banaskantha', 5, 1, NULL, NULL, NULL),
@@ -946,7 +964,7 @@ CREATE TABLE `corporate` (
 INSERT INTO `corporate` (`id`, `name`, `address`, `city`, `state`, `area`, `mobile1`, `mobile2`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'Test Corporate', '6006 Kunze Heights', '125', '5', '19', '6740206713', '6740206713', '2024-06-04 00:16:06', '2024-06-07 06:28:40', NULL),
 (2, 'Gage Odom', 'Ad ut placeat maxim', '125', '5', '7', '2222222222', '1111111111', '2024-06-04 08:03:16', '2024-07-16 01:09:41', '2024-07-16 01:09:41'),
-(3, 'Aline Woods', 'Debitis ipsum praese', '133', '5', '1', '1111111111', '2222222222', '2024-06-04 08:04:09', '2024-06-07 06:28:11', NULL),
+(3, 'Aline Woods', '708, Shail Heights, testing testing long address 12345 addressingggg.. ..... .... test.... FF-2, 1ST Floor Block A in Malabar County -2,  Nirma University cirket ground,  off SG road Chhatrodi, Ahmedabad.', '133', '5', '1', '1111111111', '2222222222', '2024-06-04 08:04:09', '2024-07-24 01:49:55', NULL),
 (4, 'Timothy Rodriquez', 'Omnis aut magni aut dddddddd dwdqwv vqwfvv eqvewv eqdvefs edfeqffef eqfefewffv e', '125', '5', '8', '2222222222', '2222222222', '2024-06-04 08:07:05', '2024-06-14 06:56:51', NULL),
 (5, 'Calista Dooley', '6006 Kunze Heights', '125', '5', '18', '6740206713', NULL, '2024-06-12 05:02:23', '2024-07-11 05:57:03', NULL);
 
@@ -981,6 +999,7 @@ CREATE TABLE `doctor` (
   `day_cost` int(20) DEFAULT NULL,
   `night_cost` int(20) DEFAULT NULL,
   `full_cost` int(20) DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1 COMMENT '0=inactive, 1=active',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -990,9 +1009,9 @@ CREATE TABLE `doctor` (
 -- Dumping data for table `doctor`
 --
 
-INSERT INTO `doctor` (`id`, `doctor_id`, `name`, `email`, `mobile`, `address`, `state`, `city`, `area`, `gender`, `age`, `dob`, `doj`, `experience`, `reference`, `qualification`, `specification`, `bank_name`, `branch`, `ifsc_code`, `acc_no`, `day_cost`, `night_cost`, `full_cost`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'DHCD202401', 'Dr. Kartik Bhavsar', 'kartikbhavsar1757@gmail.com', '8141614389', '350, Kotfali, Nr. Jain Derasar, Pethapur', '5', '133', '1', 'Male', '25', '2000-03-14', '2024-05-23', '0.5', NULL, NULL, NULL, 'BOB', 'Gandhinagar', 'KBSH123', 'BOB123456', 600, 800, 2000, '2024-05-24 04:40:40', '2024-06-16 23:45:43', NULL),
-(2, 'DHCD202402', 'Kartik Bhavsar', 'kartik.budtech@gmail.com', '8141614389', NULL, '5', '133', '2', 'Male', NULL, NULL, NULL, '2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 500, 500, 1000, '2024-07-11 05:39:30', '2024-07-11 05:39:30', NULL);
+INSERT INTO `doctor` (`id`, `doctor_id`, `name`, `email`, `mobile`, `address`, `state`, `city`, `area`, `gender`, `age`, `dob`, `doj`, `experience`, `reference`, `qualification`, `specification`, `bank_name`, `branch`, `ifsc_code`, `acc_no`, `day_cost`, `night_cost`, `full_cost`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'DHCD202401', 'Dr. Kartik Bhavsar', 'kartikbhavsar1757@gmail.com', '8141614389', '350, Kotfali, Nr. Jain Derasar, Pethapur', '5', '133', '1', 'Male', '25', '2000-03-14', '2024-05-23', '0.5', NULL, NULL, NULL, 'BOB', 'Gandhinagar', 'KBSH123', 'BOB123456', 600, 800, 2000, 1, '2024-05-24 04:40:40', '2024-06-16 23:45:43', NULL),
+(2, 'DHCD202402', 'Kartik Bhavsar', 'kartik.budtech@gmail.com', '8141614389', NULL, '5', '133', '2', 'Male', NULL, NULL, NULL, '2', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 500, 500, 1000, 0, '2024-07-11 05:39:30', '2024-07-23 05:10:02', NULL);
 
 -- --------------------------------------------------------
 
@@ -1006,6 +1025,7 @@ CREATE TABLE `equipment` (
   `type` text DEFAULT NULL,
   `cost_price` bigint(20) NOT NULL,
   `sell_price` bigint(20) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT 1 COMMENT '0=inactive, 1=active',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -1015,16 +1035,13 @@ CREATE TABLE `equipment` (
 -- Dumping data for table `equipment`
 --
 
-INSERT INTO `equipment` (`id`, `name`, `type`, `cost_price`, `sell_price`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'Anesthesia', 'Sale', 255, 255, '2024-05-14 04:11:04', '2024-06-14 06:07:23', NULL),
-(2, 'Bradley Wong', NULL, 260, 775, '2024-05-14 04:21:04', '2024-05-14 04:21:10', '2024-05-14 04:21:10'),
-(3, 'Ventilator', 'Rent', 12000, 2000, '2024-05-14 04:24:29', '2024-06-14 06:07:09', NULL),
-(4, 'Oximeter', 'Sale', 750, 900, '2024-05-14 04:25:20', '2024-06-14 06:07:02', NULL),
-(5, 'Thermometer', 'Sale', 430, 600, '2024-05-14 04:25:40', '2024-06-14 06:06:54', NULL),
-(6, 'Glucose meter', 'Sale', 820, 1200, '2024-05-14 04:26:44', '2024-06-14 06:06:40', NULL),
-(7, 'Ambulance', NULL, 0, 500, '2024-05-14 04:28:16', '2024-05-21 02:19:11', '2024-05-21 02:19:11'),
-(8, 'Test', 'Sale', 255, 400, '2024-06-14 06:05:58', '2024-06-14 06:06:31', '2024-06-14 06:06:31'),
-(9, 'Patient Bed', 'Rent', 5000, 500, '2024-06-14 06:07:58', '2024-06-14 06:07:58', NULL);
+INSERT INTO `equipment` (`id`, `name`, `type`, `cost_price`, `sell_price`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Anesthesia', 'Sale', 255, 255, 1, '2024-05-14 04:11:04', '2024-06-14 06:07:23', NULL),
+(3, 'Ventilator', 'Rent', 12000, 2000, 1, '2024-05-14 04:24:29', '2024-06-14 06:07:09', NULL),
+(4, 'Oximeter', 'Sale', 750, 900, 1, '2024-05-14 04:25:20', '2024-06-14 06:07:02', NULL),
+(5, 'Thermometer', 'Sale', 430, 600, 1, '2024-05-14 04:25:40', '2024-06-14 06:06:54', NULL),
+(6, 'Glucose meter', 'Sale', 820, 1200, 1, '2024-05-14 04:26:44', '2024-07-23 05:34:20', NULL),
+(9, 'Patient Bed', 'Rent', 5000, 500, 1, '2024-06-14 06:07:58', '2024-07-23 05:37:38', NULL);
 
 -- --------------------------------------------------------
 
@@ -1065,7 +1082,7 @@ CREATE TABLE `hospital` (
 
 INSERT INTO `hospital` (`id`, `name`, `address`, `mobile1`, `mobile2`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'Life Care - Stadium', 'Sardar Patel Statue Cir, Nathalal Colony, Naranpura, Ahmedabad, Gujarat 380014', '1234567890', '0987654321', '2024-05-15 06:36:39', '2024-05-31 10:19:23', NULL),
-(2, 'Testtttinggggg', '350, Kotfali,jjjjjjjjj', '2222222222', '2222222222', '2024-05-15 06:37:50', '2024-05-15 06:38:09', NULL),
+(2, 'Testtttinggggg', '350, Kotfali,jjjjjjjjj', '2222222222', '2222222222', '2024-05-15 06:37:50', '2024-07-22 02:43:24', '2024-07-22 02:43:24'),
 (3, 'Shalby Hospital', 'Haridarshan cross road, Nr. Airport', '1232455612', '1236541236', '2024-05-31 08:02:00', '2024-05-31 08:02:00', NULL);
 
 -- --------------------------------------------------------
@@ -1144,7 +1161,7 @@ INSERT INTO `patient` (`id`, `patient_id`, `h_type`, `name`, `dob`, `age`, `gend
 (8, 'DHCP202408', 'DHC', 'Rai', NULL, '26', 'Female', '789, Utkarsh apartment', '5', '125', '6', '6324857123', NULL, NULL, NULL, '2024-05-31 11:15:41', '2024-06-06 09:57:34', NULL),
 (9, 'DHCP202409', 'Life Care - Stadium', 'Rahul', NULL, '45', 'Male', '303 , Arcade city, River front', '5', '125', '8', '7752762000', NULL, NULL, NULL, '2024-05-31 11:16:59', '2024-06-06 09:57:26', NULL),
 (10, 'DHCP202410', 'DHC', 'Jenul', NULL, '28', 'Male', '303, The pearl, High Street', '5', '125', '9', '8974562580', NULL, NULL, NULL, '2024-05-31 11:18:32', '2024-06-06 09:57:08', NULL),
-(11, 'DHCP202411', 'DHC', 'Rahil', NULL, '58', 'Male', '708, Shail Heights', '5', '125', '19', '8874125896', NULL, NULL, NULL, '2024-05-31 11:19:52', '2024-06-18 07:43:00', NULL),
+(11, 'DHCP202411', 'DHC', 'Rahil', NULL, '58', 'Male', '708, Shail Heights, testing testing long address 12345 addressingggg.. ..... .... test.... FF-2, 1ST Floor Block A in Malabar County -2,  Nirma University cirket ground,  off SG road Chhatrodi, Ahmedabad.', '5', '125', '19', '8874125896', NULL, 'kartik.budtech@gmail.com', NULL, '2024-05-31 11:19:52', '2024-08-01 05:49:55', NULL),
 (12, 'DHCP202412', 'Life Care - Stadium', 'Sajid', NULL, '30', 'Male', '576, Opp. NABARD Tower', '5', '125', '9', '8457963214', '5555555555', 'Mukesh.budtech@gmail.com', NULL, '2024-05-31 11:21:24', '2024-06-23 23:46:25', NULL),
 (13, 'DHCP202413', 'DHC', 'Hiren', NULL, NULL, 'Male', '576, Beside MY MY store', '5', '125', '5', '7258964122', NULL, NULL, NULL, '2024-05-31 11:23:29', '2024-07-16 01:00:42', '2024-07-16 01:00:42'),
 (14, 'DHCP202414', 'Life Care - Stadium', 'Calista Dooley', '2024-06-11', '13', 'Female', '6006 Kunze Heights', '5', '125', '19', '6740206713', NULL, 'r1@gmail.com', NULL, '2024-06-12 06:47:51', '2024-06-12 06:48:18', '2024-06-12 06:48:18');
@@ -1188,7 +1205,8 @@ CREATE TABLE `roles` (
 
 INSERT INTO `roles` (`id`, `name`, `permission`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'Super Admin', '[\"dashboard\",\"dhc_dashboard\",\"hsp_dashboard\",\"crp_dashboard\",\"analytics\",\"create_booking\",\"bookings\",\"closed_bookings\",\"assign_bookings\",\"staff_attendance\",\"booking_reviews\",\"active_invoice\",\"closed_invoice\",\"salary\",\"advance_salary\",\"staff\",\"doctors\",\"patients\",\"corporates\",\"users\",\"roles\",\"staff_salary_report\",\"paused_booking_report\",\"hospitals\",\"shifts\",\"equipments\",\"ambulance\",\"staff_type\",\"states\",\"cities\",\"area\"]', '2024-05-10 13:05:29', '2024-07-10 23:54:00', NULL),
-(2, 'Admin', '[\"bookings\",\"assign_bookings\",\"staff_attendance\",\"advance_salary\",\"staff\",\"doctors\",\"patients\",\"corporates\",\"hospitals\",\"shifts\",\"equipments\",\"ambulance\",\"staff_type\",\"states\",\"cities\",\"area\"]', '2024-05-10 07:47:32', '2024-06-19 04:07:15', NULL);
+(2, 'Admin', '[\"bookings\",\"assign_bookings\",\"staff_attendance\",\"advance_salary\",\"staff\",\"doctors\",\"patients\",\"corporates\",\"hospitals\",\"shifts\",\"equipments\",\"ambulance\",\"staff_type\",\"states\",\"cities\",\"area\"]', '2024-05-10 07:47:32', '2024-06-19 04:07:15', NULL),
+(7, 'Kartik Bhavsar', '[\"dhc_dashboard\"]', '2024-07-23 00:30:09', '2024-07-23 00:35:07', '2024-07-23 00:35:07');
 
 -- --------------------------------------------------------
 
@@ -1251,6 +1269,7 @@ CREATE TABLE `staff` (
   `reference` text DEFAULT NULL,
   `qualification` text DEFAULT NULL,
   `specification` text DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1 COMMENT '0=inactive, 1=active',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -1260,23 +1279,23 @@ CREATE TABLE `staff` (
 -- Dumping data for table `staff`
 --
 
-INSERT INTO `staff` (`id`, `staff_id`, `f_name`, `m_name`, `l_name`, `password`, `type`, `email`, `mobile`, `mobile2`, `dob`, `gender`, `address`, `state`, `city`, `area`, `bank_name`, `branch`, `ifsc_code`, `acc_no`, `day_cost`, `night_cost`, `full_cost`, `age`, `doj`, `experience`, `reference`, `qualification`, `specification`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'DHCS202401', 'Kartik', 'Rajendrakumar', 'Bhavsar', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'kartikbhavsar1757@gmail.com', '8141614389', NULL, '2000-03-14', 'Male', '350, Kotfali, Nr. Jain Derasar, Pethapur', '5', '125', '7', 'BOB', 'Gandhinagar', 'KBSH123', 'BOB123456', 500, 500, 1000, '25', '2024-05-24', '2.5', NULL, 'B.E Greduate', NULL, '2024-05-24 04:36:13', '2024-05-31 11:53:01', '2024-05-31 11:53:01'),
-(2, 'DHCS202402', 'Hyacinth', 'Lars', 'Samuel', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'jery@mailinator.com', '5555555555', NULL, '2024-05-01', 'Male', 'Iste quasi laboriosa', '5', '125', '8', 'Yen Shelton', 'Autem culpa magna na', 'Molestiae ut consect', 'Facilis asperiores c', 600, 600, 1200, '31', '2024-05-27', '2', 'Dolorem ex ut nisi i', 'Qui id exercitation', 'Animi totam velit', '2024-05-27 00:24:35', '2024-05-27 00:50:34', NULL),
-(3, 'DHCS202403', 'ANJU', NULL, 'BEN', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'anju.budtech@gmail.com', '7990161705', NULL, '2022-05-01', 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '9', 'BOI', 'Ashramraoad', 'BOIB47851', '8444484487871', 1000, 1500, 2000, '26', '2024-05-01', '5', NULL, NULL, NULL, '2024-05-31 10:15:32', '2024-05-31 10:15:49', '2024-05-31 10:15:49'),
-(4, 'DHCS202404', 'ANJU', NULL, 'BEN', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'anju.budtech@gmail.com', '7990161705', NULL, '2022-05-01', 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '9', 'BOI', 'Ashramraoad', 'BOIB47851', '8444484487871', 1000, 1500, 2000, '26', '2024-05-01', '5', NULL, NULL, NULL, '2024-05-31 10:15:39', '2024-05-31 10:15:39', NULL),
-(5, 'DHCS202405', 'JIGNESH', NULL, 'BATOT', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 1, 'jinesh.budtech@gmail.com', '6367964951', NULL, NULL, 'Male', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '5', 'BOI', 'usmanpura', 'BOIB47851', '783584487871', 1500, 1500, 2000, '29', '2024-05-09', '15', NULL, NULL, NULL, '2024-05-31 10:23:20', '2024-06-18 00:26:37', NULL),
-(6, 'DHCS202406', 'MUKESH', NULL, 'KUMAR', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 1, 'Mukesh.budtech@gmail.com', '6367967862', NULL, NULL, 'Male', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '6', 'BOI', 'usmanpura', 'BOIB47851', '725484487871', 1000, NULL, 0, '29', '2024-02-01', '15', NULL, NULL, NULL, '2024-05-31 10:25:14', '2024-07-16 05:21:07', NULL),
-(7, 'DHCS202407', 'ANISHA', NULL, 'GAMETI', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 4, NULL, '9638480848', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '18', 'BOI', 'Himmat Nagar', 'BOIB47851', '8444484487871', 1000, 2500, 3000, NULL, '2022-05-01', '7', '10th', NULL, NULL, '2024-05-31 10:42:22', '2024-06-26 05:17:07', NULL),
-(8, 'DHCS202408', 'DIPIKABEN', NULL, NULL, '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 4, NULL, '7869686852', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '19', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 1500, 1800, NULL, '2024-03-07', '3', NULL, NULL, NULL, '2024-05-31 10:44:25', '2024-05-31 10:46:14', NULL),
-(9, 'DHCS202409', 'VEENA', 'BEN', 'YADAV', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 4, 'veenayadav.budtech@gmail.com', '7624049852', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '9', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 1000, 2800, NULL, '2024-01-04', '7', NULL, NULL, NULL, '2024-05-31 10:52:57', '2024-06-16 23:37:04', NULL),
-(10, 'DHCS202410', 'URMILA', 'BEN', 'DEVI', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'urmila.budtech@gmail.com', '6375604700', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '19', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 2100, 2800, NULL, '2024-05-01', '7', NULL, NULL, NULL, '2024-05-31 10:55:15', '2024-05-31 10:55:15', NULL),
-(11, 'DHCS202411', 'VARSHA', 'BEN', 'GAMETHI', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'Varsha.budtech@gmail.com', '9328233006', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '20', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 2100, 2800, NULL, '2024-01-30', '7', NULL, NULL, NULL, '2024-05-31 10:59:40', '2024-05-31 10:59:40', NULL),
-(12, 'DHCS202412', 'tinkal', 'Rajendrakumar', 'bhavsar', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 4, 'kartikbhavsar1757@gmail.com', '8141614389', NULL, '1967-04-03', 'Female', '350,kotfali, Nr. jain derasar, pethapur', '5', '133', '1', 'BOB', 'Gandhinagar', 'KBSH123', 'BOB123456', 500, 500, 1000, '45', '2024-06-06', '2', NULL, NULL, NULL, '2024-06-07 01:59:44', '2024-06-07 01:59:44', NULL),
-(13, 'DHCS202413', 'Hamilton', 'Katelyn', 'Cherokee', '$2y$12$ZQpO5pZA1nJfagFtS5Tt1Ojboj5GD7UG00jbK7y1UbbHfIKPGjNji', 5, 'nimukeku@mailinator.com', '5555555555', NULL, NULL, 'Male', 'Distinctio Similiqu', '5', '125', '18', 'Oleg Olsen', 'Aut similique in mol', 'Officia quisquam dol', 'Ducimus sit sed an', 700, 700, 1400, '23', '2024-06-10', '2', 'Nostrud velit volupt', 'Aut vel iste quaerat', 'Nihil tempor ut labo', '2024-06-17 07:10:36', '2024-06-17 07:10:36', NULL),
-(14, 'DHCS202414', 'Cole', 'Hermione', 'Maris', '$2y$12$fnjTvCuEE7w1Z3GPd2zHy.YtfIDxerV3nNgzepXVGXf.dUcxGY8Ku', 1, 'cole@gmail.com', '5555555555', NULL, '1984-06-13', 'Male', 'Qui explicabo Maior', '5', '125', '5', 'Whilemina Haynes', 'Nam est in quas aliq', 'Aut dolor accusamus', 'Sed qui in ipsum con', 500, 500, 1000, '48', '2024-06-01', '2.3', 'Qui rerum elit et e', 'Irure laborum At ni', 'Hic ab eius esse so', '2024-06-19 02:18:34', '2024-06-19 02:18:34', NULL),
-(15, 'DHCS202415', 'Channing', 'Nola', NULL, '$2y$12$wNqudhUex6ND/gzfP//dR.HfloZ/lNXvpyG5SmBrVJY6Hw83d/43e', 4, 'tevoci@mailinator.com', '1111111111', '2222222222', NULL, 'Male', 'Voluptate molestiae', '5', '125', '9', 'Maisie Kelly', 'Pariatur Dolor sed', 'Architecto magna rei', 'Libero mollitia accu', 500, 5000, NULL, '33', '2024-06-17', '2', 'Ut proident praesen', 'Aliquip beatae quos', 'Qui consequatur sit', '2024-06-24 01:33:30', '2024-07-16 01:22:19', '2024-07-16 01:22:19'),
-(16, 'DHCS202416', 'Veda', 'Quyn', 'Karly', '$2y$12$4CGxvItrZz2q7VD/4u1LAuEaMnc8h8GlwHfpKnP4P3tf.iP06ElR6', 1, 'vimi@mailinator.com', NULL, NULL, NULL, 'Male', 'Qui ea qui repudiand', '5', '125', '8', 'Graiden Drake', 'Qui nihil similique', 'Qui enim esse volup', 'Maxime ad ex ad alia', 1000, 1200, 1500, '32', '2024-07-12', '64', 'Et rem ea ad eum ani', 'Fugiat expedita et p', 'Quibusdam fugiat mo', '2024-07-12 04:25:30', '2024-07-12 07:28:59', NULL);
+INSERT INTO `staff` (`id`, `staff_id`, `f_name`, `m_name`, `l_name`, `password`, `type`, `email`, `mobile`, `mobile2`, `dob`, `gender`, `address`, `state`, `city`, `area`, `bank_name`, `branch`, `ifsc_code`, `acc_no`, `day_cost`, `night_cost`, `full_cost`, `age`, `doj`, `experience`, `reference`, `qualification`, `specification`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'DHCS202401', 'Kartik', 'Rajendrakumar', 'Bhavsar', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'kartikbhavsar1757@gmail.com', '8141614389', NULL, '2000-03-14', 'Male', '350, Kotfali, Nr. Jain Derasar, Pethapur', '5', '125', '7', 'BOB', 'Gandhinagar', 'KBSH123', 'BOB123456', 500, 500, 1000, '25', '2024-05-24', '2.5', NULL, 'B.E Greduate', NULL, 1, '2024-05-24 04:36:13', '2024-05-31 11:53:01', '2024-05-31 11:53:01'),
+(2, 'DHCS202402', 'Hyacinth', 'Lars', 'Samuel', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'jery@mailinator.com', '5555555555', NULL, '2024-05-01', 'Male', 'Iste quasi laboriosa', '5', '125', '8', 'Yen Shelton', 'Autem culpa magna na', 'Molestiae ut consect', 'Facilis asperiores c', 600, 600, 1200, '31', '2024-05-27', '2', 'Dolorem ex ut nisi i', 'Qui id exercitation', 'Animi totam velit', 1, '2024-05-27 00:24:35', '2024-07-23 05:02:58', NULL),
+(3, 'DHCS202403', 'ANJU', NULL, 'BEN', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'anju.budtech@gmail.com', '7990161705', NULL, '2022-05-01', 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '9', 'BOI', 'Ashramraoad', 'BOIB47851', '8444484487871', 1000, 1500, 2000, '26', '2024-05-01', '5', NULL, NULL, NULL, 1, '2024-05-31 10:15:32', '2024-05-31 10:15:49', '2024-05-31 10:15:49'),
+(4, 'DHCS202404', 'ANJU', NULL, 'BEN', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'anju.budtech@gmail.com', '7990161705', NULL, '2022-05-01', 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '9', 'BOI', 'Ashramraoad', 'BOIB47851', '8444484487871', 1000, 1500, 2000, '26', '2024-05-01', '5', NULL, NULL, NULL, 1, '2024-05-31 10:15:39', '2024-07-23 05:19:35', NULL),
+(5, 'DHCS202405', 'JIGNESH', NULL, 'BATOT', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 1, 'jinesh.budtech@gmail.com', '6367964951', NULL, NULL, 'Male', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '5', 'BOI', 'usmanpura', 'BOIB47851', '783584487871', 1500, 1500, 2000, '29', '2024-05-09', '15', NULL, NULL, NULL, 1, '2024-05-31 10:23:20', '2024-06-18 00:26:37', NULL),
+(6, 'DHCS202406', 'MUKESH', NULL, 'KUMAR', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 1, 'Mukesh.budtech@gmail.com', '6367967862', NULL, NULL, 'Male', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '6', 'BOI', 'usmanpura', 'BOIB47851', '725484487871', 1000, NULL, 0, '29', '2024-02-01', '15', NULL, NULL, NULL, 1, '2024-05-31 10:25:14', '2024-07-16 05:21:07', NULL),
+(7, 'DHCS202407', 'ANISHA', NULL, 'GAMETI', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 4, NULL, '9638480848', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '18', 'BOI', 'Himmat Nagar', 'BOIB47851', '8444484487871', 1000, 2500, 3000, NULL, '2022-05-01', '7', '10th', NULL, NULL, 1, '2024-05-31 10:42:22', '2024-06-26 05:17:07', NULL),
+(8, 'DHCS202408', 'DIPIKABEN', NULL, NULL, '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 4, NULL, '7869686852', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '19', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 1500, 1800, NULL, '2024-03-07', '3', NULL, NULL, NULL, 1, '2024-05-31 10:44:25', '2024-05-31 10:46:14', NULL),
+(9, 'DHCS202409', 'VEENA', 'BEN', 'YADAV', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 4, 'veenayadav.budtech@gmail.com', '7624049852', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '9', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 1000, 2800, NULL, '2024-01-04', '7', NULL, NULL, NULL, 1, '2024-05-31 10:52:57', '2024-06-16 23:37:04', NULL),
+(10, 'DHCS202410', 'URMILA', 'BEN', 'DEVI', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'urmila.budtech@gmail.com', '6375604700', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '19', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 2100, 2800, NULL, '2024-05-01', '7', NULL, NULL, NULL, 1, '2024-05-31 10:55:15', '2024-07-22 01:45:49', NULL),
+(11, 'DHCS202411', 'VARSHA', 'BEN', 'GAMETHI', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 2, 'Varsha.budtech@gmail.com', '9328233006', NULL, NULL, 'Female', '303 Vedanta, Opp. Oosmanpura Garden', '5', '125', '20', 'BOI', 'Memnagar', 'BOIB47851', '8444484487871', 1000, 2100, 2800, NULL, '2024-01-30', '7', NULL, NULL, NULL, 1, '2024-05-31 10:59:40', '2024-05-31 10:59:40', NULL),
+(12, 'DHCS202412', 'tinkal', 'Rajendrakumar', 'bhavsar', '$2y$12$vQC5JqC6jbPjY2fAAJrJLevoRI3axHCWv10esdV.Cg8fI741C8Eru', 4, 'kartikbhavsar1757@gmail.com', '8141614389', NULL, '1967-04-03', 'Female', '350,kotfali, Nr. jain derasar, pethapur', '5', '133', '1', 'BOB', 'Gandhinagar', 'KBSH123', 'BOB123456', 500, 500, 1000, '45', '2024-06-06', '2', NULL, NULL, NULL, 1, '2024-06-07 01:59:44', '2024-07-23 04:46:28', NULL),
+(13, 'DHCS202413', 'Hamilton', 'Katelyn', 'Cherokee', '$2y$12$ZQpO5pZA1nJfagFtS5Tt1Ojboj5GD7UG00jbK7y1UbbHfIKPGjNji', 5, 'nimukeku@mailinator.com', '5555555555', NULL, NULL, 'Male', 'Distinctio Similiqu', '5', '125', '18', 'Oleg Olsen', 'Aut similique in mol', 'Officia quisquam dol', 'Ducimus sit sed an', 700, 700, 1400, '23', '2024-06-10', '2', 'Nostrud velit volupt', 'Aut vel iste quaerat', 'Nihil tempor ut labo', 1, '2024-06-17 07:10:36', '2024-06-17 07:10:36', NULL),
+(14, 'DHCS202414', 'Cole', 'Hermione', 'Maris', '$2y$12$fnjTvCuEE7w1Z3GPd2zHy.YtfIDxerV3nNgzepXVGXf.dUcxGY8Ku', 1, 'cole@gmail.com', '5555555555', NULL, '1984-06-13', 'Male', 'Qui explicabo Maior', '5', '125', '5', 'Whilemina Haynes', 'Nam est in quas aliq', 'Aut dolor accusamus', 'Sed qui in ipsum con', 500, 500, 1000, '48', '2024-06-01', '2.3', 'Qui rerum elit et e', 'Irure laborum At ni', 'Hic ab eius esse so', 1, '2024-06-19 02:18:34', '2024-07-23 05:01:22', NULL),
+(15, 'DHCS202415', 'Channing', 'Nola', NULL, '$2y$12$wNqudhUex6ND/gzfP//dR.HfloZ/lNXvpyG5SmBrVJY6Hw83d/43e', 4, 'tevoci@mailinator.com', '1111111111', '2222222222', NULL, 'Male', 'Voluptate molestiae', '5', '125', '9', 'Maisie Kelly', 'Pariatur Dolor sed', 'Architecto magna rei', 'Libero mollitia accu', 500, 5000, NULL, '33', '2024-06-17', '2', 'Ut proident praesen', 'Aliquip beatae quos', 'Qui consequatur sit', 1, '2024-06-24 01:33:30', '2024-07-16 01:22:19', '2024-07-16 01:22:19'),
+(16, 'DHCS202416', 'Veda', 'Quyn', 'Karly', '$2y$12$4CGxvItrZz2q7VD/4u1LAuEaMnc8h8GlwHfpKnP4P3tf.iP06ElR6', 1, 'vimi@mailinator.com', NULL, NULL, NULL, 'Male', 'Qui ea qui repudiand', '5', '125', '8', 'Graiden Drake', 'Qui nihil similique', 'Qui enim esse volup', 'Maxime ad ex ad alia', 1000, 1200, 1500, '32', '2024-07-12', '64', 'Et rem ea ad eum ani', 'Fugiat expedita et p', 'Quibusdam fugiat mo', 1, '2024-07-12 04:25:30', '2024-07-23 04:46:32', NULL);
 
 -- --------------------------------------------------------
 
@@ -1470,6 +1489,12 @@ ALTER TABLE `booking_details`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `booking_invoice`
+--
+ALTER TABLE `booking_invoice`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `booking_payments`
 --
 ALTER TABLE `booking_payments`
@@ -1626,13 +1651,19 @@ ALTER TABLE `bookings`
 -- AUTO_INCREMENT for table `booking_assign`
 --
 ALTER TABLE `booking_assign`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `booking_details`
 --
 ALTER TABLE `booking_details`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `booking_invoice`
+--
+ALTER TABLE `booking_invoice`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `booking_payments`
@@ -1668,7 +1699,7 @@ ALTER TABLE `doctor`
 -- AUTO_INCREMENT for table `equipment`
 --
 ALTER TABLE `equipment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -1704,7 +1735,7 @@ ALTER TABLE `personal_access_tokens`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `shift`
