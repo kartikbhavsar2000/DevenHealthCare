@@ -69,7 +69,7 @@
       $permissions = Auth::user() ? Auth::user()->permissions() : [];
   @endphp
 
-  @if(!in_array('dashboard',$permissions))
+  @if(!in_array('crp_dashboard',$permissions))
   <div class="col-12">
     <div class="card">
       <div class="d-flex align-items-end row">

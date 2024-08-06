@@ -462,7 +462,7 @@ class MenuController extends Controller
     }
     public function update_staff(Request $request)
     {
-        $checkStaff = Staff::where(['f_name'=>$request->f_name,'m_name'=>$request->m_name,'l_name'=>$request->l_name])->first();
+        $checkStaff = Staff::where('id','!=',$request->id)->where(['f_name'=>$request->f_name,'m_name'=>$request->m_name,'l_name'=>$request->l_name])->first();
         if($checkStaff){
             return redirect()->back()->with('error','The Staff is already exist');
         }

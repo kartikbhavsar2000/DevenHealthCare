@@ -80,6 +80,8 @@ class BookingController extends Controller
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
+            $booking_amount_diffrence = BookingAssign::where('is_cancled',0)->where('type','!=','Doctor')->where('status','!=',1)->where(['booking_id'=>$da->id,'att_marked'=>0])->sum('sell_rate');
+            $da->booking_amount_diffrence = $booking_amount_diffrence;
         }
         return response()->json(['data'=>$data]);
     }
@@ -96,6 +98,8 @@ class BookingController extends Controller
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
+            $booking_amount_diffrence = BookingAssign::where('is_cancled',0)->where('type','!=','Doctor')->where('status','!=',1)->where(['booking_id'=>$da->id,'att_marked'=>0])->sum('sell_rate');
+            $da->booking_amount_diffrence = $booking_amount_diffrence;
         }
         return response()->json(['data'=>$data]);
     }

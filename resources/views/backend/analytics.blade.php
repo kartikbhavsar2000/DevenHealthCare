@@ -69,6 +69,220 @@
     </div>
   <!--/ Card Border Shadow -->
 
+    <div class="col-12 col-lg-4 col-md-4">
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="card-title m-0 me-2">DHC</h5>
+                {{-- <div class="dropdown">
+                    <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-1 waves-effect waves-light" type="button" id="transactionID" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ri-more-2-line ri-20px"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="transactionID" style="">
+                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
+                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
+                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
+                    </div>
+                </div> --}}
+            </div>
+            <div class="card-body">
+                <ul class="p-0 m-0">
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4 col-md-4">
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="card-title m-0 me-2">HSP</h5>
+                <div class="dropdown">
+                    <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-1 waves-effect waves-light" type="button" id="transactionID" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ri-more-2-line ri-20px"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="transactionID" style="">
+                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
+                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
+                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="p-0 m-0">
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4 col-md-4">
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="card-title m-0 me-2">CRP</h5>
+                <div class="dropdown">
+                    <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-1 waves-effect waves-light" type="button" id="transactionID" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="ri-more-2-line ri-20px"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="transactionID" style="">
+                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
+                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
+                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <ul class="p-0 m-0">
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center pb-2">
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-1">Credit Card</h6>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <h6 class="mb-0">85</h6>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
   <!-- Vehicles overview -->
   <div class="col-lg-6 col-xxl-6 order-3 order-xxl-1">
     <div class="card">

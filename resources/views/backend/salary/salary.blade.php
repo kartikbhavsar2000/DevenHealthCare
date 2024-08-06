@@ -71,7 +71,7 @@
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label class="form-label" for="weekselector">Select Weeks <span class="text-danger">*</span></label>
+                                <label class="form-label" for="weekselector">Select Date Range <span class="text-danger">*</span></label>
                                 <select class="form-control" id="weekselector" name="weeks[]" multiple="multiple"></select>
                                 <div id="weeksError" class="text-danger"></div>
                             </div>

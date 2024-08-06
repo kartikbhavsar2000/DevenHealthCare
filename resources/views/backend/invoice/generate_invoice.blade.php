@@ -264,7 +264,7 @@
         <div class="card">
             <h5 class="card-header"><i class="ri-file-list-3-line ri-22px"></i>&nbsp;Invoice History</h5>
             <div class="card-body">
-                <table class="kt_datatable table table-row-bordered table-row-gray-300" style="margin-bottom: 0px!important">
+                <table class="kt_datatable_inv table table-row-bordered table-row-gray-300" style="margin-bottom: 0px!important">
                     <thead>
                         <tr>
                         <th>Sr No.</th>
@@ -529,6 +529,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
 <script>
+    $('.kt_datatable_inv').DataTable({
+        columnDefs: [{
+            "defaultContent": "-",
+            "targets": "_all",
+        }],
+    });
     $('.kt_datatable').DataTable({
         dom:'',
         columnDefs: [{
@@ -766,6 +772,8 @@
     }
 
     function StoreInvoice(id) {
+        $("#loader").fadeOut("slow");
+        $("#DATAAA").fadeIn("slow");
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('p', 'mm', 'a4');
 
@@ -833,6 +841,8 @@
 
 
     function submit(id){
+        $("#loader").fadeIn("slow");
+        $("#DATAAA").fadeOut("slow");
         var startDate = $('#BookingStartDate').val();
         var endDate = $('#BookingEndDate').val();
         if (!startDate) {
@@ -884,13 +894,18 @@
                     $('#grand-sub-total').text('₹' + grandTotal.toLocaleString());
                     $('#grand-total').text('₹' + grandTotal.toLocaleString());
                     $('#InvoicePreview').removeClass('d-none');
+                    
                     if(invoice != null){
                         $('#INV_NO').text(invoice.inv_no);
                         setTimeout(function() 
                         {
+                            $("#loader").fadeIn("slow");
+                            $("#DATAAA").fadeOut("slow");
                             StoreInvoice(invoice.id);
                         }, 1000);
                     }else{
+                        $("#loader").fadeOut("slow");
+                        $("#DATAAA").fadeIn("slow");
                         $('#InvoicePreview').addClass('d-none');
                         Swal.fire({
                             title: 'Error!',

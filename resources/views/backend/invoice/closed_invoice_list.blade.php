@@ -48,6 +48,7 @@
                             <th>End Date</th>
                             <th>Updated At</th>
                             <th>Closed By</th>
+                            <th>Amount Diffrence</th>
                             <th>Pending Amount</th>
                             <th>Total</th>
                             <th>Actions</th>
@@ -74,7 +75,7 @@
             extend: 'excel',
             title: 'Closed Invoice List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9]
+                columns: [1,2,3,4,5,6,7,8,9,10]
             }
         }],
         columnDefs: [{
@@ -167,8 +168,11 @@
                     return "-";
                 }
             }},
-            {"data": "pending_payment" , render : function ( data, type, row, meta ) {
+            {"data": "booking_amount_diffrence" , render : function ( data, type, row, meta ) {
                 return '₹'+ parseInt(data, 10).toLocaleString();
+            }},
+            {"data": "pending_payment" , render : function ( data, type, row, meta ) {
+                return '₹'+ parseInt(data - row.booking_amount_diffrence, 10).toLocaleString();
             }},
             {"data": "total" , render : function ( data, type, row, meta ) {
                 return '₹'+ parseInt(data, 10).toLocaleString();

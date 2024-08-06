@@ -161,6 +161,8 @@ class InvoiceController extends Controller
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
+            $booking_amount_diffrence = BookingAssign::where('is_cancled',0)->where('type','!=','Doctor')->where('status','!=',1)->where(['booking_id'=>$da->id,'att_marked'=>0])->sum('sell_rate');
+            $da->booking_amount_diffrence = $booking_amount_diffrence;
         }
         return response()->json(['data'=>$data]);
     }
@@ -170,6 +172,17 @@ class InvoiceController extends Controller
             return view('backend.invoice.closed_invoice_list');
         }
         abort(403);
+    }
+    public function get_closed_invoice_list()
+    {   
+        $data = Booking::where('booking_status',1)->with('closed_by')->orderBy('id',"DESC")->get();
+        foreach($data as $da){
+            $customer_details = $da->customerDetails();
+            $da->customer_details = $customer_details;
+            $booking_amount_diffrence = BookingAssign::where('is_cancled',0)->where('type','!=','Doctor')->where('status','!=',1)->where(['booking_id'=>$da->id,'att_marked'=>0])->sum('sell_rate');
+            $da->booking_amount_diffrence = $booking_amount_diffrence;
+        }
+        return response()->json(['data'=>$data]);
     }
     public function generate_invoice($id)
     {
@@ -190,15 +203,6 @@ class InvoiceController extends Controller
             return view('backend.invoice.generate_invoice',['booking_amount_diffrence' => $booking_amount_diffrence,'invoices' => $invoices,'booking' => $booking,'payments'=>$payments]);
         }
         abort(403);
-    }
-    public function get_closed_invoice_list()
-    {   
-        $data = Booking::where('booking_status',1)->with('closed_by')->orderBy('id',"DESC")->get();
-        foreach($data as $da){
-            $customer_details = $da->customerDetails();
-            $da->customer_details = $customer_details;
-        }
-        return response()->json(['data'=>$data]);
     }
     public function close_booking(Request $request)
     {   
@@ -223,12 +227,13 @@ class InvoiceController extends Controller
     public function store_invoice(Request $request)
     {
         if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $filePath = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('invoices'), $filePath);
-
             $invoice = Invoice::find($request->id);
             if ($invoice) {
+
+                $file = $request->file('file');
+                $filePath = $invoice->inv_no . ".pdf";
+                $file->move(public_path('invoices'), $filePath);
+            
                 $invoice->file = $filePath;
                 $invoice->update();
 
@@ -426,7 +431,8 @@ class InvoiceController extends Controller
             // Recipient and email details
             $to = $request->email;
             $subject = 'Your Invoice';
-            $message = 'See attached document.';
+            
+            $message = "Dear Sir,\r\n\r\nPlease find your invoice attached to this email.\r\n\r\nBest regards,\rDeven Health Care";
         
             // Generate a unique boundary string
             $boundary = md5(time());
