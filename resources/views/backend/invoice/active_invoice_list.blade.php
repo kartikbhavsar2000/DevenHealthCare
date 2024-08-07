@@ -48,7 +48,7 @@
                             <th>End Date</th>
                             <th>Created At</th>
                             <th>Added By</th>
-                            <th>Amount Diffrence</th>
+                            <th>Amount Difference</th>
                             <th>Pending Amount</th>
                             <th>Total</th>
                             <th>Status</th>

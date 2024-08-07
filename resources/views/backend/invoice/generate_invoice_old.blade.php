@@ -121,7 +121,7 @@
                             <div class="d-flex justify-content-between align-items-start ">
                                 <div>
                                     <h4 class="mb-0">₹{{number_format($booking_amount_diffrence) ?? "0"}}</h4>
-                                    <p class="mb-0">Diffrence Amount</p>
+                                    <p class="mb-0">Difference Amount</p>
                                 </div>
                                 <div class="avatar">
                                     <span class="avatar-initial rounded-3 bg-label-secondary">

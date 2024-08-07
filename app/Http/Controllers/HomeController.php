@@ -22,6 +22,7 @@ use App\Models\Ambulance;
 use Session;
 use Log;
 use Carbon\Carbon;
+use DB;
 
 class HomeController extends Controller
 {
@@ -204,7 +205,7 @@ class HomeController extends Controller
     public function get_dhc_dashboard_booking_data(Request $request){
         $allBookings = [];
 
-        Booking::whereIn('booking_status', [0, 2])
+        Booking::where('booking_type','!=','Corporate')->whereIn('booking_status', [0, 2])
             ->with('bookingAssigns', 'bookingDetails')
             ->where(function ($query) use ($request) {
                 $query->where('start_date', $request->date)
@@ -394,8 +395,186 @@ class HomeController extends Controller
             $corporate_count = Corporate::count();
             $booking_count = Booking::count();
             $hospital_count = Hospital::count();
+
+            $today = date('Y-m-d');
+            
+            $dhc_active_booking_count = DB::table('booking_assign')
+                ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                ->join('patient', 'bookings.customer_id', '=', 'patient.id')
+                ->where('bookings.booking_type', '!=', 'Corporate')
+                ->where('booking_assign.type', '!=' ,"Doctor")
+                ->where('bookings.booking_status', 0)
+                ->where('patient.h_type', 'DHC')
+                ->where('date',$today)
+                ->count();
+            $hsp_active_booking_count = DB::table('booking_assign')
+                ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                ->join('patient', 'bookings.customer_id', '=', 'patient.id')
+                ->where('bookings.booking_type', '!=', 'Corporate')
+                ->where('booking_assign.type', '!=' ,"Doctor")
+                ->where('bookings.booking_status', 0)
+                ->where('patient.h_type', '!=' ,'DHC')
+                ->where('date',$today)
+                ->count();
+            $crp_active_booking_count = DB::table('booking_assign')
+                ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                ->where('bookings.booking_type', 'Corporate')
+                ->where('booking_assign.type', '!=' ,"Doctor")
+                ->where('bookings.booking_status', 0)
+                ->where('date',$today)
+                ->count();
+
+
+            $dhc_closed_booking_count = DB::table('booking_assign')
+                ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                ->join('patient', 'bookings.customer_id', '=', 'patient.id')
+                ->where('bookings.booking_type', '!=', 'Corporate')
+                ->where('booking_assign.type', '!=' ,"Doctor")
+                ->where('bookings.booking_status', 1)
+                ->where('patient.h_type', 'DHC')
+                ->where('date',$today)
+                ->count();
+            $hsp_closed_booking_count = DB::table('booking_assign')
+                ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                ->join('patient', 'bookings.customer_id', '=', 'patient.id')
+                ->where('bookings.booking_type', '!=', 'Corporate')
+                ->where('booking_assign.type', '!=' ,"Doctor")
+                ->where('bookings.booking_status', 1)
+                ->where('patient.h_type', '!=' ,'DHC')
+                ->where('date',$today)
+                ->count();
+            $crp_closed_booking_count = DB::table('booking_assign')
+                ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                ->where('bookings.booking_type', 'Corporate')
+                ->where('booking_assign.type', '!=' ,"Doctor")
+                ->where('bookings.booking_status', 1)
+                ->where('date',$today)
+                ->count();
+
+
+            $dhc_24hrs_shift_count = DB::table('booking_assign')
+                ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                ->join('patient', 'bookings.customer_id', '=', 'patient.id')
+                ->where('bookings.booking_type', '!=', 'Corporate')
+                ->where('booking_assign.shift', 3)
+                ->where('booking_assign.type', '!=' ,"Doctor")
+                ->where('bookings.booking_status', 0)
+                ->where('patient.h_type', 'DHC')
+                ->where('date',$today)
+                ->count();
+            $hsp_24hrs_shift_count = DB::table('booking_assign')
+                ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                ->join('patient', 'bookings.customer_id', '=', 'patient.id')
+                ->where('bookings.booking_type', '!=', 'Corporate')
+                ->where('booking_assign.shift', 3)
+                ->where('booking_assign.type', '!=' ,"Doctor")
+                ->where('bookings.booking_status', 0)
+                ->where('patient.h_type', '!=' ,'DHC')
+                ->where('date',$today)
+                ->count();
+            $crp_24hrs_shift_count = DB::table('booking_assign')
+                ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                ->where('bookings.booking_type', 'Corporate')
+                ->where('booking_assign.shift', 3)
+                ->where('booking_assign.type', '!=' ,"Doctor")
+                ->where('bookings.booking_status', 0)
+                ->where('date',$today)
+                ->count();
+
+
+            $dhc_12hrs_shift_count = DB::table('booking_assign')
+                ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                ->join('patient', 'bookings.customer_id', '=', 'patient.id')
+                ->where('bookings.booking_type', '!=', 'Corporate')
+                ->whereIn('booking_assign.shift', [1,2])
+                ->where('booking_assign.type', '!=' ,"Doctor")
+                ->where('bookings.booking_status', 0)
+                ->where('patient.h_type', 'DHC')
+                ->where('date',$today)
+                ->count();
+            $hsp_12hrs_shift_count = DB::table('booking_assign')
+                ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                ->join('patient', 'bookings.customer_id', '=', 'patient.id')
+                ->where('bookings.booking_type', '!=', 'Corporate')
+                ->whereIn('booking_assign.shift', [1,2])
+                ->where('booking_assign.type', '!=' ,"Doctor")
+                ->where('bookings.booking_status', 0)
+                ->where('patient.h_type', '!=' ,'DHC')
+                ->where('date',$today)
+                ->count();
+            $crp_12hrs_shift_count = DB::table('booking_assign')
+                ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                ->where('bookings.booking_type', 'Corporate')
+                ->whereIn('booking_assign.shift', [1,2])
+                ->where('booking_assign.type', '!=' ,"Doctor")
+                ->where('bookings.booking_status', 0)
+                ->where('date',$today)
+                ->count();
+
+
+            $staff_type = StaffType::get();
+
+            $dhc_staff_data = [];
+            $hsp_staff_data = [];
+            $crp_staff_data = [];
+            foreach($staff_type as $type){
+                $dhc_staff_count = DB::table('booking_assign')
+                    ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                    ->join('patient', 'bookings.customer_id', '=', 'patient.id')
+                    ->where('bookings.booking_type', '!=', 'Corporate')
+                    ->where('booking_assign.type', $type->title)
+                    ->where('bookings.booking_status', 0)
+                    ->where('patient.h_type', 'DHC')
+                    ->where('date',$today)
+                    ->count();
+                $hsp_staff_count = DB::table('booking_assign')
+                    ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                    ->join('patient', 'bookings.customer_id', '=', 'patient.id')
+                    ->where('bookings.booking_type', '!=', 'Corporate')
+                    ->where('booking_assign.type', $type->title)
+                    ->where('bookings.booking_status', 0)
+                    ->where('patient.h_type', '!=' ,'DHC')
+                    ->where('date',$today)
+                    ->count();
+                $crp_staff_count = DB::table('booking_assign')
+                    ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                    ->where('bookings.booking_type', 'Corporate')
+                    ->where('booking_assign.type', $type->title)
+                    ->where('bookings.booking_status', 0)
+                    ->where('date',$today)
+                    ->count();
+
+                $dhc_staff_data[] = [
+                    'title' => $type->title,
+                    'count' => $dhc_staff_count,
+                ];
+                $hsp_staff_data[] = [
+                    'title' => $type->title,
+                    'count' => $hsp_staff_count,
+                ];
+                $crp_staff_data[] = [
+                    'title' => $type->title,
+                    'count' => $crp_staff_count,
+                ];
+            }
+
             $states = State::where('status',1)->orderBy('name','asc')->get();
             $data = [
+                'dhc_active_booking_count' => $dhc_active_booking_count,
+                'dhc_closed_booking_count' => $dhc_closed_booking_count,
+                'dhc_24hrs_shift_count' => $dhc_24hrs_shift_count,
+                'dhc_12hrs_shift_count' => $dhc_12hrs_shift_count,
+                'dhc_staff_data' => $dhc_staff_data,
+                'hsp_active_booking_count' => $hsp_active_booking_count,
+                'hsp_closed_booking_count' => $hsp_closed_booking_count,
+                'hsp_24hrs_shift_count' => $hsp_24hrs_shift_count,
+                'hsp_12hrs_shift_count' => $hsp_12hrs_shift_count,
+                'hsp_staff_data' => $hsp_staff_data,
+                'crp_active_booking_count' => $crp_active_booking_count,
+                'crp_closed_booking_count' => $crp_closed_booking_count,
+                'crp_24hrs_shift_count' => $crp_24hrs_shift_count,
+                'crp_12hrs_shift_count' => $crp_12hrs_shift_count,
+                'crp_staff_data' => $crp_staff_data,
                 'staff_count' => $staff_count,
                 'doctor_count' => $doctor_count,
                 'patient_count' => $patient_count,

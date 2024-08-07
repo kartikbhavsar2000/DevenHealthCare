@@ -52,10 +52,12 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/get_bookings_list', [App\Http\Controllers\BookingController::class, 'get_bookings_list'])->name('get_bookings_list');
     Route::get('/add_booking', [App\Http\Controllers\BookingController::class, 'add_booking'])->name('add_booking');
     Route::get('/view_booking_details/{id}', [App\Http\Controllers\BookingController::class, 'view_booking_details'])->name('view_booking_details');
+    Route::get('/extend_booking/{id}', [App\Http\Controllers\BookingController::class, 'extend_booking'])->name('extend_booking');
     Route::get('/view_booking_assign_details/{id}', [App\Http\Controllers\BookingController::class, 'view_booking_assign_details'])->name('view_booking_assign_details');
     Route::get('/get_booking_assign_details', [App\Http\Controllers\BookingController::class, 'get_booking_assign_details'])->name('get_booking_assign_details');
     Route::post('/create_booking', [App\Http\Controllers\BookingController::class, 'create_booking'])->name('create_booking');
     Route::post('/change_staff_and_customer_rate', [App\Http\Controllers\BookingController::class, 'change_staff_and_customer_rate'])->name('change_staff_and_customer_rate');
+    Route::post('/extend_booking_post', [App\Http\Controllers\BookingController::class, 'extend_booking_post'])->name('extend_booking_post');
 
     Route::get('/closed_bookings', [App\Http\Controllers\BookingController::class, 'closed_bookings'])->name('closed_bookings');
     Route::get('/get_closed_bookings_list', [App\Http\Controllers\BookingController::class, 'get_closed_bookings_list'])->name('get_closed_bookings_list');

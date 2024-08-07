@@ -168,6 +168,19 @@ class BookingController extends Controller
         }
         abort(403);
     }
+    public function extend_booking($id)
+    {
+        if (in_array("bookings", Auth::user()->permissions())) {
+            $booking = Booking::find($id);
+            $bookingDetails = BookingDetails::where(['booking_id'=>$id,'type'=>1])->get();
+            foreach($bookingDetails as $bookingDetail){
+                $shift = Shifts::find($bookingDetail->shift);
+                $bookingDetail->shiftt = $shift;
+            }
+            return view('backend.bookings.extend_booking',['booking'=>$booking,'bookingDetails'=>$bookingDetails]);
+        }
+        abort(403);
+    }
     public function view_booking_assign_details($id)
     {
         if (in_array("bookings", Auth::user()->permissions())) {
@@ -836,6 +849,68 @@ class BookingController extends Controller
 
             }
             return redirect()->back()->with('success','Price Changed Successfully.');
+        }else{
+            return redirect()->back()->with('error','Data Not Found.');
+        }
+
+    }
+    public function extend_booking_post(Request $request)
+    {
+        $booking = Booking::find($request->booking_id);
+        if($booking){
+            $booking_end_date = date('Y-m-d', strtotime($booking->end_date . ' +1 day'));
+            $new_end_date = date('Y-m-d', strtotime($booking->end_date . ' +1 month'));
+
+            $all_dates = [];
+            $current_date = strtotime($booking_end_date);
+            $end_timestamp = strtotime($new_end_date);
+
+            while ($current_date <= $end_timestamp) {
+                $all_dates[] = date('Y-m-d', $current_date);
+                $current_date = strtotime('+1 day', $current_date);
+            }
+            foreach($request->id as $id){
+                if(!empty($all_dates)){
+                    $booking_details = BookingDetails::find($id);
+                    if($booking_details){
+                        $booking_details->qnt = $booking_details->qnt + count($all_dates);
+                        $booking_details->update();
+
+                        foreach($all_dates as $date){
+                            $booking_assign = new BookingAssign();
+                            $booking_assign->booking_id = $booking->id;
+                            $booking_assign->booking_detail_id = $id;
+                            $booking_assign->type = $booking_details->name;
+                            $booking_assign->shift = $booking_details->shift;
+                            $booking_assign->sell_rate = $booking_details->sell_rate;
+                            $booking_assign->date = $date;
+                            $booking_assign->save();
+                        }
+                    }
+                }
+            }
+            $staff_and_doctor_sum = BookingAssign::where('is_cancled',0)->where('booking_id', $booking->id)
+            ->whereBetween('date', [$booking->start_date, $new_end_date])
+            ->sum('sell_rate');
+
+            $equipment_and_ambulance_sum = BookingDetails::where('booking_id', $booking->id)
+                ->whereIn('type', [2, 4])
+                ->sum('sell_rate');
+
+            $paid_ammount = BookingPayment::where('booking_id', $booking->id)
+                ->sum('amount');
+
+
+            $total = $staff_and_doctor_sum + $equipment_and_ambulance_sum;
+            $pending = $total - $paid_ammount;
+
+            $booking->total = $total;
+            $booking->sub_total = $total;
+            $booking->pending_payment = $pending;
+            $booking->end_date = $new_end_date;
+            $booking->update();
+
+            return redirect()->back()->with('success','Booking Extended Successfully.');
         }else{
             return redirect()->back()->with('error','Data Not Found.');
         }

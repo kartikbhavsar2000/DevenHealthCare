@@ -74,7 +74,7 @@
                                 @enderror
                                 <div class="container py-4 d-none" id="PatientDetails">
                                     <h6>Patient Details :</h6>
-                                    <div class="d-flex flex-wrap row-gap-2">
+                                    {{-- <div class="d-flex flex-wrap row-gap-2">
                                         <div class="me-12">
                                             <p class="text-nowrap mb-2"><i class="ri-hospital-line ri-20px me-2"></i>Hospital : <span id="P-HType"></span></p>
                                             <p class="text-nowrap mb-2"><i class="ri-user-line ri-20px me-2"></i>Full Name : <span id="P-Name"></span></p>
@@ -86,10 +86,28 @@
                                         </div>
                                         <div class="me-12">
                                             <p class="text-nowrap mb-2"><i class="ri-men-line ri-20px me-2"></i>Gender : <span id="P-Gender"></span></p>
-                                            <p class="text-nowrap mb-2"><i class="ri-home-2-line ri-20px me-2 ms-50"></i>Address : <span id="P-Address"></span></p>
                                             <p class="text-nowrap mb-2"><i class="ri-road-map-line ri-20px me-2"></i>State : <span id="P-State"></span></p>
                                             <p class="text-nowrap mb-2"><i class="ri-building-line ri-20px me-2 ms-50"></i>City: <span id="P-City"></span></p>
-                                            <p class="text-nowrap mb-0"><i class="ri-compass-line ri-20px me-2"></i>Area : <span id="P-Area"></span></p>
+                                            <p class="text-nowrap mb-2"><i class="ri-compass-line ri-20px me-2"></i>Area : <span id="P-Area"></span></p>
+                                            <p class="text-nowrap mb-0"><i class="ri-home-2-line ri-20px me-2 ms-50"></i>Address : <span class="text-wrap" id="P-Address" style="overflow: hidden; text-overflow: ellipsis;"></span></p>
+                                        </div>
+                                    </div> --}}
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p class="text-nowrap mb-2"><i class="ri-hospital-line ri-20px me-2"></i>Hospital : <span id="P-HType"></span></p>
+                                            <p class="text-nowrap mb-2"><i class="ri-user-line ri-20px me-2"></i>Full Name : <span id="P-Name"></span></p>
+                                            <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Mobile : <span id="P-Mobile"></span></p>
+                                            <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Mobile 2 : <span id="P-Mobile2"></span></p>
+                                            <p class="text-nowrap mb-2"><i class="ri-mail-line ri-20px me-2"></i>Email : <span id="P-Email"></span></p>
+                                            <p class="text-nowrap mb-2"><i class="ri-calendar-event-line ri-20px me-2"></i>DOB : <span id="P-DOB"></span></p>
+                                            <p class="text-nowrap mb-0"><i class="ri-calendar-schedule-line ri-20px me-2"></i>Age : <span id="P-Age"></span></p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="text-nowrap mb-2"><i class="ri-men-line ri-20px me-2"></i>Gender : <span id="P-Gender"></span></p>
+                                            <p class="text-nowrap mb-2"><i class="ri-road-map-line ri-20px me-2"></i>State : <span id="P-State"></span></p>
+                                            <p class="text-nowrap mb-2"><i class="ri-building-line ri-20px me-2 ms-50"></i>City: <span id="P-City"></span></p>
+                                            <p class="text-nowrap mb-2"><i class="ri-compass-line ri-20px me-2"></i>Area : <span id="P-Area"></span></p>
+                                            <p class="text-nowrap mb-0"><i class="ri-home-2-line ri-20px me-2 ms-50"></i>Address : <span class="text-wrap" id="P-Address" style="overflow: hidden; text-overflow: ellipsis;"></span></p>
                                         </div>
                                     </div>
                                 </div>
@@ -119,14 +137,14 @@
                                 @enderror
                                 <div class="container py-4 d-none" id="CorporateDetails">
                                     <h6>Corporate Details :</h6>
-                                    <div class="d-flex flex-wrap row-gap-2">
-                                        <div class="me-12">
+                                    <div class="row">
+                                        <div class="col-6">
                                             <p class="text-nowrap mb-2"><i class="ri-hospital-line ri-20px me-2"></i>Corporate Name : <span id="H-Name"></span></p>
-                                            <p class="text-nowrap mb-2"><i class="ri-map-pin-2-line ri-20px me-2 ms-50"></i>Address : <span id="H-Address"></span></p>
                                             <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Contact Number 1 : <span id="H-Mobile1"></span></p>
                                             <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Contact Number 2 : <span id="H-Mobile2"></span></p>
+                                            <p class="text-nowrap mb-2"><i class="ri-map-pin-2-line ri-20px me-2 ms-50"></i>Address : <span class="text-wrap mb-2" id="H-Address" style="overflow: hidden; text-overflow: ellipsis;"></span></p>
                                         </div>
-                                        <div class="me-12">
+                                        <div class="col-6">
                                             <p class="text-nowrap mb-2"><i class="ri-road-map-line ri-20px me-2"></i>State : <span id="H-State"></span></p>
                                             <p class="text-nowrap mb-2"><i class="ri-building-line ri-20px me-2 ms-50"></i>City: <span id="H-City"></span></p>
                                             <p class="text-nowrap mb-0"><i class="ri-compass-line ri-20px me-2"></i>Area : <span id="H-Area"></span></p>

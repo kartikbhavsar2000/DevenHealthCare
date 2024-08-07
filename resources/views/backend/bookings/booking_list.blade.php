@@ -53,7 +53,7 @@
                             <th>End Date</th>
                             <th>Created At</th>
                             <th>Added By</th>
-                            <th>Amount Diffrence</th>
+                            <th>Amount Difference</th>
                             <th>Pending Amount</th>
                             <th>Total</th>
                             <th>Status</th>
@@ -250,6 +250,7 @@
                             <ul class="dropdown-menu dropdown-menu-end m-0" style="">
                                 <li><a href="{{asset("/")}}view_booking_assign_details/` + data + `" class="dropdown-item"><i class="ri-list-view ri-20px"></i> View Staff List</a></li>
                                 <li><a href="{{asset("/")}}view_booking_details/` + data + `" class="dropdown-item"><i class="ri-information-2-line ri-20px"></i> View Booking Details</a></li>
+                                <li><a href="{{asset("/")}}extend_booking/` + data + `" class="dropdown-item"><i class="ri-add-box-line ri-20px"></i> Extend Booking</a></li>
                                 <li><a href="{{asset("/")}}cancel_booking_staff/` + data + `" class="dropdown-item"><i class="ri-user-unfollow-line ri-20px"></i> Remove Staff</a></li>
                                 <li><button onclick="pauseBooking('`+data+`')" class="dropdown-item"><i class="ri-pause-circle-line"></i> Pause Booking</button></li>
                             </ul>

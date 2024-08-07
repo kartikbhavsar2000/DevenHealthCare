@@ -72,70 +72,79 @@
     <div class="col-12 col-lg-4 col-md-4">
         <div class="card h-100">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="card-title m-0 me-2">DHC</h5>
-                {{-- <div class="dropdown">
-                    <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-1 waves-effect waves-light" type="button" id="transactionID" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="ri-more-2-line ri-20px"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="transactionID" style="">
-                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
-                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
-                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
-                    </div>
-                </div> --}}
+                <h5 class="card-title m-0 me-2">Deven Health Care</h5>
             </div>
             <div class="card-body">
                 <ul class="p-0 m-0">
-                    <li class="d-flex align-items-center pb-2">
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-success"><i class="ri-checkbox-circle-line ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">Active Services</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$data['dhc_active_booking_count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
-                    <li class="d-flex align-items-center pb-2">
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-danger"><i class="ri-close-circle-line ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">Closed Services</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$data['dhc_closed_booking_count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
-                    <li class="d-flex align-items-center pb-2">
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-dark"><i class="ri-time-fill ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">24Hrs Services</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$data['dhc_24hrs_shift_count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
-                    <li class="d-flex align-items-center pb-2">
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-warning"><i class="ri-hourglass-fill ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">12Hrs Services</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$data['dhc_12hrs_shift_count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
-                    <li class="d-flex align-items-center pb-2">
+                    @if(!empty($data['dhc_staff_data']))
+                    @foreach($data['dhc_staff_data'] as $dhcStaff)
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-primary"><i class="ri-nurse-fill ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">{{$dhcStaff['title'] ?? "-"}}</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$dhcStaff['count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
+                    @endforeach
+                    @endif
                 </ul>
             </div>
         </div>
@@ -143,70 +152,79 @@
     <div class="col-12 col-lg-4 col-md-4">
         <div class="card h-100">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="card-title m-0 me-2">HSP</h5>
-                <div class="dropdown">
-                    <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-1 waves-effect waves-light" type="button" id="transactionID" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="ri-more-2-line ri-20px"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="transactionID" style="">
-                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
-                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
-                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
-                    </div>
-                </div>
+                <h5 class="card-title m-0 me-2">Hospitals</h5>
             </div>
             <div class="card-body">
                 <ul class="p-0 m-0">
-                    <li class="d-flex align-items-center pb-2">
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-success"><i class="ri-checkbox-circle-line ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">Active Services</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$data['hsp_active_booking_count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
-                    <li class="d-flex align-items-center pb-2">
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-danger"><i class="ri-close-circle-line ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">Closed Services</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$data['hsp_closed_booking_count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
-                    <li class="d-flex align-items-center pb-2">
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-dark"><i class="ri-time-fill ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">24Hrs Services</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$data['hsp_24hrs_shift_count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
-                    <li class="d-flex align-items-center pb-2">
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-warning"><i class="ri-hourglass-fill ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">12Hrs Services</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$data['hsp_12hrs_shift_count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
-                    <li class="d-flex align-items-center pb-2">
+                    @if(!empty($data['hsp_staff_data']))
+                    @foreach($data['hsp_staff_data'] as $hspStaff)
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-primary"><i class="ri-nurse-fill ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">{{$hspStaff['title'] ?? "-"}}</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$hspStaff['count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
+                    @endforeach
+                    @endif
                 </ul>
             </div>
         </div>
@@ -214,70 +232,79 @@
     <div class="col-12 col-lg-4 col-md-4">
         <div class="card h-100">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="card-title m-0 me-2">CRP</h5>
-                <div class="dropdown">
-                    <button class="btn btn-text-secondary rounded-pill text-muted border-0 p-1 waves-effect waves-light" type="button" id="transactionID" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="ri-more-2-line ri-20px"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="transactionID" style="">
-                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last 28 Days</a>
-                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Month</a>
-                        <a class="dropdown-item waves-effect" href="javascript:void(0);">Last Year</a>
-                    </div>
-                </div>
+                <h5 class="card-title m-0 me-2">Corporates</h5>
             </div>
             <div class="card-body">
                 <ul class="p-0 m-0">
-                    <li class="d-flex align-items-center pb-2">
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-success"><i class="ri-checkbox-circle-line ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">Active Services</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$data['crp_active_booking_count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
-                    <li class="d-flex align-items-center pb-2">
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-danger"><i class="ri-close-circle-line ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">Closed Services</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$data['crp_closed_booking_count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
-                    <li class="d-flex align-items-center pb-2">
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-dark"><i class="ri-time-fill ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">24Hrs Services</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$data['crp_24hrs_shift_count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
-                    <li class="d-flex align-items-center pb-2">
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-warning"><i class="ri-hourglass-fill ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">12Hrs Services</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$data['crp_12hrs_shift_count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
-                    <li class="d-flex align-items-center pb-2">
+                    @if(!empty($data['crp_staff_data']))
+                    @foreach($data['crp_staff_data'] as $crpStaff)
+                    <li class="d-flex mb-6 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                          <span class="avatar-initial rounded-3 bg-label-primary"><i class="ri-nurse-fill ri-24px"></i></span>
+                        </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-1">Credit Card</h6>
-                            </div>
-                            <div class="user-progress d-flex align-items-center gap-2">
-                                <h6 class="mb-0">85</h6>
-                            </div>
+                          <div class="me-2">
+                            <h6 class="mb-0 fw-normal">{{$crpStaff['title'] ?? "-"}}</h6>
+                          </div>
+                          <div class="user-progress">
+                            <h6 class="mb-0">{{$crpStaff['count'] ?? "0"}}</h6>
+                          </div>
                         </div>
                     </li>
+                    @endforeach
+                    @endif
                 </ul>
             </div>
         </div>

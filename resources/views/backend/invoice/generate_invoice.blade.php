@@ -121,7 +121,7 @@
                             <div class="d-flex justify-content-between align-items-start ">
                                 <div>
                                     <h4 class="mb-0">₹{{number_format($booking_amount_diffrence) ?? "0"}}</h4>
-                                    <p class="mb-0">Diffrence Amount</p>
+                                    <p class="mb-0">Difference Amount</p>
                                 </div>
                                 <div class="avatar">
                                     <span class="avatar-initial rounded-3 bg-label-secondary">
@@ -252,7 +252,7 @@
                     </div>
                 </div>
                 <div class="pt-6">
-                    <button type="submit" class="btn btn-primary me-4 waves-effect waves-light" onclick="submit({{$booking->id}})">Generate</button>
+                    <button type="submit" class="btn btn-primary me-4 waves-effect waves-light" id="ButtonSub" onclick="submit({{$booking->id}})">Generate</button>
                     <div class="mt-5">
                         <b class="text-danger">Note :- </b><span class="m-0 text-dark">This invoice is generated based on staff attendance. If the attendance is marked and approved by the admin, it will be reflected in the invoice.</span>
                     </div>
@@ -271,6 +271,7 @@
                         <th>Invoice No</th>
                         <th>Invoice Start Date</th>
                         <th>Invoice End Date</th>
+                        <th>Amount</th>
                         <th>Added By</th>
                         <th>Action</th>
                         </tr>
@@ -283,6 +284,7 @@
                             <td class="text-nowrap">{{$invoice->inv_no ?? "-"}}</td>
                             <td class="text-nowrap">{{date('d/m/Y',strtotime($invoice->start_date)) ?? "-"}}</td>
                             <td class="text-nowrap">{{date('d/m/Y',strtotime($invoice->end_date)) ?? "-"}}</td>
+                            <td>₹{{ number_format($invoice->amount) ?? "0"}}</td>
                             <td>{{$invoice->created_by->name ?? "-"}}</td>
                             @if($invoice->file)
                                 <td>
@@ -841,8 +843,6 @@
 
 
     function submit(id){
-        $("#loader").fadeIn("slow");
-        $("#DATAAA").fadeOut("slow");
         var startDate = $('#BookingStartDate').val();
         var endDate = $('#BookingEndDate').val();
         if (!startDate) {
@@ -855,8 +855,13 @@
         } else {
             $('#EndError').text('');
         }
-        $('#InvoicePreview').addClass('d-none');
+        
         if(startDate && endDate){
+            $('#ButtonSub').prop('disabled',true);
+            $("#loader").fadeIn("slow");
+            $("#DATAAA").fadeOut("slow");
+            $('#InvoicePreview').addClass('d-none');
+
             $.ajax({
                 url:"{{route('invoice_details_by_dates')}}",
                 method:"POST",
@@ -895,15 +900,7 @@
                     $('#grand-total').text('₹' + grandTotal.toLocaleString());
                     $('#InvoicePreview').removeClass('d-none');
                     
-                    if(invoice != null){
-                        $('#INV_NO').text(invoice.inv_no);
-                        setTimeout(function() 
-                        {
-                            $("#loader").fadeIn("slow");
-                            $("#DATAAA").fadeOut("slow");
-                            StoreInvoice(invoice.id);
-                        }, 1000);
-                    }else{
+                    if(invoice == null){
                         $("#loader").fadeOut("slow");
                         $("#DATAAA").fadeIn("slow");
                         $('#InvoicePreview').addClass('d-none');
@@ -918,7 +915,31 @@
                             },
                             buttonsStyling: false
                         });
-                        setTimeout(function(){ window.location.reload(); }, 500);
+                        $('#ButtonSub').prop('disabled',false);
+                    }else if(invoice == "No"){
+                        $("#loader").fadeOut("slow");
+                        $("#DATAAA").fadeIn("slow");
+                        $('#InvoicePreview').addClass('d-none');
+                        Swal.fire({
+                            title: 'Warning!',
+                            text: 'You cannot generate an invoice with the amount zero.',
+                            icon: 'warning',
+                            showCancelButton: false,
+                            confirmButtonText: 'ok',
+                            customClass: {
+                                confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
+                            },
+                            buttonsStyling: false
+                        });
+                        $('#ButtonSub').prop('disabled',false);
+                    }else{
+                        $('#INV_NO').text(invoice.inv_no);
+                        setTimeout(function() 
+                        {
+                            $("#loader").fadeIn("slow");
+                            $("#DATAAA").fadeOut("slow");
+                            StoreInvoice(invoice.id);
+                        }, 1000);
                     }
                 }
             });

@@ -72,7 +72,8 @@
                         <div class="col-6">
                             <div class="form-group">
                                 <label class="form-label" for="weekselector">Select Date Range <span class="text-danger">*</span></label>
-                                <select class="form-control" id="weekselector" name="weeks[]" multiple="multiple"></select>
+                                <select class="form-control" id="weekselector" name="weeks[]" multiple="multiple">
+                                </select>
                                 <div id="weeksError" class="text-danger"></div>
                             </div>
                         </div>
@@ -386,7 +387,7 @@
     });
 
     $('#weekselector').select2({
-        placeholder: "Select Periods",
+        placeholder: "Select Date Range",
         allowClear: true,
         closeOnSelect: false
     }).on("change", function() {

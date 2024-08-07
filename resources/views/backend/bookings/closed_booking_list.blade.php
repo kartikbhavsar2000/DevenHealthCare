@@ -53,7 +53,7 @@
                             <th>End Date</th>
                             <th>Updated At</th>
                             <th>Closed By</th>
-                            <th>Amount Diffrence</th>
+                            <th>Amount Difference</th>
                             <th>Pending Amount</th>
                             <th>Total</th>
                             <th>Actions</th>

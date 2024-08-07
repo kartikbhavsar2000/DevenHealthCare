@@ -242,7 +242,7 @@
             </form>
             <hr>
             <div class="mt-5 container">
-                <h6><i class="ri-close-circle-line ri-22px"></i> Canceled Dates</h6>
+                <h6><i class="ri-close-circle-line ri-22px"></i> Canceled Staff</h6>
             </div>
             <div class="my-3 container">
                 <table id="kt_datatable5" class="table table-row-bordered table-row-gray-300">

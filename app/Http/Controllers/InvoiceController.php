@@ -358,43 +358,53 @@ class InvoiceController extends Controller
                 }
             }
         }
+        $grandTotal = 0;
+        foreach($data as $d){
+            $grandTotal += $d['total'];
+        }
         $invoice = null;
+
         if ($booking) {
-            // Retrieve the latest invoice for the booking
-            $latestInvoice = Invoice::where('booking_id', $booking->id)
-            ->orderBy('id', 'desc') // Order by ID or a timestamp to get the latest invoice
-            ->first();
+            if($grandTotal > 0){
+                // Retrieve the latest invoice for the booking
+                $latestInvoice = Invoice::where('booking_id', $booking->id)
+                ->orderBy('id', 'desc') // Order by ID or a timestamp to get the latest invoice
+                ->first();
 
-            $currentYear = date('Y');
-            $prefix = "INV" . $currentYear . $booking->id;
+                $currentYear = date('Y');
+                $prefix = "INV" . $currentYear . $booking->id;
 
-            if ($latestInvoice) {
-                // Extract the numeric part of the inv_no if it matches the current year and booking ID
-                if (strpos($latestInvoice->inv_no, $prefix) === 0) {
-                    // Get the remaining part as the numeric count
-                    $latestInvNo = (int)substr($latestInvoice->inv_no, strlen($prefix));
-                    $latestInvNo++; // Increment the count
+                if ($latestInvoice) {
+                    // Extract the numeric part of the inv_no if it matches the current year and booking ID
+                    if (strpos($latestInvoice->inv_no, $prefix) === 0) {
+                        // Get the remaining part as the numeric count
+                        $latestInvNo = (int)substr($latestInvoice->inv_no, strlen($prefix));
+                        $latestInvNo++; // Increment the count
+                    } else {
+                        // If the prefix does not match, start a new count
+                        $latestInvNo = 1;
+                    }
                 } else {
-                    // If the prefix does not match, start a new count
+                    // No previous invoice, start with 1
                     $latestInvNo = 1;
                 }
-            } else {
-                // No previous invoice, start with 1
-                $latestInvNo = 1;
+
+                // Generate the new invoice number
+                $invoiceNumber = $prefix . $latestInvNo;
+
+
+                // Create the new invoice record
+                $invoice = new Invoice();
+                $invoice->booking_id = $booking->id;
+                $invoice->inv_no = $invoiceNumber;
+                $invoice->start_date = $startDate;
+                $invoice->end_date = $endDate;
+                $invoice->amount = $grandTotal;
+                $invoice->added_by = Auth::user()->id;
+                $invoice->save();
+            }else{
+                $invoice = "No";
             }
-
-            // Generate the new invoice number
-            $invoiceNumber = $prefix . $latestInvNo;
-
-
-            // Create the new invoice record
-            $invoice = new Invoice();
-            $invoice->booking_id = $booking->id;
-            $invoice->inv_no = $invoiceNumber;
-            $invoice->start_date = $startDate;
-            $invoice->end_date = $endDate;
-            $invoice->added_by = Auth::user()->id;
-            $invoice->save();
         }
 
         return(['data'=>$data,'invoice'=>$invoice]);
@@ -425,14 +435,22 @@ class InvoiceController extends Controller
 
         $invoice = Invoice::find($request->id);
         if($invoice && $invoice->file){
+            $booking = Booking::find($invoice->booking_id);
+            $name = "Sir";
+            if($booking){
+                $cust_data = $booking->customerDetails();
+                if($cust_data){
+                    $name = $cust_data->name ?? "Sir";
+                }
+            }
             $pdfName = $invoice->file;
             $pdfPath = public_path('invoices')."/".$pdfName;
 
             // Recipient and email details
             $to = $request->email;
-            $subject = 'Your Invoice';
+            $subject = 'Invoice #'. $invoice->inv_no.' from Deven Health Care';
             
-            $message = "Dear Sir,\r\n\r\nPlease find your invoice attached to this email.\r\n\r\nBest regards,\rDeven Health Care";
+            $message = "Dear ".$name.",\r\n\r\nPlease find your invoice attached to this email.\r\n\r\nBest regards,\rDeven Health Care";
         
             // Generate a unique boundary string
             $boundary = md5(time());
