@@ -10,6 +10,8 @@ use App\Models\Staff;
 use App\Models\AdvanceSalary;
 use App\Models\AdvanceSalaryHistory;
 use App\Models\Booking;
+use App\Models\StaffType;
+use DB;
 
 class ReportController extends Controller
 {
@@ -71,11 +73,38 @@ class ReportController extends Controller
     }
     public function get_paused_booking_report_data(Request $request){
         if (in_array("paused_booking_report", Auth::user()->permissions())) {
-            $data = Booking::where('booking_status',2)->with('added_by')->orderBy('id',"DESC")->get();
+            // $data = Booking::where('booking_status',2)->with('added_by')->orderBy('id',"DESC")->get();
+            $data = Booking::whereNotNull('pause_reason')->with('added_by')->orderBy('id',"DESC")->get();
             foreach($data as $da){
                 $customer_details = $da->customerDetails();
                 $da->customer_details = $customer_details;
             }
+            return $data;
+        }
+        abort(403);
+    }
+    public function started_booking_report(){
+        if (in_array("started_booking_report", Auth::user()->permissions())) {
+            $staff_type = StaffType::get();
+            return view('backend.reports.started_booking_report',['staff_type'=>$staff_type]);
+        }
+        abort(403);
+    }
+    public function get_started_booking_report_data(Request $request){
+        return($request->all());
+        if (in_array("started_booking_report", Auth::user()->permissions())) {
+            $today = date('Y-m-d');
+            
+            $data = DB::table('booking_assign')
+                ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                ->join('patient', 'bookings.customer_id', '=', 'patient.id')
+                ->where('bookings.booking_type', '!=', 'Corporate')
+                ->where('booking_assign.type', '!=' ,"Doctor")
+                ->where('bookings.booking_status', 0)
+                ->where('patient.h_type', 'DHC')
+                ->where('date',$today)
+                ->get();
+
             return $data;
         }
         abort(403);

@@ -714,8 +714,10 @@ class BookingController extends Controller
                     }else{
                         if(!empty($all_dates)){
                             foreach($all_dates as $date){
+                                $today = date('Y-m-d');
+
                                 $booking_assign_varification = BookingAssign::where('is_cancled',0)->whereNotNull('staff_id')
-                                    ->where(['booking_status'=>0,'staff_id' => $staff['staff_id'],'type' => $staff['type'], 'date' => $date]);
+                                ->where('date', '>=', $today)->where(['booking_status'=>0,'staff_id' => $staff['staff_id'],'type' => $staff['type'], 'date' => $date]);
     
                                 // Add shift conditions based on the staff's shift
                                 if ($staff['shift'] == 3) {
@@ -742,12 +744,12 @@ class BookingController extends Controller
                                     }
                                 } else {
                                     // No conflicting booking assignments, assign the staff to the booking
-                                    $booking_assign = BookingAssign::where('is_cancled',0)->where([
+                                    $booking_assign = BookingAssign::where('is_cancled',0)->where('date', '>=', $today)->where([
                                         'staff_id' => null,
                                         'booking_id' => $request->booking_id,
                                         'type' => $staff['type'],
                                         'shift' => $staff['shift'],
-                                        'date' => $date
+                                        'date' => $date,
                                     ])->first();
     
                                     if ($booking_assign) {
@@ -908,6 +910,7 @@ class BookingController extends Controller
             $booking->sub_total = $total;
             $booking->pending_payment = $pending;
             $booking->end_date = $new_end_date;
+            $booking->status = 0;
             $booking->update();
 
             return redirect()->back()->with('success','Booking Extended Successfully.');

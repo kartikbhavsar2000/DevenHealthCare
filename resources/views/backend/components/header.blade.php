@@ -390,6 +390,14 @@
                         </a>
                     </li>
                     @endif
+                    @if(in_array('started_booking_report',$permissions))
+                    <li class="menu-item  @if (Route::currentRouteName() == 'started_booking_report') active @endif">
+                        <a href="{{route('started_booking_report')}}" class="menu-link">
+                            <i class="menu-icon tf-icons ri-file-list-line"></i>
+                            <div>Services</div>
+                        </a>
+                    </li>
+                    @endif
                     @if(in_array('paused_booking_report',$permissions))
                     <li class="menu-item  @if (Route::currentRouteName() == 'paused_booking_report') active @endif">
                         <a href="{{route('paused_booking_report')}}" class="menu-link">

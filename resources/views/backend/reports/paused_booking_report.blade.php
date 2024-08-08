@@ -52,6 +52,7 @@
                             <th>Customer Name</th>
                             <th>Start Date</th>
                             <th>End Date</th>
+                            <th>Status</th>
                             <th>Pending</th>
                             <th>Total</th>
                         </tr>
@@ -94,7 +95,7 @@
                 extend: 'excel',
                 title: 'Paused Booking Report',
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7]
+                    columns: [1,2,3,4,5,6,7,8]
                 }
             }],
             columnDefs: [{
@@ -162,6 +163,11 @@
                     }else{
                         type = "-";
                     }
+                    if( item.pause_reason && item.booking_status != 1){
+                        var status = "<p class='m-0 text-warning bg-label-warning text-center p-1 rounded'>PAUSED</p>";
+                    }else{
+                        var status = "<p class='m-0 text-secondary bg-label-secondary text-center p-1 rounded'>CLOSED</p>";
+                    }
                     var grandTotal = '₹'+ parseInt(item.total, 10).toLocaleString();
                     var pendingAmount = '₹'+ parseInt(item.pending_payment, 10).toLocaleString();
 
@@ -172,6 +178,7 @@
                         item.customer_details.name,
                         moment(new Date(item.start_date)).format("DD/MM/YYYY"),
                         moment(new Date(item.end_date)).format("DD/MM/YYYY"),
+                        status,
                         pendingAmount,
                         grandTotal
                     ]).draw(false);

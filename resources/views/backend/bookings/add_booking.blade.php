@@ -63,7 +63,8 @@
                                         <option></option>
                                         @if(!empty($data['patients']))
                                             @foreach($data['patients'] as $patient)
-                                                <option value="{{$patient->id}}" data-details="{{$patient}}">{{$patient->name}} - {{$patient->patient_id}}</option>
+                                                <?php $typeee = "";  if($patient->h_type == "DHC"){ $typeee = " - DHC"; }else{ $typeee = " - HSP"; } ?>
+                                                <option value="{{$patient->id}}" data-details="{{$patient}}">{{$patient->name}} - {{$patient->patient_id}}{{$typeee}}</option>
                                             @endforeach
                                         @endif
                                     </select>

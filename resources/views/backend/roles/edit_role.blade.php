@@ -263,6 +263,14 @@
                                 </div>
                                 <div class="col-2">
                                     <div class="form-check form-check-inline mt-4">
+                                        <input class="form-check-input" type="checkbox" value="started_booking_report" @if(in_array('started_booking_report',$permissions)) checked @endif name="permission[]" id="started_booking_report" />
+                                        <label class="form-check-label" for="started_booking_report">
+                                            Services
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-check form-check-inline mt-4">
                                         <input class="form-check-input" type="checkbox" value="paused_booking_report" @if(in_array('paused_booking_report',$permissions)) checked @endif name="permission[]" id="paused_booking_report" />
                                         <label class="form-check-label" for="paused_booking_report">
                                             Paused Booking

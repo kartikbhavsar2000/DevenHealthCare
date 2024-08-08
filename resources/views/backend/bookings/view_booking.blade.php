@@ -23,7 +23,7 @@
 @endif
 <div class="row">
     <div class="col-12">
-        @if($booking->pause_reason && $booking->booking_status == 2)
+        @if($booking->pause_reason && $booking->booking_status != 0)
         <div class="alert alert-warning d-flex align-items-center p-3 mt-4" role="alert">
             <b>Pause Reason : <span style="font-weight: 400; color:black;">{{$booking->pause_reason ?? '-'}}</span></b>
             <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">

@@ -250,4 +250,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/paused_booking_report', [App\Http\Controllers\ReportController::class, 'paused_booking_report'])->name('paused_booking_report');
     Route::get('/get_paused_booking_report_data', [App\Http\Controllers\ReportController::class, 'get_paused_booking_report_data'])->name('get_paused_booking_report_data');
 
+    Route::get('/started_booking_report', [App\Http\Controllers\ReportController::class, 'started_booking_report'])->name('started_booking_report');
+    Route::get('/get_started_booking_report_data', [App\Http\Controllers\ReportController::class, 'get_started_booking_report_data'])->name('get_started_booking_report_data');
+
 });

@@ -289,6 +289,12 @@
         input:'textarea',
         inputPlaceholder: 'Enter reason for pause...',
         buttonsStyling: false,
+        preConfirm: (inputValue) => {
+            if (!inputValue) {
+                Swal.showValidationMessage('Reason is required')
+            }
+            return inputValue;
+        }
         }).then(function(result) {
             if (result.isConfirmed) {
                 let rejectionReason = result.value;
