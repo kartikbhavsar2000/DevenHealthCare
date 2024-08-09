@@ -163,7 +163,7 @@
                         <div class="col-6 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Qualification</label>
-                                <input type="text" class="form-control mb-1" value="{{old('qualification')}}" name="qualification" placeholder="Enter qualification">
+                                <input type="text" class="form-control mb-1" value="{{old('qualification')}}" name="qualification" placeholder="Enter qualification" onkeyup="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')">
                                 @error('qualification')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
@@ -172,7 +172,7 @@
                         <div class="col-6 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Specification</label>
-                                <input type="text" class="form-control mb-1" value="{{old('specification')}}" name="specification" placeholder="Enter specification">
+                                <input type="text" class="form-control mb-1" value="{{old('specification')}}" name="specification" placeholder="Enter specification" onkeyup="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')">
                                 @error('specification')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
@@ -181,7 +181,7 @@
                         <div class="col-6 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Reference</label>
-                                <input type="text" class="form-control mb-1" value="{{old('reference')}}" name="reference" placeholder="Enter reference">
+                                <input type="text" class="form-control mb-1" value="{{old('reference')}}" name="reference" placeholder="Enter reference" onkeyup="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')">
                                 @error('reference')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror

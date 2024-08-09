@@ -55,7 +55,9 @@
                             <th>Date</th>
                             <th>Cost Price</th>
                             <th>Sell Price</th>
+                            @if($data->booking_status != 1) 
                             <th>Edit</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody id="TData">

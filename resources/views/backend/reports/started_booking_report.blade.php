@@ -46,7 +46,7 @@
                         <div class="mb-4">
                             <label class="form-label">Services</label>
                             <select class="form-control mb-1" id="Services">
-                                <option value=""></option>
+                                <option value=" " selected>All</option>
                                 @if(!empty($staff_type))
                                     @foreach($staff_type as $st)
                                         <option value="{{$st->id}}">{{$st->title ?? "-"}}</option>
@@ -59,7 +59,7 @@
                         <div class="mb-4">
                             <label class="form-label">Category</label>
                             <select class="form-control mb-1" id="Category">
-                                <option value=""></option>
+                                <option value=" " selected>All</option>
                                 <option value="DHC">Deven Health Care</option>
                                 <option value="HSP">Hospitals</option>
                                 <option value="CRP">Corporates</option>
@@ -70,10 +70,11 @@
                         <div class="mb-4">
                             <label class="form-label">Status</label>
                             <select class="form-control mb-1" id="Status">
-                                <option value=""></option>
-                                <option value="0">Active</option>
-                                <option value="1">Closed</option>
-                                <option value="2">Pending</option>
+                                <option value=" " selected>All</option>
+                                <option value="1">Active</option>
+                                <option value="2">Closed</option>
+                                <option value="3">Paused</option>
+                                <option value="4">Stopped</option>
                             </select>
                         </div>
                     </div>
@@ -81,7 +82,7 @@
                         <div class="mb-4">
                             <label class="form-label">Type</label>
                             <select class="form-control mb-1" id="Type">
-                                <option value=""></option>
+                                <option value=" " selected>All</option>
                                 <option value="12">12Hrs Services</option>
                                 <option value="24">24Hrs Services</option>
                             </select>
@@ -112,8 +113,14 @@
                     <thead>
                         <tr>
                             <th>Sr No.</th>
-                            <th>Title</th>
-                            <th>Count</th>
+                            <th>BookingId</th>
+                            <th>Customer Name</th>
+                            <th>Service Name</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Amount</th>
                         </tr>
                     </thead>
                     <tbody id="TData">
@@ -133,47 +140,65 @@
 
 <script>
     function filterData(){
+        $("#loader").fadeIn("slow");
+        $("#DATAAA").fadeOut("slow");
+
+        var category = $('#Category').val();
         var services = $('#Services').val();
         var status = $('#Status').val();
         var type = $('#Type').val();
         var date_range = $('#Daterange').val();
 
+        var table = $('#kt_datatable5').DataTable();
+                table.clear().draw();
+
         $.ajax({
             url:"{{route('get_started_booking_report_data')}}",
             method:"GET",
-            data:{'services':services,'status':status,'type':type,'date_range':date_range,_token:"{{ csrf_token() }}"},
+            data:{'category':category,'services':services,'status':status,'type':type,'date_range':date_range,_token:"{{ csrf_token() }}"},
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(result) {
-                console.log(result);                
+                console.log(result);
+                var rows = '';
+                $.each(result, function(index, item) {
+                    var type = item.booking_type == "Corporate" ? "CRP" :
+                            (item.booking_type == "Patient" ? (item.h_type == "DHC" ? "DHC" : "HSP") : "-");
+
+                    var shift = (item.shift == 1 || item.shift == 2) ? "12Hrs Shift" : "24Hrs Shift";
+                    if(item.is_cancled == 0){
+                        var status = item.booking_status == 0 ? "<p class='m-0 text-success bg-label-success text-center p-1 rounded'>Active</p>" :
+                                item.booking_status == 1 ? "<p class='m-0 text-secondary bg-label-secondary text-center p-1 rounded'>CLOSED</p>" :
+                                item.booking_status == 2 ? "<p class='m-0 text-warning bg-label-warning text-center p-1 rounded'>PAUSED</p>" : "-";
+                    }else{
+                        var status = "<p class='m-0 text-danger bg-label-danger text-center p-1 rounded'>Stopped</p>";
+                    }
+                    var amount = '₹'+ parseInt(item.sell_rate, 10).toLocaleString();
+
+                    rows += '<tr><td>' + (index + 1) + '</td><td>' + item.unique_id + '</td><td>' + item.customer_name + '</td><td>' +
+                            item.type + '</td><td>' + shift + '</td><td>' + type + '</td><td>' +
+                            moment(new Date(item.date)).format("DD/MM/YYYY") + '</td><td>' + status + '</td><td>' + amount + '</td></tr>';
+                });
+                table.rows.add($(rows)).draw(false);
+                $("#loader").fadeOut("slow");
+                $("#DATAAA").fadeIn("slow");
+
             }
         }); 
     }
     $(document).ready(function() {
-        // Get the current date
-        var currentDate = new Date();
-        // Format the date to yyyy-mm
-        var formattedDate =  ('0' + (currentDate.getMonth() + 1)).slice(-2) + ' ' + currentDate.getFullYear();
-
-        // Initialize the datepicker
-        $('#monthpicker').datepicker({
-            format: "M yyyy",
-            startView: "months",
-            minViewMode: "months",
-            autoclose: true
-        }).datepicker('setDate', formattedDate);
-
         var table =$('#kt_datatable5').DataTable({
             dom: `<'row'<'col-sm-12'lBtr>>
 			<'row'<'col-sm-12 col-md-8'i><'col-sm-12 col-md-4 d-flex justify-content-end align-items-center'p>>`,
             pageLength: 10,
             scrollX: true,
+            deferRender: true,
             buttons: [{
                 extend: 'excel',
-                title: 'Started Services Report',
+                title: 'Services Report',
                 exportOptions: {
-                    columns: [1,2]
+                    columns: [1,2,3,4,5,6,7,8]
                 }
             }],
             columnDefs: [{
@@ -206,6 +231,7 @@
                 })
             },
         });
+        filterData();
     });
     $('#Daterange').daterangepicker({
         opens: 'left',

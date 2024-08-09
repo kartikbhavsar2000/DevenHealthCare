@@ -90,22 +90,92 @@ class ReportController extends Controller
         }
         abort(403);
     }
-    public function get_started_booking_report_data(Request $request){
-        return($request->all());
+    public function get_started_booking_report_data(Request $request) {
         if (in_array("started_booking_report", Auth::user()->permissions())) {
-            $today = date('Y-m-d');
-            
+            $category = $request->category;
+            $services = $request->services;
+            $status = $request->status;
+            $type = $request->type;
+            $dateRange = $request->date_range;
+    
+            $dates = explode(' - ', $dateRange);
+    
+            $startDate = date('Y-m-d', strtotime(str_replace('/', '-', $dates[0])));
+            $endDate = date('Y-m-d', strtotime(str_replace('/', '-', $dates[1])));
+    
             $data = DB::table('booking_assign')
                 ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
                 ->join('patient', 'bookings.customer_id', '=', 'patient.id')
-                ->where('bookings.booking_type', '!=', 'Corporate')
-                ->where('booking_assign.type', '!=' ,"Doctor")
-                ->where('bookings.booking_status', 0)
-                ->where('patient.h_type', 'DHC')
-                ->where('date',$today)
-                ->get();
-
-            return $data;
+                ->leftJoin('corporate', function($join) {
+                    $join->on('bookings.customer_id', '=', 'corporate.id')
+                         ->where('bookings.booking_type', 'Corporate');
+                })
+                ->where('booking_assign.type', '!=', 'Doctor')
+                ->whereNull('patient.deleted_at')
+                ->whereNull('booking_assign.deleted_at')
+                ->whereNull('bookings.deleted_at');
+    
+            if ($status == "1") {
+                $data->where('bookings.booking_status', "0");
+            }
+            if ($status == "2") {
+                $data->where('bookings.booking_status', "1");
+            }
+            if ($status == "3") {
+                $data->where('bookings.booking_status', "2");
+            }
+            if ($status == "4") {
+                $data->where('booking_assign.is_cancled', "1");
+            }
+    
+            if ($category) {
+                if ($category == "DHC") {
+                    $data->where('bookings.booking_type', '!=', 'Corporate')
+                         ->where('patient.h_type', 'DHC');
+                }
+                if ($category == "HSP") {
+                    $data->where('bookings.booking_type', '!=', 'Corporate')
+                         ->where('patient.h_type', '!=', 'DHC');
+                }
+                if ($category == "CRP") {
+                    $data->where('bookings.booking_type', 'Corporate');
+                }
+            }
+    
+            if ($services) {
+                $staff_type = StaffType::find($services);
+                $data->where('booking_assign.type', $staff_type->title);
+            }
+    
+            if ($type) {
+                if ($type == 12) {
+                    $data->whereIn('booking_assign.shift', [1, 2]);
+                } else {
+                    $data->where('booking_assign.shift', 3);
+                }
+            }
+    
+            if ($startDate && $endDate) {
+                $data->whereBetween('booking_assign.date', [$startDate, $endDate]);
+            }
+    
+            $all_data = $data->select(
+                'bookings.booking_status',
+                'bookings.booking_type',
+                'patient.h_type',
+                'booking_assign.shift',
+                'bookings.unique_id',
+                DB::raw('CASE 
+                            WHEN bookings.booking_type = "Corporate" THEN corporate.name 
+                            ELSE patient.name 
+                         END as customer_name'),
+                'booking_assign.type',
+                'booking_assign.date',
+                'booking_assign.sell_rate',
+                'booking_assign.is_cancled'
+            )->get();
+    
+            return response()->json($all_data);
         }
         abort(403);
     }

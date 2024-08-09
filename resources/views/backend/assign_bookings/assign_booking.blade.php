@@ -98,24 +98,33 @@
                             @endif
                             @if($booking->booking_type == "Corporate")
                             <h6 ><i class="ri-information-2-line ri-24px"></i> Corporate Details :</h6>
-                            <div class="row mx-5">
+                            <div class="row mx-3">
                                 <div class="col-2">
                                     <p class="text-nowrap mb-2"><i class="ri-building-line ri-20px me-2"></i>Corporate Name</p>
-                                    <p class="text-nowrap mb-2"><i class="ri-map-pin-line ri-20px me-2"></i>Address</p>
                                     <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Contact Number 1</p>
                                     <p class="text-nowrap mb-2"><i class="ri-phone-line ri-20px me-2"></i>Contact Number 2</p>
-                                    <p class="text-nowrap mb-0"><i class="ri-compass-line ri-20px me-2"></i>Area</p>
+                                    <p class="text-nowrap mb-2"><i class="ri-compass-line ri-20px me-2"></i>Area</p>
                                     <p class="text-nowrap mb-2"><i class="ri-building-line ri-20px me-2 ms-50"></i>City</p>
                                     <p class="text-nowrap mb-2"><i class="ri-road-map-line ri-20px me-2"></i>State</p>
+                                    <p class="text-nowrap mb-0"><i class="ri-map-pin-line ri-20px me-2"></i>Address</p>
                                 </div>
-                                <div class="col-10">
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->name ?? "-"}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->address ?? "-"}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile1 ?? "-"}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->customer_details->mobile2 ?? "-"}}</p>
-                                    <p class="text-nowrap mb-0"><span class="me-5">:</span> {{$booking->area ?? "-"}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->city ?? "-"}}</p>
-                                    <p class="text-nowrap mb-2"><span class="me-5">:</span> {{$booking->state ?? "-"}}</p>
+                                <div class="col-1 text-center">
+                                    <p class="text-nowrap mb-2">:</p>
+                                    <p class="text-nowrap mb-2">:</p>
+                                    <p class="text-nowrap mb-2">:</p>
+                                    <p class="text-nowrap mb-2">:</p>
+                                    <p class="text-nowrap mb-2">:</p>
+                                    <p class="text-nowrap mb-2">:</p>
+                                    <p class="text-nowrap mb-0">:</p>
+                                </div>
+                                <div class="col-9">
+                                    <p class="text-nowrap mb-2"> {{$booking->customer_details->name ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"> {{$booking->customer_details->mobile1 ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"> {{$booking->customer_details->mobile2 ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"> {{$booking->area ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"> {{$booking->city ?? "-"}}</p>
+                                    <p class="text-nowrap mb-2"> {{$booking->state ?? "-"}}</p>
+                                    <p class="text-wrap mb-0"> {{$booking->customer_details->address ?? "-"}}</p>
                                 </div>
                             </div>
                             @endif

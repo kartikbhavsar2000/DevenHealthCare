@@ -406,6 +406,7 @@ class HomeController extends Controller
                 ->where('bookings.booking_status', 0)
                 ->where('patient.h_type', 'DHC')
                 ->where('date',$today)
+                ->whereNull('booking_assign.deleted_at')
                 ->count();
             $hsp_active_booking_count = DB::table('booking_assign')
                 ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
@@ -415,6 +416,7 @@ class HomeController extends Controller
                 ->where('bookings.booking_status', 0)
                 ->where('patient.h_type', '!=' ,'DHC')
                 ->where('date',$today)
+                ->whereNull('booking_assign.deleted_at')
                 ->count();
             $crp_active_booking_count = DB::table('booking_assign')
                 ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
@@ -422,6 +424,7 @@ class HomeController extends Controller
                 ->where('booking_assign.type', '!=' ,"Doctor")
                 ->where('bookings.booking_status', 0)
                 ->where('date',$today)
+                ->whereNull('booking_assign.deleted_at')
                 ->count();
 
 
@@ -433,6 +436,7 @@ class HomeController extends Controller
                 ->where('bookings.booking_status', 1)
                 ->where('patient.h_type', 'DHC')
                 ->where('date',$today)
+                ->whereNull('booking_assign.deleted_at')
                 ->count();
             $hsp_closed_booking_count = DB::table('booking_assign')
                 ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
@@ -442,6 +446,7 @@ class HomeController extends Controller
                 ->where('bookings.booking_status', 1)
                 ->where('patient.h_type', '!=' ,'DHC')
                 ->where('date',$today)
+                ->whereNull('booking_assign.deleted_at')
                 ->count();
             $crp_closed_booking_count = DB::table('booking_assign')
                 ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
@@ -449,6 +454,7 @@ class HomeController extends Controller
                 ->where('booking_assign.type', '!=' ,"Doctor")
                 ->where('bookings.booking_status', 1)
                 ->where('date',$today)
+                ->whereNull('booking_assign.deleted_at')
                 ->count();
 
 
@@ -461,6 +467,7 @@ class HomeController extends Controller
                 ->where('bookings.booking_status', 0)
                 ->where('patient.h_type', 'DHC')
                 ->where('date',$today)
+                ->whereNull('booking_assign.deleted_at')
                 ->count();
             $hsp_24hrs_shift_count = DB::table('booking_assign')
                 ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
@@ -471,6 +478,7 @@ class HomeController extends Controller
                 ->where('bookings.booking_status', 0)
                 ->where('patient.h_type', '!=' ,'DHC')
                 ->where('date',$today)
+                ->whereNull('booking_assign.deleted_at')
                 ->count();
             $crp_24hrs_shift_count = DB::table('booking_assign')
                 ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
@@ -479,6 +487,7 @@ class HomeController extends Controller
                 ->where('booking_assign.type', '!=' ,"Doctor")
                 ->where('bookings.booking_status', 0)
                 ->where('date',$today)
+                ->whereNull('booking_assign.deleted_at')
                 ->count();
 
 
@@ -491,6 +500,7 @@ class HomeController extends Controller
                 ->where('bookings.booking_status', 0)
                 ->where('patient.h_type', 'DHC')
                 ->where('date',$today)
+                ->whereNull('booking_assign.deleted_at')
                 ->count();
             $hsp_12hrs_shift_count = DB::table('booking_assign')
                 ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
@@ -501,6 +511,7 @@ class HomeController extends Controller
                 ->where('bookings.booking_status', 0)
                 ->where('patient.h_type', '!=' ,'DHC')
                 ->where('date',$today)
+                ->whereNull('booking_assign.deleted_at')
                 ->count();
             $crp_12hrs_shift_count = DB::table('booking_assign')
                 ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
@@ -509,6 +520,7 @@ class HomeController extends Controller
                 ->where('booking_assign.type', '!=' ,"Doctor")
                 ->where('bookings.booking_status', 0)
                 ->where('date',$today)
+                ->whereNull('booking_assign.deleted_at')
                 ->count();
 
 
@@ -526,6 +538,7 @@ class HomeController extends Controller
                     ->where('bookings.booking_status', 0)
                     ->where('patient.h_type', 'DHC')
                     ->where('date',$today)
+                    ->whereNull('booking_assign.deleted_at')
                     ->count();
                 $hsp_staff_count = DB::table('booking_assign')
                     ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
@@ -535,6 +548,7 @@ class HomeController extends Controller
                     ->where('bookings.booking_status', 0)
                     ->where('patient.h_type', '!=' ,'DHC')
                     ->where('date',$today)
+                    ->whereNull('booking_assign.deleted_at')
                     ->count();
                 $crp_staff_count = DB::table('booking_assign')
                     ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
@@ -542,6 +556,7 @@ class HomeController extends Controller
                     ->where('booking_assign.type', $type->title)
                     ->where('bookings.booking_status', 0)
                     ->where('date',$today)
+                    ->whereNull('booking_assign.deleted_at')
                     ->count();
 
                 $dhc_staff_data[] = [

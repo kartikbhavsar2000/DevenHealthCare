@@ -517,37 +517,39 @@ class BookingController extends Controller
             $doctor_data = [];
             $ambulance_data = [];
             foreach($booking->bookingDetails as $bookings){
-                if($bookings->type == 1){
-                    $bookings->staff_type = StaffType::where('title',$bookings->name)->pluck('id')->first();
-                    if($bookings->shift == 3){
-                        $staff = Staff::where('status',1)->where(function ($query) {
-                            $query->whereNotNull('full_cost')
-                                  ->where('full_cost', '>', 0);
-                        })->where('type',$bookings->staff_type)->orderBy('id',"DESC")->get();
-                    }elseif($bookings->shift == 2){
-                        $staff = Staff::where('status',1)->where(function ($query) {
-                            $query->whereNotNull('night_cost')
-                                  ->where('night_cost', '>', 0);
-                        })->where('type',$bookings->staff_type)->orderBy('id',"DESC")->get();
-                    }elseif($bookings->shift == 1){
-                        $staff = Staff::where('status',1)->where(function ($query) {
-                            $query->whereNotNull('day_cost')
-                                  ->where('day_cost', '>', 0);
-                        })->where('type',$bookings->staff_type)->orderBy('id',"DESC")->get();
-                    }else{
-                        $staff = Staff::where('status',1)->where('type',$bookings->staff_type)->orderBy('id',"DESC")->get();
+                if($bookings->is_assigned == 0){
+                    if($bookings->type == 1){
+                        $bookings->staff_type = StaffType::where('title',$bookings->name)->pluck('id')->first();
+                        if($bookings->shift == 3){
+                            $staff = Staff::where('status',1)->where(function ($query) {
+                                $query->whereNotNull('full_cost')
+                                      ->where('full_cost', '>', 0);
+                            })->where('type',$bookings->staff_type)->orderBy('id',"DESC")->get();
+                        }elseif($bookings->shift == 2){
+                            $staff = Staff::where('status',1)->where(function ($query) {
+                                $query->whereNotNull('night_cost')
+                                      ->where('night_cost', '>', 0);
+                            })->where('type',$bookings->staff_type)->orderBy('id',"DESC")->get();
+                        }elseif($bookings->shift == 1){
+                            $staff = Staff::where('status',1)->where(function ($query) {
+                                $query->whereNotNull('day_cost')
+                                      ->where('day_cost', '>', 0);
+                            })->where('type',$bookings->staff_type)->orderBy('id',"DESC")->get();
+                        }else{
+                            $staff = Staff::where('status',1)->where('type',$bookings->staff_type)->orderBy('id',"DESC")->get();
+                        }
+                        $bookings->staffs = $staff;
+                        $staff_data[] = $bookings;
                     }
-                    $bookings->staffs = $staff;
-                    $staff_data[] = $bookings;
-                }
-                if($bookings->type == 2){
-                    $equipment_data[] = $bookings;
-                }
-                if($bookings->type == 3){
-                    $doctor_data[] = $bookings;
-                }
-                if($bookings->type == 4){
-                    $ambulance_data[] = $bookings;
+                    if($bookings->type == 2){
+                        $equipment_data[] = $bookings;
+                    }
+                    if($bookings->type == 3){
+                        $doctor_data[] = $bookings;
+                    }
+                    if($bookings->type == 4){
+                        $ambulance_data[] = $bookings;
+                    }
                 }
             }
             $shifts = Shifts::orderBy('id',"DESC")->get();
@@ -623,7 +625,6 @@ class BookingController extends Controller
                     $cs->shift_name = "-";
                 }
             }
-            // dd($booking->bookingDetails);
             return view('backend.bookings.cancel_booking_staff',['cancled_staff'=>$cancled_staff,'shifts'=>$shifts,'staff_data'=>$staff_data,'equipment_data'=>$equipment_data,'doctor_data'=>$doctor_data,'ambulance_data'=>$ambulance_data,'booking'=>$booking,'staffs'=>$staffs,'doctors'=>$doctors]);
         }
         abort(403);
@@ -769,6 +770,11 @@ class BookingController extends Controller
                     return redirect()->back()->with('bulk_error', $error);
                 }else{
                     if($bookss){
+                        $bookingDetails = BookingDetails::where(['booking_id'=>$id,'type'=>1])->get();
+                        foreach($bookingDetails as $bd){
+                            $bd->is_assigned = 1;
+                            $bd->update();
+                        }
                         $bookss->status = 1;
                         $bookss->assigned_by = Auth::user()->id;
                         $bookss->update();
@@ -780,6 +786,11 @@ class BookingController extends Controller
                     return redirect()->back()->with('error','Please Select Staff.');
                 }else{
                     if($bookss){
+                        $bookingDetails = BookingDetails::where(['booking_id'=>$id,'type'=>1])->get();
+                        foreach($bookingDetails as $bd){
+                            $bd->is_assigned = 1;
+                            $bd->update();
+                        }
                         $bookss->status = 1;
                         $bookss->assigned_by = Auth::user()->id;
                         $bookss->update();
@@ -876,6 +887,7 @@ class BookingController extends Controller
                     $booking_details = BookingDetails::find($id);
                     if($booking_details){
                         $booking_details->qnt = $booking_details->qnt + count($all_dates);
+                        $booking_details->is_assigned = 0;
                         $booking_details->update();
 
                         foreach($all_dates as $date){
@@ -891,6 +903,22 @@ class BookingController extends Controller
                     }
                 }
             }
+            
+            $booking_detailss = BookingDetails::whereNotIn('id',$request->id)->where('booking_id',$booking->id)->get();
+            if(!$booking_detailss->isEmpty()){
+                foreach($booking_detailss as $bd){
+                    $booking_assign = new BookingAssign();
+                    $booking_assign->booking_id = $booking->id;
+                    $booking_assign->booking_detail_id = $bd->id;
+                    $booking_assign->type = $bd->name;
+                    $booking_assign->shift = $bd->shift;
+                    $booking_assign->sell_rate = $bd->sell_rate;
+                    $booking_assign->date = $booking_end_date;
+                    $booking_assign->is_cancled = 1;
+                    $booking_assign->save();
+                }
+            }
+            
             $staff_and_doctor_sum = BookingAssign::where('is_cancled',0)->where('booking_id', $booking->id)
             ->whereBetween('date', [$booking->start_date, $new_end_date])
             ->sum('sell_rate');

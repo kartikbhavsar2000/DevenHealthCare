@@ -1599,12 +1599,16 @@
           if(item.type == 1){
             rate *= item.qnt;
           }
-
+          if(item.shift){
+            var shift_name = item.shift.name;
+          }else{
+            var shift_name = "-";
+          }
           bookingData += `<tr>
                               <td>`+ srno +`</td>
                               <td>`+ (item.name ?? "-") +`</td>
                               <td>`+ type +`</td>
-                              <td>`+ (item.shift.name ?? "-") +`</td>
+                              <td>`+ (shift_name ?? "-") +`</td>
                               <td>`+ (item.qnt ?? "-") +`</td>
                               <td>`+ ('₹'+ parseInt(rate,10).toLocaleString() ?? "-") +`</td>
                           </tr>`;

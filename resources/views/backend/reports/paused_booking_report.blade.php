@@ -52,6 +52,7 @@
                             <th>Customer Name</th>
                             <th>Start Date</th>
                             <th>End Date</th>
+                            <th>Reason To Pause</th>
                             <th>Status</th>
                             <th>Pending</th>
                             <th>Total</th>
@@ -101,7 +102,7 @@
             columnDefs: [{
                 "defaultContent": "-",
                 "targets": "_all",
-            }],
+            },{ width: '50%', targets: 6 }],
             initComplete: function() {
                 var api = this.api();
                 var row = $('<tr>').appendTo($(api.table().header()));
@@ -171,6 +172,8 @@
                     var grandTotal = '₹'+ parseInt(item.total, 10).toLocaleString();
                     var pendingAmount = '₹'+ parseInt(item.pending_payment, 10).toLocaleString();
 
+                    var pause_reason = '<p style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width:400px;">'+item.pause_reason+'</p>';
+
                     table.row.add([
                         index + 1,
                         item.unique_id,
@@ -178,6 +181,7 @@
                         item.customer_details.name,
                         moment(new Date(item.start_date)).format("DD/MM/YYYY"),
                         moment(new Date(item.end_date)).format("DD/MM/YYYY"),
+                        pause_reason,
                         status,
                         pendingAmount,
                         grandTotal
