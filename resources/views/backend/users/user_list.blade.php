@@ -44,6 +44,7 @@
                         <tr>
                             <th>Sr No.</th>
                             <th>Role</th>
+                            <th>Type</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Actions</th>
@@ -69,7 +70,7 @@
             extend: 'excel',
             title: 'Users List',
             exportOptions: {
-                columns: [1,2,3]
+                columns: [1,2,3,4]
             }
         }],
         columnDefs: [{
@@ -113,6 +114,7 @@
                     return meta.row+1;
             }},
             { "data": "role.name" ,"defaultContent": "-"},
+            { "data": "type" ,"defaultContent": "-"},
             { "data": "name" ,"defaultContent": "-"},
             { "data": "email" ,"defaultContent": "-"},
             {

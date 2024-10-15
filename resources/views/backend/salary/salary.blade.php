@@ -24,8 +24,17 @@
 <div class="row">
     <div class="col-12">
         <div class="card py-5">
-            <div class="mx-5">
-                <h5 class="mb-0">Generate Salary</h5>
+            <div class="row">
+                <div class="col-6">
+                    <div class="mx-5">
+                        <h5 class="mb-0">Generate Salary</h5>
+                    </div>
+                </div>
+                <div class="col-6 text-end">
+                    <div class="mx-5">
+                        <a id="exportLink" class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body h-40px fs-7 waves-effect waves-light me-2"><i class="ri-file-excel-line"></i> <span class="nav-text">Excel</span></a>
+                    </div>
+                </div>
             </div>
             <hr>
             <form id="Form" action="{{route('staff_salary_pay')}}" method="POST">
@@ -52,7 +61,7 @@
                                 <select class="form-control" name="staff_id[]" id="StaffId"  multiple="multiple">
                                     @if(!empty($staff))
                                         @foreach($staff as $st)
-                                            <option value="{{$st->id}}" @if(old('staff_id') == $st->id) selected @endif>{{$st->f_name ?? ""}} {{$st->m_name ?? ""}} {{$st->l_name ?? ""}} - {{$st->staff_id ?? ""}}</option>
+                                            <option value="{{$st->id}}" @if(old('staff_id') == $st->id) selected @endif>{{$st->f_name ?? ""}} {{$st->m_name ?? ""}} {{$st->l_name ?? ""}} - ({{$st->staff_id ?? ""}}) | {{$st->types->title ?? ""}}</option>
                                         @endforeach
                                     @endif
                                 </select>
@@ -100,6 +109,7 @@
                                 <tr>
                                   <th>Sr No.</th>
                                   <th>Staff ID</th>
+                                  <th>Type</th>
                                   <th>Staff Name</th>
                                   <th>Total Assign</th>
                                   <th>Present</th>
@@ -110,7 +120,7 @@
                                 </tr>
                               </thead>
                               <tbody id="table-body">
-                           
+                                    <td colspan="9" class="text-center">No Data Found</td>
                               </tbody>
                             </table>
                         </div>
@@ -134,13 +144,6 @@
         if(!validate){
             e.preventDefault();
         }
-    });
-    $('.kt_datatable').DataTable({
-        dom:'',
-        columnDefs: [{
-            "defaultContent": "-",
-            "targets": "_all",
-        }],
     });
     function getStaffOptions(type){
         $.ajax({
@@ -194,6 +197,8 @@
                     console.log(result);
 
                     $('#table-body').empty();
+                    $('.kt_datatable').DataTable().clear().draw();
+                    $('.kt_datatable').DataTable().destroy();
 
                     // Populate the table with the data received
                     $.each(result, function(index, item) {
@@ -205,6 +210,7 @@
                             '<tr>' +
                             '<td>' + (index + 1) + '</td>' +
                             '<td>' + item.staff.staff_id + '</td>' +
+                            '<td>' + item.staff.types.title + '</td>' +
                             '<td>' + item.staff.staff_name + '</td>' +
                             '<td>' + item.total_assign + '</td>' +
                             '<td>' + present + '</td>' +
@@ -215,6 +221,28 @@
                             '</tr>'
                         );
                     });
+                    $('.kt_datatable').DataTable({
+                        dom:`<'row'<'col-sm-12'lBtr>>
+                            <'row'<'col-sm-12 col-md-8'i><'col-sm-12 col-md-4 d-flex justify-content-end align-items-center'p>>`,
+                        buttons: [{
+                            extend: 'excel',
+                            title: 'Salary List',
+                            exportOptions: {
+                                columns: [1,2,3,4,5,6,7,8,9]
+                            }
+                        }],
+                        columnDefs: [{
+                            "defaultContent": "-",
+                            "targets": "_all",
+                        }],
+                        initComplete: function() {
+                            var $buttons = $('.dt-buttons').hide();
+                            $('#exportLink').on('click', function() {
+                                var btnClass = ".buttons-excel";
+                                if (btnClass) $buttons.find(btnClass).click();
+                            })
+                        },
+                    }).draw();
                 }
             }); 
         }
@@ -404,8 +432,20 @@
     $('#StaffId').select2({
         placeholder: 'Select Staff',
         allowClear: true,
-        closeOnSelect: false
+        closeOnSelect: false,
+        templateResult: formatOutput
     });
+    function formatOutput(optionElement) {
+        if (!optionElement.id) {
+            return optionElement.text;  // Return default if no option is selected
+        }
+
+        // Example logic to find and bold DHCS code
+        var text = optionElement.text;
+        var formattedText = text.replace(/(DHCS\d+)/, '<strong>$1</strong>');
+        
+        return $('<span>').html(formattedText);
+    }
     $('#selectAll').click(function() {
         $('#StaffId > option').each(function() {
             if ($(this).val() !== "") {

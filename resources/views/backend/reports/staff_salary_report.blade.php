@@ -49,6 +49,7 @@
                             <th>Sr No.</th>
                             <th>Month</th>
                             <th>Staff Id</th>
+                            <th>Staff Type</th>
                             <th>Staff Name</th>
                             <th>Total Shifts</th>
                             <th>Gross Salary</th>
@@ -94,7 +95,7 @@
                 extend: 'excel',
                 title: 'Staff Salary Report',
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7]
+                    columns: [1,2,3,4,5,6,7,8]
                 }
             }],
             columnDefs: [{
@@ -153,6 +154,7 @@
                         index + 1,
                         item.month,
                         item.staff.staff_id,
+                        item.staff.types.title,
                         item.staff.staff_name,
                         day,
                         '₹' + parseInt(item.total, 10).toLocaleString(),

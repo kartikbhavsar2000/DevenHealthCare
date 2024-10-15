@@ -28,7 +28,7 @@ class ReportController extends Controller
             $startDate = date('Y-m-01', strtotime($requestMonth));
             $endDate = date('Y-m-t', strtotime($requestMonth));
 
-            $staff = Staff::all();
+            $staff = Staff::with('types')->get();
             $data = [];
             foreach($staff as $st){
                 $st->staff_name = $st->f_name . " " . $st->m_name . " " . $st->l_name;
@@ -75,11 +75,28 @@ class ReportController extends Controller
         if (in_array("paused_booking_report", Auth::user()->permissions())) {
             // $data = Booking::where('booking_status',2)->with('added_by')->orderBy('id',"DESC")->get();
             $data = Booking::whereNotNull('pause_reason')->with('added_by')->orderBy('id',"DESC")->get();
+            $allData = [];
             foreach($data as $da){
                 $customer_details = $da->customerDetails();
                 $da->customer_details = $customer_details;
+
+                if(Auth::user()->type == "CRP"){
+                    if($da->booking_type == "Corporate"){
+                        $allData[] = $da;
+                    }
+                }elseif(Auth::user()->type == "HSP"){
+                    if($da->booking_type != "Corporate" && $customer_details->h_type != "DHC"){
+                        $allData[] = $da;
+                    }
+                }elseif(Auth::user()->type == "DHC"){
+                    if($da->booking_type != "Corporate" && $customer_details->h_type == "DHC"){
+                        $allData[] = $da;
+                    }
+                }else{
+                    $allData[] = $da;
+                }
             }
-            return $data;
+            return $allData;
         }
         abort(403);
     }
@@ -106,6 +123,7 @@ class ReportController extends Controller
             $data = DB::table('booking_assign')
                 ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
                 ->join('patient', 'bookings.customer_id', '=', 'patient.id')
+                ->join('staff', 'booking_assign.staff_id', '=', 'staff.id')
                 ->leftJoin('corporate', function($join) {
                     $join->on('bookings.customer_id', '=', 'corporate.id')
                          ->where('bookings.booking_type', 'Corporate');
@@ -116,13 +134,13 @@ class ReportController extends Controller
                 ->whereNull('bookings.deleted_at');
     
             if ($status == "1") {
-                $data->where('bookings.booking_status', "0");
+                $data->where('booking_assign.is_cancled', "0")->where('bookings.booking_status', "0");
             }
             if ($status == "2") {
-                $data->where('bookings.booking_status', "1");
+                $data->where('booking_assign.is_cancled', "0")->where('bookings.booking_status', "1");
             }
             if ($status == "3") {
-                $data->where('bookings.booking_status', "2");
+                $data->where('booking_assign.is_cancled', "0")->where('bookings.booking_status', "2");
             }
             if ($status == "4") {
                 $data->where('booking_assign.is_cancled', "1");
@@ -162,20 +180,46 @@ class ReportController extends Controller
             $all_data = $data->select(
                 'bookings.booking_status',
                 'bookings.booking_type',
-                'patient.h_type',
                 'booking_assign.shift',
                 'bookings.unique_id',
+                'staff.f_name',
+                'staff.m_name',
+                'staff.l_name',
                 DB::raw('CASE 
                             WHEN bookings.booking_type = "Corporate" THEN corporate.name 
                             ELSE patient.name 
                          END as customer_name'),
+                DB::raw('CASE 
+                            WHEN bookings.booking_type = "Corporate" THEN "-" 
+                            ELSE patient.h_type 
+                         END as h_type'),
                 'booking_assign.type',
                 'booking_assign.date',
                 'booking_assign.sell_rate',
                 'booking_assign.is_cancled'
             )->get();
+
+            $allData = [];
+
+            foreach($all_data as $da){
+                if(Auth::user()->type == "CRP"){
+                    if($da->booking_type == "Corporate"){
+                        $allData[] = $da;
+                    }
+                }elseif(Auth::user()->type == "HSP"){
+                    if($da->booking_type != "Corporate" && $da->h_type != "DHC"){
+                        $allData[] = $da;
+                    }
+                }elseif(Auth::user()->type == "DHC"){
+                    if($da->booking_type != "Corporate" && $da->h_type == "DHC"){
+                        $allData[] = $da;
+                    }
+                }else{
+                    $allData[] = $da;
+                }
+            }
     
-            return response()->json($all_data);
+            return response()->json($allData);
         }
         abort(403);
     }

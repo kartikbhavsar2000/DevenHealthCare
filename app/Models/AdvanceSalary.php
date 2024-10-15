@@ -14,7 +14,7 @@ class AdvanceSalary extends Model
 
     public function staff()
     {
-        return $this->hasOne(Staff::class,'id','staff_id');
+        return $this->hasOne(Staff::class,'id','staff_id')->with('types');
     }
     public function created_by_user()
     {

@@ -41,9 +41,6 @@ class LoginController extends Controller
 
     protected function authenticated(\Illuminate\Http\Request $request, $user)
     {
-        // Log the user name and the route name after successful authentication
-        Log::info('User logged in: ' . $user->name);
-
         // Optionally redirect to a different page
         return redirect()->intended($this->redirectTo);
     }
@@ -58,9 +55,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
-
-        // Log the user name and the route name after successful logout
-        Log::info('User logged out: ' . $user->name);
 
         return redirect('/');
     }

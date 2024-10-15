@@ -65,6 +65,21 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="col-6 mb-3">
+                            <div class="mb-4">
+                                <label class="form-label">User Type <span class="text-danger">*</span></label>
+                                <select class="form-control mb-1" id="Type" name="type">
+                                    <option></option>
+                                    <option value="ALL" @if($data->type == "ALL") selected @endif>ALL</option>
+                                    <option value="DHC" @if($data->type == "DHC") selected @endif>DHC</option>
+                                    <option value="HSP" @if($data->type == "HSP") selected @endif>HSP</option>
+                                    <option value="CRP" @if($data->type == "CRP") selected @endif>CRP</option>
+                                </select>
+                                @error('type')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <hr>
@@ -83,6 +98,9 @@
 <script>
     $('#Rolee').select2({
         placeholder: 'Select a role'
+    });
+    $('#Type').select2({
+        placeholder: 'Select a type'
     });
 </script>
 @endsection

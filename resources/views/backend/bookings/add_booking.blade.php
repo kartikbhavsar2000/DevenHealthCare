@@ -35,14 +35,15 @@
                         <h6 class="mb-0"><i class="ri-radio-button-line ri-22px"></i> Select Booking Type</h6>
                         <div class="row mb-4 mx-1">
                             <div class="col-sm-12">
+                                
                                 <div class="form-check form-check-inline mt-4 me-12">
-                                    <input class="form-check-input" type="radio" value="Patient" name="booking_type" id="patientradio" onclick="checkBookingType()">
+                                    <input class="form-check-input" type="radio"  @if(Auth::user()->type == "CRP") disabled @endif value="Patient" name="booking_type" id="patientradio" onclick="checkBookingType()">
                                     <label class="form-check-label" for="patientradio">
                                         Patient
                                     </label>
                                 </div>
                                 <div class="form-check form-check-inline mt-4 me-12">
-                                    <input class="form-check-input" type="radio" value="Corporate" name="booking_type" id="hospitalradio" onclick="checkBookingType()">
+                                    <input class="form-check-input" type="radio" @if(Auth::user()->type != "CRP" && Auth::user()->type != "ALL") disabled @endif value="Corporate" name="booking_type" id="hospitalradio" onclick="checkBookingType()">
                                     <label class="form-check-label" for="hospitalradio">
                                         Corporate
                                     </label>
@@ -513,13 +514,13 @@
                                 <div class="mb-4">
                                     <label class="form-label">Hospital Type <span class="text-danger">*</span></label><br>
                                     <div class="form-check form-check-inline mt-4 me-12">
-                                        <input class="form-check-input" type="radio" value="DHC" name="h_type" @if(old('h_type') == "DHC") checked @endif id="dhcradio" onclick="checkHospitalType()">
+                                        <input class="form-check-input" type="radio" value="DHC" name="h_type" @if(Auth::user()->type == "HSP") disabled @endif @if(Auth::user()->type == "DHC") checked @endif @if(old('h_type') == "DHC") checked @endif id="dhcradio" onclick="checkHospitalType()">
                                         <label class="form-check-label" for="dhcradio">
                                             DHC
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline mt-4 me-12">
-                                        <input class="form-check-input" type="radio" value="Other" @if(old('h_type') == "Other") checked @endif name="h_type" id="otherradio" onclick="checkHospitalType()">
+                                        <input class="form-check-input" type="radio" value="Other" @if(Auth::user()->type == "DHC") disabled @endif @if(Auth::user()->type == "HSP") checked @endif @if(old('h_type') == "Other") checked @endif name="h_type" id="otherradio" onclick="checkHospitalType()">
                                         <label class="form-check-label" for="otherradio">
                                             Other
                                         </label>

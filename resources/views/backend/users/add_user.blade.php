@@ -84,6 +84,21 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="col-6 mb-3">
+                            <div class="mb-4">
+                                <label class="form-label">User Type <span class="text-danger">*</span></label>
+                                <select class="form-control mb-1" id="Type" name="type">
+                                    <option></option>
+                                    <option value="ALL">ALL</option>
+                                    <option value="DHC">DHC</option>
+                                    <option value="HSP">HSP</option>
+                                    <option value="CRP">CRP</option>
+                                </select>
+                                @error('type')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <hr>
@@ -102,6 +117,9 @@
 <script>
     $('#Rolee').select2({
         placeholder: 'Select a role'
+    });
+    $('#Type').select2({
+        placeholder: 'Select a type'
     });
 </script>
 @endsection

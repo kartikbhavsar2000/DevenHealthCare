@@ -161,7 +161,7 @@
                         <div class="col-6 mb-3">
                             <div class="mb-4">
                                 <label class="form-label">Qualification</label>
-                                <input type="text" class="form-control mb-1" value="{{$data->qualification}}" name="qualification" placeholder="Enter qualification" onkeyup="this.value = this.value.replace(/[^a-zA-Z\s]/g, '')">
+                                <input type="text" class="form-control mb-1" value="{{$data->qualification}}" name="qualification" placeholder="Enter qualification">
                                 @error('qualification')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror

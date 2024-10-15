@@ -43,6 +43,7 @@
                     <thead>
                         <tr>
                             <th>Sr No.</th>
+                            <th>Type</th>
                             <th>Staff Name</th>
                             <th>Month</th>
                             <th>Pending Amount</th>
@@ -76,7 +77,7 @@
             extend: 'excel',
             title: 'Advance Salary List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7]
+                columns: [1,2,3,4,5,6,7,8]
             }
         }],
         columnDefs: [{
@@ -119,6 +120,7 @@
             { "render": function(data, type, full, meta) {
                     return meta.row+1;
             }},
+            { "data": "staff.types.title" ,"defaultContent": "-"},
             {
                 data: "staff",
                 render: function (data, type, row, meta) {

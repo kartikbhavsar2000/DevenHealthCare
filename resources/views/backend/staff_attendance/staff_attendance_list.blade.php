@@ -27,12 +27,14 @@
     </div>
 @endif
 <div class="row">
-    <div class="col-6 mb-5">
+    <div class="col-4 mb-5">
         <h4 class="mt-1 mb-1">Staff Attendance</h4>
         <p class="mb-0"><a href="{{route('dashboard')}}">Home</a> / Staff Attendance</p>
     </div>
-    <div class="col-6 mb-5 text-end pt-5 pe-5">
-        <a id="exportLink" class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body h-40px fs-7 waves-effect waves-light me-2"><i class="ri-file-excel-line"></i> <span class="nav-text">Excel</span></a>
+    <div class="col-8 mb-5 text-end pt-5 pe-5">
+        <button id="approveBulckBtn" class="btn btn-success me-1 d-none" onclick="approveBulckClick()"><i class="ri-check-line"></i> <span class="nav-text">Approve</span></button>
+        <button id="rejectBulckBtn" class="btn btn-danger me-1 d-none" onclick="rejectBulckClick()"><i class="ri-close-line"></i> <span class="nav-text">Reject</span></button>
+        <a id="exportLink" class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body h-40px fs-7 waves-effect waves-light me-1"><i class="ri-file-excel-line"></i> <span class="nav-text">Excel</span></a>
         <div class="btn btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-primary h-40px fs-7 waves-effect waves-light p-0">
             <div class="form-floating form-floating-outline">
                 <input type="text" id="StaffAttandanceDaterange" class="p-2 rounded border-0 bg-primary text-white" readonly/>
@@ -46,6 +48,7 @@
                 <table id="kt_datatable" class="table table-row-bordered table-row-gray-300">
                     <thead>
                         <tr>
+                            <th><input type="checkbox" id="CheckAll" class="form-check" onclick="CheckAll()" /></th>
                             <th>Sr No.</th>
                             <th>Booking ID</th>
                             <th>Type</th>
@@ -92,11 +95,12 @@
         dom: `<'row'<'col-sm-12'lBtr>>
             <'row'<'col-sm-12 col-md-8'i><'col-sm-12 col-md-4 d-flex justify-content-end align-items-center'p>>`,
         pageLength: 10,
+        ordering: false,
         buttons: [{
             extend: 'excel',
             title: 'Bookings List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,10,11,12]
+                columns: [2,3,4,5,6,7,8,10,11,12,13]
             }
         }],
         columnDefs: [{
@@ -106,18 +110,34 @@
         initComplete: function() {
             var api = this.api();
             var row = $('<tr>').appendTo($(api.table().header()));
+
             api.columns().every(function() {
                 var column = this;
                 var title = $(column.header()).text(); // Get the title from the original header
+
+                // Create input field for search
                 var input = $('<input>', {
                     type: 'text',
                     placeholder: 'Search ' + title,
                     class: 'form-control form-control-sm my-2'
                 }).appendTo($('<th>').appendTo(row));
 
+                // On keyup, change, or clear, perform the search
                 input.on('keyup change clear', function() {
-                    if (column.search() !== this.value) {
-                        column.search(this.value).draw();
+                    var searchValue = this.value;
+
+                    // If it's a date column, convert the search input to the date format used in the render function
+                    if (title.toLowerCase().includes('date')) {
+                        if (searchValue) {
+                            searchValue = moment(searchValue, "DD/MM/YYYY").format("YYYY-MM-DD");
+                        }
+                    }
+
+                    // If the search input is empty, clear the search and show all data
+                    if (searchValue === "") {
+                        column.search('').draw();
+                    } else if (column.search() !== searchValue) {
+                        column.search(searchValue).draw();
                     }
                 });
             });
@@ -128,7 +148,9 @@
                 if (btnClass) $buttons.find(btnClass).click();
             })
         },
+        scrollY: "400px",
         scrollX: true,
+        bScrollCollapse : true,
         processing: true,
         serverSide: false,
         order: [
@@ -136,6 +158,21 @@
         ],
         ajax: "{{asset("get_staff_attendance_list")}}",
         columns:[
+            {"data": "id" , render : function ( data, type, row, meta ) {
+                if(data){
+                    if (row.status == 0) {
+                        return type === 'display'  ?
+                        '<input type="checkbox" class="BulkCheckBox" onclick="showHideBulckButton()" value="'+data+'" class="form-check" />' :
+                        data;
+                    }else{
+                        return type === 'display'  ?
+                        '<input type="checkbox" class="form-check" disabled />' :
+                        data;
+                    }
+                }else{
+                    return "-";
+                }
+            }},
             { "render": function(data, type, full, meta) {
                     return meta.row+1;
             }},
@@ -274,6 +311,85 @@
         
     });
 
+    function CheckAll(){
+        if($('#CheckAll').is(':checked')){
+            $('.BulkCheckBox').prop('checked', true);
+        } else {
+            $('.BulkCheckBox').prop('checked', false);
+        }
+        showHideBulckButton();
+    }
+    function showHideBulckButton(){
+        var numItems = $('.BulkCheckBox:checked').length;
+        console.log(numItems);
+        if(numItems > 0){
+            $('#approveBulckBtn').removeClass('d-none');
+            $('#rejectBulckBtn').removeClass('d-none');
+            $('#CheckAll').prop('checked', true);
+        }else{
+            $('#approveBulckBtn').addClass('d-none');
+            $('#rejectBulckBtn').addClass('d-none');
+            $('#CheckAll').prop('checked', false);
+        }
+    }
+    function approveBulckClick() {
+        // Get all checked checkbox values
+        var ids = $('.BulkCheckBox:checked').map(function() {
+            return $(this).val();
+        }).get(); // Converts the result to an array
+        
+        if(ids.length === 0) {
+            alert('No items selected');
+            return;
+        }
+
+        $.ajax({
+            url: '{{route("approve_bulk_attendance")}}',
+            method: "POST",
+            data: {
+                id: ids, // Pass the array of ids
+                _token: "{{ csrf_token() }}"
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                location.reload();
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    }
+    function rejectBulckClick(){
+        var ids = $('.BulkCheckBox:checked').map(function() {
+            return $(this).val();
+        }).get(); // Converts the result to an array
+        
+        if(ids.length === 0) {
+            alert('No items selected');
+            return;
+        }
+
+        $.ajax({
+            url: '{{route("reject_bulk_attendance")}}',
+            method: "POST",
+            data: {
+                id: ids, // Pass the array of ids
+                _token: "{{ csrf_token() }}"
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (response) {
+                location.reload();
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    }
+
     // Function to fetch and display attendance data
     function fetchAttendanceData(startDate, endDate) {
         $.ajax({
@@ -284,7 +400,6 @@
                 end_date: endDate
             },
             success: function (response) {
-                console.log('Received data:', response.data); // Log received data
                 table.clear();
                 table.rows.add(response.data); // Assuming `response.data` is an array of data rows
                 table.draw();

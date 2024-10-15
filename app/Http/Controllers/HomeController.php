@@ -120,10 +120,10 @@ class HomeController extends Controller
         $dates = [];
         $currentDate = new \DateTime();
         $pastDate = clone $currentDate;
-        $pastDate->sub(new \DateInterval('P6D')); // 7 days before today
+        $pastDate->sub(new \DateInterval('P14D')); // 7 days before today
         $dates[] = $pastDate->format('Y-m-d');
 
-        for ($i = 1; $i <= 12; $i++) { // 13 days total to include 7 days before and 6 days ahead
+        for ($i = 1; $i <= 21; $i++) { // 13 days total to include 7 days before and 6 days ahead
             $nextDate = clone $pastDate;
             $nextDate->add(new \DateInterval('P' . $i . 'D'));
             $dates[] = $nextDate->format('Y-m-d');
@@ -180,14 +180,14 @@ class HomeController extends Controller
     }
     public function dhc_dashboard()
     {   
-        if (in_array("dhc_dashboard", Auth::user()->permissions())) {
+        if (in_array("dhc_dashboard", Auth::user()->permissions()) && Auth::user()->type == "DHC" ||  Auth::user()->type == "ALL") {
             $dates = [];
             $currentDate = new \DateTime();
             $pastDate = clone $currentDate;
-            $pastDate->sub(new \DateInterval('P6D')); // 7 days before today
+            $pastDate->sub(new \DateInterval('P14D')); // 7 days before today
             $dates[] = $pastDate->format('Y-m-d');
 
-            for ($i = 1; $i <= 12; $i++) { // 13 days total to include 7 days before and 6 days ahead
+            for ($i = 1; $i <= 21; $i++) { // 13 days total to include 7 days before and 6 days ahead
                 $nextDate = clone $pastDate;
                 $nextDate->add(new \DateInterval('P' . $i . 'D'));
                 $dates[] = $nextDate->format('Y-m-d');
@@ -248,14 +248,14 @@ class HomeController extends Controller
     }
     public function hsp_dashboard()
     {   
-        if (in_array("hsp_dashboard", Auth::user()->permissions())) {
+        if (in_array("hsp_dashboard", Auth::user()->permissions()) && Auth::user()->type == "HSP" ||  Auth::user()->type == "ALL") {
             $dates = [];
             $currentDate = new \DateTime();
             $pastDate = clone $currentDate;
-            $pastDate->sub(new \DateInterval('P6D')); // 7 days before today
+            $pastDate->sub(new \DateInterval('P14D')); // 7 days before today
             $dates[] = $pastDate->format('Y-m-d');
 
-            for ($i = 1; $i <= 12; $i++) { // 13 days total to include 7 days before and 6 days ahead
+            for ($i = 1; $i <= 21; $i++) { // 13 days total to include 7 days before and 6 days ahead
                 $nextDate = clone $pastDate;
                 $nextDate->add(new \DateInterval('P' . $i . 'D'));
                 $dates[] = $nextDate->format('Y-m-d');
@@ -318,14 +318,14 @@ class HomeController extends Controller
     
     public function crp_dashboard()
     {   
-        if (in_array("crp_dashboard", Auth::user()->permissions())) {
+        if (in_array("crp_dashboard", Auth::user()->permissions()) && Auth::user()->type == "CRP" ||  Auth::user()->type == "ALL") {
             $dates = [];
             $currentDate = new \DateTime();
             $pastDate = clone $currentDate;
-            $pastDate->sub(new \DateInterval('P6D')); // 7 days before today
+            $pastDate->sub(new \DateInterval('P14D')); // 7 days before today
             $dates[] = $pastDate->format('Y-m-d');
 
-            for ($i = 1; $i <= 12; $i++) { // 13 days total to include 7 days before and 6 days ahead
+            for ($i = 1; $i <= 21; $i++) { // 13 days total to include 7 days before and 6 days ahead
                 $nextDate = clone $pastDate;
                 $nextDate->add(new \DateInterval('P' . $i . 'D'));
                 $dates[] = $nextDate->format('Y-m-d');

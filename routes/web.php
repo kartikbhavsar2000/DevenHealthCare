@@ -70,6 +70,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/get_assign_bookings_list', [App\Http\Controllers\BookingController::class, 'get_assign_bookings_list'])->name('get_assign_bookings_list');
     Route::get('/assign_booking/{id}', [App\Http\Controllers\BookingController::class, 'assign_booking'])->name('assign_booking');
     Route::get('/cancel_booking_staff/{id}', [App\Http\Controllers\BookingController::class, 'cancel_booking_staff'])->name('cancel_booking_staff');
+    Route::get('/remove_single_staff/{id}', [App\Http\Controllers\BookingController::class, 'remove_single_staff'])->name('remove_single_staff');
     Route::post('/cancel_staff/{id}', [App\Http\Controllers\BookingController::class, 'cancel_staff'])->name('cancel_staff');
     Route::post('/store_assign_booking/{id}', [App\Http\Controllers\BookingController::class, 'store_assign_booking'])->name('store_assign_booking');
     Route::post('/assign_single_staff', [App\Http\Controllers\BookingController::class, 'assign_single_staff'])->name('assign_single_staff');
@@ -85,6 +86,8 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/staff_attendance', [App\Http\Controllers\BookingController::class, 'staff_attendance'])->name('staff_attendance');
     Route::get('/get_staff_attendance_list', [App\Http\Controllers\BookingController::class, 'get_staff_attendance_list'])->name('get_staff_attendance_list');
     Route::post('/approve_reject_staff_attendance', [App\Http\Controllers\BookingController::class, 'approve_reject_staff_attendance'])->name('approve_reject_staff_attendance');
+    Route::post('/approve_bulk_attendance', [App\Http\Controllers\BookingController::class, 'approve_bulk_attendance'])->name('approve_bulk_attendance');
+    Route::post('/reject_bulk_attendance', [App\Http\Controllers\BookingController::class, 'reject_bulk_attendance'])->name('reject_bulk_attendance');
     Route::post('/make_attandance_pending', [App\Http\Controllers\BookingController::class, 'make_attandance_pending'])->name('make_attandance_pending');
 
     Route::get('/booking_reviews', [App\Http\Controllers\BookingController::class, 'booking_reviews'])->name('booking_reviews');
@@ -198,6 +201,8 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/add_staff', [App\Http\Controllers\MenuController::class, 'add_staff'])->name('add_staff');
     Route::get('/edit_staff/{id}', [App\Http\Controllers\MenuController::class, 'edit_staff'])->name('edit_staff');
     Route::get('/view_staff_details/{id}', [App\Http\Controllers\MenuController::class, 'view_staff_details'])->name('view_staff_details');
+    Route::get('/view_staff_history/{id}', [App\Http\Controllers\MenuController::class, 'view_staff_history'])->name('view_staff_history');
+    Route::get('/get_staff_history_data', [App\Http\Controllers\MenuController::class, 'get_staff_history_data'])->name('get_staff_history_data');
     Route::get('/view_staff_reviews/{id}', [App\Http\Controllers\MenuController::class, 'view_staff_reviews'])->name('view_staff_reviews');
     Route::get('/get_staff_all_reviews_list/{id}', [App\Http\Controllers\MenuController::class, 'get_staff_all_reviews_list'])->name('get_staff_all_reviews_list');
     Route::get('/staff_salary_slip/{id}', [App\Http\Controllers\MenuController::class, 'staff_salary_slip'])->name('staff_salary_slip');

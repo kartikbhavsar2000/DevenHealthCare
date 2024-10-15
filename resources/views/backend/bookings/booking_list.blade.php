@@ -44,11 +44,8 @@
                             <th>Sr No.</th>
                             <th>Booking ID</th>
                             <th>Type</th>
+                            <th>Hospital Name</th>
                             <th>Customer Name</th>
-                            <th>Staff</th>
-                            <th>Equipment</th>
-                            <th>Doctor</th>
-                            <th>Ambulance</th>
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Created At</th>
@@ -81,7 +78,7 @@
             extend: 'excel',
             title: 'Active Bookings List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+                columns: [1,2,3,4,5,6,7,8,9,10,11,12]
             }
         }],
         columnDefs: [{
@@ -91,18 +88,34 @@
         initComplete: function() {
             var api = this.api();
             var row = $('<tr>').appendTo($(api.table().header()));
+
             api.columns().every(function() {
                 var column = this;
                 var title = $(column.header()).text(); // Get the title from the original header
+
+                // Create input field for search
                 var input = $('<input>', {
                     type: 'text',
                     placeholder: 'Search ' + title,
                     class: 'form-control form-control-sm my-2'
                 }).appendTo($('<th>').appendTo(row));
 
+                // On keyup, change, or clear, perform the search
                 input.on('keyup change clear', function() {
-                    if (column.search() !== this.value) {
-                        column.search(this.value).draw();
+                    var searchValue = this.value;
+
+                    // If it's a date column, convert the search input to the date format used in the render function
+                    if (title.toLowerCase().includes('date')) {
+                        if (searchValue) {
+                            searchValue = moment(searchValue, "DD/MM/YYYY").format("YYYY-MM-DD");
+                        }
+                    }
+
+                    // If the search input is empty, clear the search and show all data
+                    if (searchValue === "") {
+                        column.search('').draw();
+                    } else if (column.search() !== searchValue) {
+                        column.search(searchValue).draw();
                     }
                 });
             });
@@ -113,7 +126,9 @@
                 if (btnClass) $buttons.find(btnClass).click();
             })
         },
+        scrollY: "400px",
         scrollX: true,
+        bScrollCollapse : true,
         processing: true,
         serverSide: false,
         order: [
@@ -139,35 +154,8 @@
                     return "-";
                 }
             }},
+            { "data": "customer_details.h_type" ,"defaultContent": "-"},
             { "data": "customer_details.name" ,"defaultContent": "-"},
-            {"data": "is_staff" , render : function ( data, type, row, meta ) {
-                if(data == 1){
-                    return "<span class='badge rounded-pill bg-primary'>YES</span>";
-                }else{
-                    return "<span class='badge rounded-pill bg-dark'>NO</span>";
-                }
-            }},
-            {"data": "is_equipment" , render : function ( data, type, row, meta ) {
-                if(data == 1){
-                    return "<span class='badge rounded-pill bg-primary'>YES</span>";
-                }else{
-                    return "<span class='badge rounded-pill bg-dark'>NO</span>";
-                }
-            }},
-            {"data": "is_doctor" , render : function ( data, type, row, meta ) {
-                if(data == 1){
-                    return "<span class='badge rounded-pill bg-primary'>YES</span>";
-                }else{
-                    return "<span class='badge rounded-pill bg-dark'>NO</span>";
-                }
-            }},
-            {"data": "is_ambulance" , render : function ( data, type, row, meta ) {
-                if(data == 1){
-                    return "<span class='badge rounded-pill bg-primary'>YES</span>";
-                }else{
-                    return "<span class='badge rounded-pill bg-dark'>NO</span>";
-                }
-            }},
             {"data": "start_date" , render : function ( data, type, row, meta ) {
                 if(data){
                     return type === 'display'  ?
@@ -244,27 +232,19 @@
                 "render": function (data, type, row, meta) {
                     if(row.booking_status == 0){
                         return type === 'display' ?
-                        `<div class="d-inline-block"><a href="javascript:;"
-                                class="btn btn-sm btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
-                                aria-expanded="false"><i class="ri-more-2-line"></i></a>
-                            <ul class="dropdown-menu dropdown-menu-end m-0" style="">
-                                <li><a href="{{asset("/")}}view_booking_assign_details/` + data + `" class="dropdown-item"><i class="ri-list-view ri-20px"></i> View Staff List</a></li>
-                                <li><a href="{{asset("/")}}view_booking_details/` + data + `" class="dropdown-item"><i class="ri-information-2-line ri-20px"></i> View Booking Details</a></li>
-                                <li><a href="{{asset("/")}}extend_booking/` + data + `" class="dropdown-item"><i class="ri-add-box-line ri-20px"></i> Extend Booking</a></li>
-                                <li><a href="{{asset("/")}}cancel_booking_staff/` + data + `" class="dropdown-item"><i class="ri-user-unfollow-line ri-20px"></i> Remove Staff</a></li>
-                                <li><button onclick="pauseBooking('`+data+`')" class="dropdown-item"><i class="ri-pause-circle-line"></i> Pause Booking</button></li>
-                            </ul>
+                        `<div class="d-flex">
+                            <a href="{{asset("/")}}view_booking_assign_details/` + data + `" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-list-view ri-20px"></i></a>
+                            <a href="{{asset("/")}}view_booking_details/` + data + `" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-information-2-line ri-20px"></i></a>
+                            <a href="{{asset("/")}}extend_booking/` + data + `" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-add-box-line ri-20px"></i></a>
+                            <a href="{{asset("/")}}cancel_booking_staff/` + data + `" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-user-unfollow-line ri-20px"></i></a>
+                            <button onclick="pauseBooking('`+data+`')" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-pause-circle-line ri-20px"></i></button>
                         </div>` :
                         data;
                     }else{
                         return type === 'display' ?
-                        `<div class="d-inline-block"><a href="javascript:;"
-                                class="btn btn-sm btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
-                                aria-expanded="false"><i class="ri-more-2-line"></i></a>
-                            <ul class="dropdown-menu dropdown-menu-end m-0" style="">
-                                <li><a href="{{asset("/")}}view_booking_assign_details/` + data + `" class="dropdown-item"><i class="ri-list-view ri-20px"></i> View Staff List</a></li>
-                                <li><a href="{{asset("/")}}view_booking_details/` + data + `" class="dropdown-item"><i class="ri-information-2-line ri-20px"></i> View Booking Details</a></li>
-                            </ul>
+                        `<div class="d-flex">
+                            <a href="{{asset("/")}}view_booking_assign_details/` + data + `" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-list-view ri-20px"></i></a>
+                            <a href="{{asset("/")}}view_booking_details/` + data + `" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-information-2-line ri-20px"></i></a>
                         </div>` :
                         data;
                     }
@@ -289,6 +269,7 @@
         input:'textarea',
         inputPlaceholder: 'Enter reason for pause...',
         buttonsStyling: false,
+        allowOutsideClick: false,
         preConfirm: (inputValue) => {
             if (!inputValue) {
                 Swal.showValidationMessage('Reason is required')

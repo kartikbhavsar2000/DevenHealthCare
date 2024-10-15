@@ -54,6 +54,7 @@
                             <th>Sr No.</th>
                             <th>Booking ID</th>
                             <th>Type</th>
+                            <th>Hospital Name</th>
                             <th>Customer Name</th>
                             <th>Staff</th>
                             {{-- <th>Equipments</th> --}}
@@ -88,7 +89,7 @@
             extend: 'excel',
             title: 'Bookings List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9]
+                columns: [1,2,3,4,5,6,7,8,9,10]
             }
         }],
         columnDefs: [{
@@ -98,18 +99,34 @@
         initComplete: function() {
             var api = this.api();
             var row = $('<tr>').appendTo($(api.table().header()));
+
             api.columns().every(function() {
                 var column = this;
                 var title = $(column.header()).text(); // Get the title from the original header
+
+                // Create input field for search
                 var input = $('<input>', {
                     type: 'text',
                     placeholder: 'Search ' + title,
                     class: 'form-control form-control-sm my-2'
                 }).appendTo($('<th>').appendTo(row));
 
+                // On keyup, change, or clear, perform the search
                 input.on('keyup change clear', function() {
-                    if (column.search() !== this.value) {
-                        column.search(this.value).draw();
+                    var searchValue = this.value;
+
+                    // If it's a date column, convert the search input to the date format used in the render function
+                    if (title.toLowerCase().includes('date')) {
+                        if (searchValue) {
+                            searchValue = moment(searchValue, "DD/MM/YYYY").format("YYYY-MM-DD");
+                        }
+                    }
+
+                    // If the search input is empty, clear the search and show all data
+                    if (searchValue === "") {
+                        column.search('').draw();
+                    } else if (column.search() !== searchValue) {
+                        column.search(searchValue).draw();
                     }
                 });
             });
@@ -120,7 +137,9 @@
                 if (btnClass) $buttons.find(btnClass).click();
             })
         },
+        scrollY: "400px",
         scrollX: true,
+        bScrollCollapse : true,
         processing: true,
         serverSide: false,
         order: [
@@ -132,7 +151,21 @@
                     return meta.row+1;
             }},
             { "data": "unique_id" ,"defaultContent": "-"},
-            { "data": "booking_type" ,"defaultContent": "-"},
+            // { "data": "booking_type" ,"defaultContent": "-"},
+            {"data": "customer_details.h_type" , render : function ( data, type, row, meta ) {
+                if(row.booking_type == "Corporate"){
+                    return "CRP";
+                }else if(row.booking_type == "Patient"){
+                    if(data == "DHC"){
+                        return "DHC";
+                    }else{
+                        return "HSP";
+                    }
+                }else{
+                    return "-";
+                }
+            }},
+            { "data": "customer_details.h_type" ,"defaultContent": "-"},
             { "data": "customer_details.name" ,"defaultContent": "-"},
             {"data": "staff_count" , render : function ( data, type, row, meta ) {
                 return "<span class='badge badge-center bg-primary'>"+ data +"</span>";

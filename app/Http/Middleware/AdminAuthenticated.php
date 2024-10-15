@@ -22,11 +22,8 @@ class AdminAuthenticated
 
         if( Auth::check() )
         {
-            Log::info('User: '. $usereName . ' , Route: ' . $routeName . ' loaded');
             return $next($request);
         }
-        Log::info('User: '. $usereName . ' , Route: ' . $routeName . ' loaded');
-        Log::info('User: '. $usereName . ' , Route: ' . $routeName . ' Permission Denied');
         return redirect('login');
     }
 }

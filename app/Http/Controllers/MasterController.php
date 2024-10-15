@@ -20,7 +20,7 @@ class MasterController extends Controller
 {
     public function hospitals()
     {
-        if (in_array("hospitals", Auth::user()->permissions())) {
+        if (in_array("hospitals", Auth::user()->permissions()) && Auth::user()->type == "HSP" || Auth::user()->type == "ALL") {
             return view('backend.hospitals.hospital_list');
         }
         abort(403);
@@ -32,14 +32,14 @@ class MasterController extends Controller
     }
     public function add_hospital()
     {
-        if (in_array("hospitals", Auth::user()->permissions())) {
+        if (in_array("hospitals", Auth::user()->permissions()) && Auth::user()->type == "HSP" || Auth::user()->type == "ALL") {
             return view('backend.hospitals.add_hospital');
         }
         abort(403);
     }
     public function edit_hospital($id)
     {
-        if (in_array("hospitals", Auth::user()->permissions())) {
+        if (in_array("hospitals", Auth::user()->permissions()) && Auth::user()->type == "HSP" || Auth::user()->type == "ALL") {
             $data = Hospital::find($id);
             return view('backend.hospitals.edit_hospital',['data'=>$data]);
         }

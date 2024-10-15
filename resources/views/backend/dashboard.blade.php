@@ -32,6 +32,11 @@
   #SelectCustomerType + .select2-container{
     width: 15%!important;
   }
+  div.dataTables_filter {
+      margin-top: 1.25rem;
+      margin-bottom: 1.25rem;
+      margin-right: 1.25rem;
+  }
 </style>
 @endsection
 
@@ -69,14 +74,14 @@
       $permissions = Auth::user() ? Auth::user()->permissions() : [];
   @endphp
 
-  @if(!in_array('dashboard',$permissions))
+  @if(!in_array('dashboard',$permissions) || Auth::user()->type != "ALL")
   <div class="col-12">
     <div class="card">
       <div class="d-flex align-items-end row">
         <div class="col-md-6 order-2 order-md-1">
           <div class="card-body">
             <h2 class="card-title mb-4">Welcome,<br><span class="fw-bold">{{Auth::user()->name ?? ""}}</span> 👋</h2>
-            <h3>{{Auth::user()->role->name ?? ""}}</h3>
+            <h3>@if(Auth::user()->role) {{Auth::user()->role->name ?? ""}} @endif</h3>
             <p class="mb-0">Sorry! You do not have the access in viewing the rest fortes as disciplined by the Super Admin.</p>
           </div>
         </div>
@@ -97,7 +102,7 @@
             @if(!empty($dates))
               @foreach($dates as $key => $date)
                 <li class="nav-item" role="presentation">
-                  <button type="button" style="height: 60px; background: #4cb7e5; color:#c5eeff; border:2px solid #4cb7e5;" class="nav-link d-flex flex-column gap-1 waves-effect  @if($key == 6)active @endif" onclick="getBookingDetailsByDate('{{$date}}','{{date('Y-m-d')}}')" role="tab" data-bs-toggle="tab" data-bs-target="#navs-card" aria-controls="navs-profile" aria-selected="true" tabindex="-1">{{date('M d', strtotime($date))}}</button>
+                  <button @if($key == 14) id="activeTab" @endif type="button" style="height: 60px; background: #4cb7e5; color:#c5eeff; border:2px solid #4cb7e5;" class="nav-link d-flex flex-column gap-1 waves-effect  @if($key == 14)active @endif" onclick="getBookingDetailsByDate('{{$date}}','{{date('Y-m-d')}}')" role="tab" data-bs-toggle="tab" data-bs-target="#navs-card" aria-controls="navs-profile" aria-selected="true" tabindex="-1">{{date('M d', strtotime($date))}}</button>
                 </li>
               @endforeach
             @endif
@@ -1232,6 +1237,16 @@
 <script src="{{asset('public')}}/assets/vendor/libs/apex-charts/apexcharts.js"></script>
 <script src="{{asset('public')}}/assets/js/app-logistics-dashboard.js"></script>
 <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    var activeTab = document.getElementById("activeTab");
+    if (activeTab) {
+      setTimeout(function() {
+        activeTab.scrollIntoView({ behavior: "smooth", inline: "center" });
+      }, 1000);
+    }
+  });
+</script>
+<script>
    $(document).ready(function() {
     var date = new Date();
 
@@ -1250,7 +1265,7 @@
     getBookingDetailsByDate(formattedDate, formattedDate);
   });
   var table = $('.kt_datatable_main').DataTable({
-      dom:'',
+      dom:'f',
       paging: false,
       // processing: true,
       // lengthMenu: [[ 5, 15, 25, 100, -1 ], [ 5, 15, 25, 100, "All" ]],
@@ -1313,7 +1328,7 @@
                     if (booking.customer_details.h_type == "DHC") {
                         customerDetails += '(DHC)';
                     } else {
-                        customerDetails += '(HSP)';
+                        customerDetails += '(HSP)<br><span style="color:#0f84b7;">' + booking.customer_details.h_type + '</span>';
                     }
                 } else {
                     customerDetails += '(CRP)';
@@ -1377,6 +1392,7 @@
                                       staffDetails += `<button class="badge badge-center bg-label-primary border-none mt-1  me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Mark Attendance" data-bs-custom-class="tooltip-dark" onclick="markAttendance('` + stf.id + `', '`+ date +`','`+ today +`')" type="button" style="line-height: 10px;"><i class="ri-calendar-check-line"></i></button>`;
                                   }
                                   staffDetails += '<button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Staff Details" data-bs-custom-class="tooltip-dark" onclick=\'openStaffDetailsModal(' + JSON.stringify(stf.staff) + ')\'' + ' type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>';
+                                  staffDetails += '<a href="{{asset("remove_single_staff")}}/' + stf.id +'" class="badge badge-center text-white bg-danger border-none mt-1 ms-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Remove Staff" data-bs-custom-class="tooltip-dark"><i class="ri-close-line"></i></a>';
                                   staffDetails += '</div>';
                                   staffDetails += '</div>';
                                   staff_found = true;
@@ -1965,6 +1981,7 @@
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: 'Yes',
+    allowOutsideClick: false,
     customClass: {
       confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
       cancelButton: 'btn btn-outline-secondary waves-effect'

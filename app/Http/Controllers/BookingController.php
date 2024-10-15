@@ -77,13 +77,30 @@ class BookingController extends Controller
     public function get_bookings_list()
     {   
         $data = Booking::whereIn('booking_status',[0,2])->with('added_by')->orderBy('id',"DESC")->get();
+        $allData = [];
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
             $booking_amount_diffrence = BookingAssign::where('is_cancled',0)->where('type','!=','Doctor')->where('status','!=',1)->where(['booking_id'=>$da->id,'att_marked'=>0])->sum('sell_rate');
             $da->booking_amount_diffrence = $booking_amount_diffrence;
+
+            if(Auth::user()->type == "CRP"){
+                if($da->booking_type == "Corporate"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "HSP"){
+                if($da->booking_type != "Corporate" && $customer_details->h_type != "DHC"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "DHC"){
+                if($da->booking_type != "Corporate" && $customer_details->h_type == "DHC"){
+                    $allData[] = $da;
+                }
+            }else{
+                $allData[] = $da;
+            }
         }
-        return response()->json(['data'=>$data]);
+        return response()->json(['data'=>$allData]);
     }
     public function closed_bookings()
     {
@@ -95,13 +112,30 @@ class BookingController extends Controller
     public function get_closed_bookings_list()
     {   
         $data = Booking::where('booking_status',1)->with('closed_by')->orderBy('id',"DESC")->get();
+        $allData = [];
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
             $booking_amount_diffrence = BookingAssign::where('is_cancled',0)->where('type','!=','Doctor')->where('status','!=',1)->where(['booking_id'=>$da->id,'att_marked'=>0])->sum('sell_rate');
             $da->booking_amount_diffrence = $booking_amount_diffrence;
+
+            if(Auth::user()->type == "CRP"){
+                if($da->booking_type == "Corporate"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "HSP"){
+                if($da->booking_type != "Corporate" && $customer_details->h_type != "DHC"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "DHC"){
+                if($da->booking_type != "Corporate" && $customer_details->h_type == "DHC"){
+                    $allData[] = $da;
+                }
+            }else{
+                $allData[] = $da;
+            }
         }
-        return response()->json(['data'=>$data]);
+        return response()->json(['data'=>$allData]);
     }
     public function add_booking()
     {
@@ -114,10 +148,26 @@ class BookingController extends Controller
             $hospitals = Hospital::orderBy('id',"DESC")->get();
             $corporates = Corporate::with('state')->with('city')->with('area')->orderBy('id',"DESC")->get();
             $states = State::where('status',1)->orderBy('name','asc')->get();
+
+            $allpatients = [];
+            foreach($patients as $da){
+                if(Auth::user()->type == "HSP"){
+                    if($da->h_type != "DHC"){
+                        $allpatients[] = $da;
+                    }
+                }elseif(Auth::user()->type == "DHC"){
+                    if($da->h_type == "DHC"){
+                        $allpatients[] = $da;
+                    }
+                }else{
+                    $allpatients[] = $da;
+                }
+            }
+
             $data = [
                 'shifts' => $shifts,
                 'staff_type' => $staff_type,
-                'patients' => $patients,
+                'patients' => $allpatients,
                 'equipments' => $equipments,
                 'hospitals' => $hospitals,
                 'corporates' => $corporates,
@@ -472,6 +522,7 @@ class BookingController extends Controller
     public function get_assign_bookings_list()
     {   
         $data = Booking::where(['booking_status'=>0,'is_staff'=>1])->with('bookingDetails')->with('assign_by')->orderBy('id',"DESC")->get();
+        $allData = [];
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
@@ -499,9 +550,25 @@ class BookingController extends Controller
             $da->equipment_count = count($equipment_data);
             $da->doctor_count = count($doctor_data);
             $da->ambulance_count = count($ambulance_data);
+
+            if(Auth::user()->type == "CRP"){
+                if($da->booking_type == "Corporate"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "HSP"){
+                if($da->booking_type != "Corporate" && $customer_details->h_type != "DHC"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "DHC"){
+                if($da->booking_type != "Corporate" && $customer_details->h_type == "DHC"){
+                    $allData[] = $da;
+                }
+            }else{
+                $allData[] = $da;
+            }
         }
         // dd($data);
-        return response()->json(['data'=>$data]);
+        return response()->json(['data'=>$allData]);
     }
     public function assign_booking($id)
     {
@@ -947,6 +1014,25 @@ class BookingController extends Controller
         }
 
     }
+    public function remove_single_staff($id)
+    {
+        $booking_assign = BookingAssign::find($id);
+
+        if($booking_assign){
+            $booking_assign->cost_rate = NULL;
+            $booking_assign->staff_id = NULL;
+            $booking_assign->lat = NULL;
+            $booking_assign->lng = NULL;
+            $booking_assign->att_proof = NULL;
+            $booking_assign->att_marked = 0;
+            $booking_assign->status = 0;
+            $booking_assign->update();
+            return redirect()->back()->with('success','Staff Removed Successfully.');
+        }else{
+            return redirect()->back()->with('error','Data Not Found.');
+        }
+
+    }
     public function assign_single_staff(Request $request)
     {
         $booking_assign = BookingAssign::find($request->id);
@@ -1303,6 +1389,26 @@ class BookingController extends Controller
             return "NoData";
         }
     }
+    public function approve_bulk_attendance(Request $request)
+    {
+        $data = BookingAssign::find($request->id);
+        foreach($data as $id){
+            $id->status = 1;
+            $id->updated_by = Auth::user()->id;
+            $id->update();
+        }
+        return "Done";
+    }
+    public function reject_bulk_attendance(Request $request)
+    {
+        $data = BookingAssign::find($request->id);
+        foreach($data as $id){
+            $id->status = 2;
+            $id->updated_by = Auth::user()->id;
+            $id->update();
+        }
+        return "Done";
+    }
     public function make_attandance_pending(Request $request)
     {
         $data = BookingAssign::find($request->id);
@@ -1327,11 +1433,28 @@ class BookingController extends Controller
     public function get_booking_reviews_list()
     {   
         $data = Booking::where('booking_status',1)->with('added_by')->orderBy('id',"DESC")->get();
+        $allData = [];
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
+
+            if(Auth::user()->type == "CRP"){
+                if($da->booking_type == "Corporate"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "HSP"){
+                if($da->booking_type != "Corporate" && $customer_details->h_type != "DHC"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "DHC"){
+                if($da->booking_type != "Corporate" && $customer_details->h_type == "DHC"){
+                    $allData[] = $da;
+                }
+            }else{
+                $allData[] = $da;
+            }
         }
-        return response()->json(['data'=>$data]);
+        return response()->json(['data'=>$allData]);
     }
     public function add_booking_reviews($id)
     {   

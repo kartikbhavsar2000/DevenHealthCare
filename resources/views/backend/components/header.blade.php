@@ -152,28 +152,28 @@
                             <div>Dashboard</div>
                         </a>
                         <ul class="menu-sub">
-                            @if(in_array('dashboard',$permissions))
+                            @if(in_array('dashboard',$permissions) && Auth::user()->type == "ALL")
                             <li class="menu-item  @if (Route::currentRouteName() == 'dashboard') active @endif">
                                 <a href="{{route('dashboard')}}" class="menu-link">
                                     <div>All</div>
                                 </a>
                             </li>
                             @endif
-                            @if(in_array('dhc_dashboard',$permissions))
+                            @if(in_array('dhc_dashboard',$permissions) && Auth::user()->type == "DHC" ||  Auth::user()->type == "ALL")
                             <li class="menu-item  @if (Route::currentRouteName() == 'dhc_dashboard') active @endif">
                                 <a href="{{route('dhc_dashboard')}}" class="menu-link">
                                     <div>DHC</div>
                                 </a>
                             </li>
                             @endif
-                            @if(in_array('hsp_dashboard',$permissions))
+                            @if(in_array('hsp_dashboard',$permissions) && Auth::user()->type == "HSP" ||  Auth::user()->type == "ALL")
                             <li class="menu-item  @if (Route::currentRouteName() == 'hsp_dashboard') active @endif">
                                 <a href="{{route('hsp_dashboard')}}" class="menu-link">
                                     <div>HSP</div>
                                 </a>
                             </li>
                             @endif
-                            @if(in_array('crp_dashboard',$permissions))
+                            @if(in_array('crp_dashboard',$permissions) && Auth::user()->type == "CRP" ||  Auth::user()->type == "ALL")
                             <li class="menu-item  @if (Route::currentRouteName() == 'crp_dashboard') active @endif">
                                 <a href="{{route('crp_dashboard')}}" class="menu-link">
                                     <div>CRP</div>
@@ -332,7 +332,7 @@
                         </a>
                     </li>
                     @endif
-                    @if(in_array('patients',$permissions))
+                    @if(in_array('patients',$permissions) && Auth::user()->type == "DHC" || Auth::user()->type == "HSP" || Auth::user()->type == "ALL")
                     <li class="menu-item  @if (Route::currentRouteName() == 'patients') active @endif">
                         <a href="{{route('patients')}}" class="menu-link">
                             <i class="menu-icon tf-icons ri-wheelchair-line"></i>
@@ -340,7 +340,7 @@
                         </a>
                     </li>
                     @endif
-                    @if(in_array('corporates',$permissions))
+                    @if(in_array('corporates',$permissions) && Auth::user()->type == "CRP" ||  Auth::user()->type == "ALL")
                     <li class="menu-item  @if (Route::currentRouteName() == 'corporates') active @endif">
                         <a href="{{route('corporates')}}" class="menu-link">
                             <i class="menu-icon tf-icons ri-building-line"></i>
@@ -412,7 +412,7 @@
                         <span class="menu-header-text">Masters</span>
                     </li>
                     @endif
-                    @if(in_array('hospitals',$permissions))
+                    @if(in_array('hospitals',$permissions) && Auth::user()->type == "HSP" || Auth::user()->type == "ALL")
                     <li class="menu-item  @if (Route::currentRouteName() == 'hospitals') active @endif">
                         <a href="{{route('hospitals')}}" class="menu-link">
                             <i class="menu-icon tf-icons ri-hospital-line"></i>
@@ -515,7 +515,7 @@
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <span class="fw-medium d-block">{{ Auth::user() ? Auth::user()->name : "DHC" }}</span>
-                                                    <small class="text-muted">{{ Auth::user() ? Auth::user()->role->name : "NA" }}</small>
+                                                    <small class="text-muted">{{ Auth::user()->role ? Auth::user()->role->name : "NA" }}</small>
                                                 </div>
                                             </div>
                                         </a>

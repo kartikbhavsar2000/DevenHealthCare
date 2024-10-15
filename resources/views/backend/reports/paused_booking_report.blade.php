@@ -49,6 +49,7 @@
                             <th>Sr No.</th>
                             <th>Booking ID</th>
                             <th>Type</th>
+                            <th>Hospital Name</th>
                             <th>Customer Name</th>
                             <th>Start Date</th>
                             <th>End Date</th>
@@ -96,7 +97,7 @@
                 extend: 'excel',
                 title: 'Paused Booking Report',
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8]
+                    columns: [1,2,3,4,5,6,7,8,9]
                 }
             }],
             columnDefs: [{
@@ -178,6 +179,7 @@
                         index + 1,
                         item.unique_id,
                         type,
+                        item.customer_details.h_type,
                         item.customer_details.name,
                         moment(new Date(item.start_date)).format("DD/MM/YYYY"),
                         moment(new Date(item.end_date)).format("DD/MM/YYYY"),

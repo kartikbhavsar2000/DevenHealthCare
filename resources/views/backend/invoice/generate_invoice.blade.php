@@ -1,7 +1,17 @@
 @extends('backend.components.header')
 
 @section('css')
-
+<style>
+    #InvoicePreview p,span,h6,td,th{
+        color: #000000!important;
+    }
+    #InvoicePreview p,span,td,th{
+        font-size: 16px;
+    }
+    #InvoicePreview h6{
+        font-size: 18px;
+    }
+</style>
 @endsection
 
 @section('content')
@@ -449,7 +459,7 @@
                       <tr>
                         <td class="align-top px-0 py-6">
                           <p class="mb-1">
-                            <span class="me-2 fw-medium text-heading">Signature:</span>
+                            <span class="me-2 fw-medium text-heading" style="color: #000000!important;">Signature:</span>
                           </p>
                         </td>
                         <td class="pe-0 py-6 w-px-100">
@@ -509,7 +519,7 @@
                 <div class="input-group input-group-merge">
                     <span class="input-group-text text-secondary">₹</span>
                     <div class="form-floating form-floating-outline">
-                        <input type="number" class="form-control" name="amount" min="1" max="{{$booking->pending_payment  - $booking_amount_diffrence ?? '0'}}" placeholder="00" required id="PaymentAmount" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
+                        <input type="number" class="form-control" name="amount" min="0" max="{{$booking->pending_payment  - $booking_amount_diffrence ?? '0'}}" placeholder="00" required id="PaymentAmount" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
                         <label for="PaymentAmount">Amount</label>
                     </div>
                 </div>

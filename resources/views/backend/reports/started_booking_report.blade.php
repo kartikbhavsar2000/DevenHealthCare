@@ -59,10 +59,10 @@
                         <div class="mb-4">
                             <label class="form-label">Category</label>
                             <select class="form-control mb-1" id="Category">
-                                <option value=" " selected>All</option>
-                                <option value="DHC">Deven Health Care</option>
-                                <option value="HSP">Hospitals</option>
-                                <option value="CRP">Corporates</option>
+                                @if(Auth::user()->type == "ALL")<option value=" " selected>All</option> @endif
+                                @if(Auth::user()->type == "DHC" || Auth::user()->type == "ALL")<option value="DHC">Deven Health Care</option> @endif
+                                @if(Auth::user()->type == "HSP" || Auth::user()->type == "ALL")<option value="HSP">Hospitals</option> @endif
+                                @if(Auth::user()->type == "CRP" || Auth::user()->type == "ALL")<option value="CRP">Corporates</option> @endif
                             </select>
                         </div>
                     </div>
@@ -115,9 +115,11 @@
                             <th>Sr No.</th>
                             <th>BookingId</th>
                             <th>Customer Name</th>
-                            <th>Service Name</th>
-                            <th>Category</th>
+                            <th>Service Type</th>
                             <th>Type</th>
+                            <th>Hospital Name</th>
+                            <th>Staff Name</th>
+                            <th>Shift</th>
                             <th>Date</th>
                             <th>Status</th>
                             <th>Amount</th>
@@ -174,10 +176,11 @@
                     }else{
                         var status = "<p class='m-0 text-danger bg-label-danger text-center p-1 rounded'>Stopped</p>";
                     }
+                    var staff_name = (item.f_name ?? '') + ' ' + (item.m_name ?? '') + ' ' + (item.l_name ?? '');
                     var amount = '₹'+ parseInt(item.sell_rate, 10).toLocaleString();
-
+                    console.log(item);
                     rows += '<tr><td>' + (index + 1) + '</td><td>' + item.unique_id + '</td><td>' + item.customer_name + '</td><td>' +
-                            item.type + '</td><td>' + shift + '</td><td>' + type + '</td><td>' +
+                            item.type + '</td><td>' + type + '</td><td>' + item.h_type + '</td><td>' + staff_name + '</td><td>' + shift + '</td><td>' +
                             moment(new Date(item.date)).format("DD/MM/YYYY") + '</td><td>' + status + '</td><td>' + amount + '</td></tr>';
                 });
                 table.rows.add($(rows)).draw(false);
@@ -198,7 +201,7 @@
                 extend: 'excel',
                 title: 'Services Report',
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8]
+                    columns: [1,2,3,4,5,6,7,8,9,10]
                 }
             }],
             columnDefs: [{

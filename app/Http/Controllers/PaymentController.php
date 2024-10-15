@@ -71,7 +71,7 @@ class PaymentController extends Controller
         $request->validate([
             'month' => 'required',
             'staff_id' => 'required',
-            'amount' => 'required|numeric|min:0|digits_between:1,12',
+            'amount' => 'required|numeric|min:1|digits_between:1,12',
         ]);
 
         $checkMonth = AdvanceSalary::where(['staff_id'=>$request->staff_id,'month'=>$request->month])->first();
@@ -180,7 +180,7 @@ class PaymentController extends Controller
         $data = [];
     
         foreach ($request->staff_id as $st_id) {
-            $staff = Staff::find($st_id);
+            $staff = Staff::with('types')->find($st_id);
             if ($staff) {
                 $staff->staff_name = $staff->f_name . " " . $staff->m_name . " " . $staff->l_name;
                 $total_assign = 0;
@@ -302,9 +302,9 @@ class PaymentController extends Controller
                 $nextMonth = $nextMonthName . ' ' . $year;
                
                 $checkMonth = AdvanceSalary::where(['staff_id'=>$staff->id,'month'=>$month])->first();
-                if($checkMonth){
+                if($checkMonth && $checkMonth->amount > 0){
                     $advance_salary = $checkMonth->amount;
-
+                    
                     if ($total_salary <= $advance_salary) {
                         $main_total = 0;
                         $remaining_advance_salary = $advance_salary - $total_salary;
@@ -324,25 +324,46 @@ class PaymentController extends Controller
                         $ad_Data->is_salary = 1;
                         $ad_Data->save();
 
-                        $data = new AdvanceSalary();
-                        $data->staff_id = $staff->id;
-                        $data->month = $nextMonth;
-                        $data->amount = $remaining_advance_salary;
-                        $data->description = "Carryover from the previous month.";
-                        $data->added_by = Auth::user()->id;
-                        $data->save();
+                        $checknextMonth = AdvanceSalary::where(['staff_id'=>$staff->id,'month'=>$nextMonth])->first();
+                        if($checknextMonth){
+                            if($checknextMonth->amount > 0){
+                                $checknextMonth->amount = $checknextMonth->amount + $remaining_advance_salary;
+                            }else{
+                                $checknextMonth->amount = $remaining_advance_salary;
+                            }
+                            $checknextMonth->updated_by = Auth::user()->id;
+                            $checknextMonth->update();
 
-                        $ad_Data = new AdvanceSalaryHistory();
-                        $ad_Data->adv_id = $data->id;
-                        $ad_Data->staff_id = $data->staff_id;
-                        $ad_Data->month = $data->month;
-                        $ad_Data->amount = $data->amount;
-                        $ad_Data->added_by = Auth::user()->id;
-                        $ad_Data->description = "Carryover from the previous month.";
-                        $ad_Data->type = 1;
-                        $ad_Data->is_salary = 0;
-                        $ad_Data->save();
+                            $ad_Data = new AdvanceSalaryHistory();
+                            $ad_Data->adv_id = $checknextMonth->id;
+                            $ad_Data->staff_id = $checknextMonth->staff_id;
+                            $ad_Data->month = $checknextMonth->month;
+                            $ad_Data->amount = $remaining_advance_salary;
+                            $ad_Data->added_by = Auth::user()->id;
+                            $ad_Data->description = "Carryover from the previous month.";
+                            $ad_Data->type = 1;
+                            $ad_Data->is_salary = 0;
+                            $ad_Data->save();
+                        }else{
+                            $data = new AdvanceSalary();
+                            $data->staff_id = $staff->id;
+                            $data->month = $nextMonth;
+                            $data->amount = $remaining_advance_salary;
+                            $data->description = "Carryover from the previous month.";
+                            $data->added_by = Auth::user()->id;
+                            $data->save();
 
+                            $ad_Data = new AdvanceSalaryHistory();
+                            $ad_Data->adv_id = $data->id;
+                            $ad_Data->staff_id = $data->staff_id;
+                            $ad_Data->month = $data->month;
+                            $ad_Data->amount = $data->amount;
+                            $ad_Data->added_by = Auth::user()->id;
+                            $ad_Data->description = "Carryover from the previous month.";
+                            $ad_Data->type = 1;
+                            $ad_Data->is_salary = 0;
+                            $ad_Data->save();
+                        }
                     } else {
                         $checkMonth->amount = 0;
                         $checkMonth->updated_by = Auth::user()->id;

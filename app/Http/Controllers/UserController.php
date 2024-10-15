@@ -132,6 +132,7 @@ class UserController extends Controller
             'name' => 'required|max:255|regex:/^([^0-9]*)$/',
             'email' => 'required|email|unique:users,email',
             'role' => 'required',
+            'type' => 'required',
             'password' => 'required|min:8',
             'c_password' => 'required|min:8',
         ],[
@@ -146,6 +147,7 @@ class UserController extends Controller
         $data->name = $request->name;
         $data->email = $request->email;
         $data->role_id = $request->role;
+        $data->type = $request->type;
         $data->password = Hash::make($request->password);
         $data->save();
         return redirect('users')->with('success','The User Added Successfully');
@@ -156,12 +158,14 @@ class UserController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users,email,'.$request->id,
             'role' => 'required',
+            'type' => 'required',
         ]);
         $data = User::where('role_id','!=',1)->where('id',$request->id)->first();
         if($data){
             $data->name = $request->name;
             $data->email = $request->email;
             $data->role_id = $request->role;
+            $data->type = $request->type;
             $data->update();
     
             return redirect()->back()->with('success','The User Updated Successfully');

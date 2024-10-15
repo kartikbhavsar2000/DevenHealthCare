@@ -111,7 +111,10 @@
                 if (btnClass) $buttons.find(btnClass).click();
             })
         },
-        scrollX: true,
+        scrollY: "400px",
+        
+        
+        bScrollCollapse : true,
         processing: true,
         serverSide: false,
         order: [
@@ -232,6 +235,7 @@
                             aria-expanded="false"><i class="ri-more-2-line"></i></a>
                         <ul class="dropdown-menu dropdown-menu-end m-0" style="">
                             <li><a href="{{asset("/")}}view_staff_details/` + data + `" class="dropdown-item"><i class="ri-information-line ri-20px"></i> View Staff Details</a></li>
+                            <li><a href="{{asset("/")}}view_staff_history/` + data + `" class="dropdown-item"><i class="ri-history-line ri-20px"></i> View Staff History</a></li>
                             <li><a href="{{asset("/")}}view_staff_reviews/` + data + `" class="dropdown-item"><i class="ri-user-star-line ri-20px"></i> Staff Ratings</a></li>
                             <li><a href="{{asset("/")}}edit_staff/` + data + `" class="dropdown-item"><i class="ri-edit-box-line ri-20px"></i> Edit Staff</a></li>
                             <li><a href="{{asset("/")}}staff_salary_slip/` + data + `" class="dropdown-item"><i class="ri-file-list-2-line"></i> Staff Salary Slip</a></li>

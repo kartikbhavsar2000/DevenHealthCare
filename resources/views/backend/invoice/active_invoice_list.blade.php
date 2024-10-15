@@ -43,6 +43,7 @@
                             <th>Sr No.</th>
                             <th>Booking ID</th>
                             <th>Type</th>
+                            <th>Hospital Name</th>
                             <th>Customer Name</th>
                             <th>Start Date</th>
                             <th>End Date</th>
@@ -76,7 +77,7 @@
             extend: 'excel',
             title: 'Active Invoice List',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11]
+                columns: [1,2,3,4,5,6,7,8,9,10,11,12]
             }
         }],
         columnDefs: [{
@@ -86,18 +87,34 @@
         initComplete: function() {
             var api = this.api();
             var row = $('<tr>').appendTo($(api.table().header()));
+
             api.columns().every(function() {
                 var column = this;
                 var title = $(column.header()).text(); // Get the title from the original header
+
+                // Create input field for search
                 var input = $('<input>', {
                     type: 'text',
                     placeholder: 'Search ' + title,
                     class: 'form-control form-control-sm my-2'
                 }).appendTo($('<th>').appendTo(row));
 
+                // On keyup, change, or clear, perform the search
                 input.on('keyup change clear', function() {
-                    if (column.search() !== this.value) {
-                        column.search(this.value).draw();
+                    var searchValue = this.value;
+
+                    // If it's a date column, convert the search input to the date format used in the render function
+                    if (title.toLowerCase().includes('date')) {
+                        if (searchValue) {
+                            searchValue = moment(searchValue, "DD/MM/YYYY").format("YYYY-MM-DD");
+                        }
+                    }
+
+                    // If the search input is empty, clear the search and show all data
+                    if (searchValue === "") {
+                        column.search('').draw();
+                    } else if (column.search() !== searchValue) {
+                        column.search(searchValue).draw();
                     }
                 });
             });
@@ -108,7 +125,9 @@
                 if (btnClass) $buttons.find(btnClass).click();
             })
         },
+        scrollY: "400px",
         scrollX: true,
+        bScrollCollapse : true,
         processing: true,
         serverSide: false,
         order: [
@@ -133,6 +152,7 @@
                     return "-";
                 }
             }},
+            { "data": "customer_details.h_type" ,"defaultContent": "-"},
             { "data": "customer_details.name" ,"defaultContent": "-"},
             {"data": "start_date" , render : function ( data, type, row, meta ) {
                 if(data){
@@ -203,15 +223,11 @@
                 "data": "id",
                 "render": function (data, type, row, meta) {
                     return type === 'display' ?
-                    `<div class="d-inline-block"><a href="javascript:;"
-                            class="btn btn-sm btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown"
-                            aria-expanded="false"><i class="ri-more-2-line"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end m-0" style="">
-                            <li><a href="{{asset("/")}}view_booking_assign_details/` + data + `" class="dropdown-item"><i class="ri-list-view ri-20px"></i> View Staff List</a></li>
-                            <li><a href="{{asset("/")}}view_booking_details/` + data + `" class="dropdown-item"><i class="ri-information-2-line ri-20px"></i> View Booking Details</a></li>
-                            <li><a href="{{asset("/")}}generate_invoice/` + data + `" class="dropdown-item"><i class="ri-file-list-3-line ri-20px"></i> Generate Invoice</a></li>
-                            <li><button onClick="closeBooking('`+data+`')" class="dropdown-item"><i class="ri-close-circle-line ri-20px"></i> Close Booking</button></li>
-                        </ul>
+                    `<div class="d-flex">
+                        <a href="{{asset("/")}}view_booking_assign_details/` + data + `" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-list-view ri-20px"></i></a>
+                        <a href="{{asset("/")}}view_booking_details/` + data + `" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-information-2-line ri-20px"></i></a>
+                        <a href="{{asset("/")}}generate_invoice/` + data + `" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-file-list-3-line ri-20px"></i></a>
+                        <button onclick="closeBooking('`+data+`')" class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect waves-light"><i class="ri-close-circle-line ri-20px"></i></button>
                     </div>` :
                     data;
                 }
@@ -231,7 +247,8 @@
           confirmButton: 'btn btn-primary me-3 waves-effect waves-light',
           cancelButton: 'btn btn-outline-secondary waves-effect'
         },
-        buttonsStyling: false
+        buttonsStyling: false,
+        allowOutsideClick: false
         }).then(function(result) {
             if(result.dismiss != 'cancel'){
                 $.ajax({

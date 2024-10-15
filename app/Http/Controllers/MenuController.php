@@ -23,12 +23,13 @@ use App\Models\BookingDetails;
 use App\Models\BookingAssign;
 use App\Models\BookingRating;
 use App\Models\BookingPayment;
+use DB;
 
 class MenuController extends Controller
 {
     public function patients()
     {
-        if (in_array("patients", Auth::user()->permissions())) {
+        if (in_array("patients", Auth::user()->permissions()) && Auth::user()->type == "DHC" || Auth::user()->type == "HSP" || Auth::user()->type == "ALL") {
             return view('backend.patients.patient_list');
         }
         abort(403);
@@ -36,11 +37,25 @@ class MenuController extends Controller
     public function get_patients_list()
     {   
         $data = Patient::with('state')->with('city')->with('area')->orderBy('id',"DESC")->get();
-        return response()->json(['data'=>$data]);
+        $allData = [];
+        foreach($data as $da){
+            if(Auth::user()->type == "HSP"){
+                if($da->h_type != "DHC"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "DHC"){
+                if($da->h_type == "DHC"){
+                    $allData[] = $da;
+                }
+            }else{
+                $allData[] = $da;
+            }
+        }
+        return response()->json(['data'=>$allData]);
     }
     public function add_patient()
     {
-        if (in_array("patients", Auth::user()->permissions())) {
+        if (in_array("patients", Auth::user()->permissions()) && Auth::user()->type == "DHC" || Auth::user()->type == "HSP" || Auth::user()->type == "ALL") {
             $states = State::where('status',1)->orderBy('name','asc')->get();
             $hospitals = Hospital::orderBy('id',"DESC")->get();
             return view('backend.patients.add_patient',['states'=>$states,'hospitals'=>$hospitals]);
@@ -49,7 +64,7 @@ class MenuController extends Controller
     }
     public function edit_patient($id)
     {
-        if (in_array("patients", Auth::user()->permissions())) {
+        if (in_array("patients", Auth::user()->permissions()) && Auth::user()->type == "DHC" || Auth::user()->type == "HSP" || Auth::user()->type == "ALL") {
             $states = State::where('status',1)->orderBy('name','asc')->get();
             $cities = City::where('status',1)->orderBy('name','asc')->get();
             $area = Area::orderBy('name','asc')->get();
@@ -61,7 +76,7 @@ class MenuController extends Controller
     }
     public function view_patient_history($id)
     {
-        if (in_array("patients", Auth::user()->permissions())) {
+        if (in_array("patients", Auth::user()->permissions()) && Auth::user()->type == "DHC" || Auth::user()->type == "HSP" || Auth::user()->type == "ALL") {
             $data = Patient::find($id);
             return view('backend.patients.view_patient_history',['data'=>$data]);
         }
@@ -285,6 +300,102 @@ class MenuController extends Controller
             $staff_type = StaffType::orderBy('title','asc')->get();
             $data = Staff::find($id);
             return view('backend.staff.view_staff',['states'=>$states,'cities'=>$cities,'area'=>$area,'staff_type'=>$staff_type,'data'=>$data]);
+        }
+        abort(403);
+    }
+    public function view_staff_history($id)
+    {
+        if (in_array("staff", Auth::user()->permissions())) {
+            $data = Staff::find($id);
+            return view('backend.staff.view_staff_history',['data'=>$data]);
+        }
+        abort(403);
+    }
+    public function get_staff_history_data(Request $request) {
+        if (in_array("started_booking_report", Auth::user()->permissions())) {
+            $staff_id = $request->staff_id;
+            $category = $request->category;
+            $services = $request->services;
+            $status = $request->status;
+            $type = $request->type;
+            $dateRange = $request->date_range;
+    
+            $dates = explode(' - ', $dateRange);
+    
+            $startDate = date('Y-m-d', strtotime(str_replace('/', '-', $dates[0])));
+            $endDate = date('Y-m-d', strtotime(str_replace('/', '-', $dates[1])));
+    
+            $data = DB::table('booking_assign')
+                ->join('bookings', 'booking_assign.booking_id', '=', 'bookings.id')
+                ->join('patient', 'bookings.customer_id', '=', 'patient.id')
+                ->join('staff', 'booking_assign.staff_id', '=', 'staff.id')
+                ->leftJoin('corporate', function($join) {
+                    $join->on('bookings.customer_id', '=', 'corporate.id')
+                         ->where('bookings.booking_type', 'Corporate');
+                })
+                ->where('booking_assign.type', '!=', 'Doctor')
+                ->where('booking_assign.staff_id', $staff_id)
+                ->whereNull('patient.deleted_at')
+                ->whereNull('booking_assign.deleted_at')
+                ->whereNull('bookings.deleted_at');
+    
+            if ($type) {
+                if ($type == 12) {
+                    $data->whereIn('booking_assign.shift', [1, 2]);
+                } else {
+                    $data->where('booking_assign.shift', 3);
+                }
+            }
+    
+            if ($startDate && $endDate) {
+                $data->whereBetween('booking_assign.date', [$startDate, $endDate]);
+            }
+    
+            $all_data = $data->select(
+                'bookings.booking_status',
+                'bookings.booking_type',
+                'booking_assign.shift',
+                'bookings.unique_id',
+                'staff.f_name',
+                'staff.m_name',
+                'staff.l_name',
+                DB::raw('CASE 
+                            WHEN bookings.booking_type = "Corporate" THEN corporate.name 
+                            ELSE patient.name 
+                         END as customer_name'),
+                DB::raw('CASE 
+                            WHEN bookings.booking_type = "Corporate" THEN "-" 
+                            ELSE patient.h_type 
+                         END as h_type'),
+                'booking_assign.type',
+                'booking_assign.date',
+                'booking_assign.cost_rate',
+                'booking_assign.is_cancled',
+                'booking_assign.att_marked',
+                'booking_assign.status'
+            )->get();
+
+            $allData = [];
+
+            foreach($all_data as $da){
+                if(Auth::user()->type == "CRP"){
+                    if($da->booking_type == "Corporate"){
+                        $allData[] = $da;
+                    }
+                }elseif(Auth::user()->type == "HSP"){
+                    if($da->booking_type != "Corporate" && $da->h_type != "DHC"){
+                        $allData[] = $da;
+                    }
+                }elseif(Auth::user()->type == "DHC"){
+                    if($da->booking_type != "Corporate" && $da->h_type == "DHC"){
+                        $allData[] = $da;
+                    }
+                }else{
+                    $allData[] = $da;
+                }
+            }
+    
+            return response()->json($allData);
         }
         abort(403);
     }
@@ -559,7 +670,7 @@ class MenuController extends Controller
     }
     public function corporates()
     {
-        if (in_array("corporates", Auth::user()->permissions())) {
+        if (in_array("corporates", Auth::user()->permissions()) && Auth::user()->type == "CRP" || Auth::user()->type == "ALL") {
             return view('backend.corporates.corporate_list');
         }
         abort(403);
@@ -571,7 +682,7 @@ class MenuController extends Controller
     }
     public function add_corporate()
     {
-        if (in_array("corporates", Auth::user()->permissions())) {
+        if (in_array("corporates", Auth::user()->permissions()) && Auth::user()->type == "CRP" || Auth::user()->type == "ALL") {
             $states = State::where('status',1)->orderBy('name','asc')->get();
             return view('backend.corporates.add_corporate',['states'=>$states]);
         }
@@ -579,7 +690,7 @@ class MenuController extends Controller
     }
     public function edit_corporate($id)
     {
-        if (in_array("corporates", Auth::user()->permissions())) {
+        if (in_array("corporates", Auth::user()->permissions()) && Auth::user()->type == "CRP" || Auth::user()->type == "ALL") {
             $states = State::where('status',1)->orderBy('name','asc')->get();
             $cities = City::where('status',1)->orderBy('name','asc')->get();
             $area = Area::orderBy('name','asc')->get();
@@ -590,7 +701,7 @@ class MenuController extends Controller
     }
     public function view_corporate_history($id)
     {
-        if (in_array("corporates", Auth::user()->permissions())) {
+        if (in_array("corporates", Auth::user()->permissions()) && Auth::user()->type == "CRP" || Auth::user()->type == "ALL") {
             $data = Patient::find($id);
             return view('backend.corporates.view_corporate_history',['data'=>$data]);
         }

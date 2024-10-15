@@ -158,13 +158,30 @@ class InvoiceController extends Controller
     public function get_active_invoice_list()
     {   
         $data = Booking::whereIn('booking_status',[0,2])->with('added_by')->orderBy('id',"DESC")->get();
+        $allData = [];
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
             $booking_amount_diffrence = BookingAssign::where('is_cancled',0)->where('type','!=','Doctor')->where('status','!=',1)->where(['booking_id'=>$da->id,'att_marked'=>0])->sum('sell_rate');
             $da->booking_amount_diffrence = $booking_amount_diffrence;
+
+            if(Auth::user()->type == "CRP"){
+                if($da->booking_type == "Corporate"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "HSP"){
+                if($da->booking_type != "Corporate" && $customer_details->h_type != "DHC"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "DHC"){
+                if($da->booking_type != "Corporate" && $customer_details->h_type == "DHC"){
+                    $allData[] = $da;
+                }
+            }else{
+                $allData[] = $da;
+            }
         }
-        return response()->json(['data'=>$data]);
+        return response()->json(['data'=>$allData]);
     }
     public function closed_invoice()
     {
@@ -176,13 +193,30 @@ class InvoiceController extends Controller
     public function get_closed_invoice_list()
     {   
         $data = Booking::where('booking_status',1)->with('closed_by')->orderBy('id',"DESC")->get();
+        $allData = [];
         foreach($data as $da){
             $customer_details = $da->customerDetails();
             $da->customer_details = $customer_details;
             $booking_amount_diffrence = BookingAssign::where('is_cancled',0)->where('type','!=','Doctor')->where('status','!=',1)->where(['booking_id'=>$da->id,'att_marked'=>0])->sum('sell_rate');
             $da->booking_amount_diffrence = $booking_amount_diffrence;
+
+            if(Auth::user()->type == "CRP"){
+                if($da->booking_type == "Corporate"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "HSP"){
+                if($da->booking_type != "Corporate" && $customer_details->h_type != "DHC"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "DHC"){
+                if($da->booking_type != "Corporate" && $customer_details->h_type == "DHC"){
+                    $allData[] = $da;
+                }
+            }else{
+                $allData[] = $da;
+            }
         }
-        return response()->json(['data'=>$data]);
+        return response()->json(['data'=>$allData]);
     }
     public function generate_invoice($id)
     {

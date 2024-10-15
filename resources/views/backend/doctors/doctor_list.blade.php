@@ -107,7 +107,9 @@
                 if (btnClass) $buttons.find(btnClass).click();
             })
         },
+        scrollY: "400px",
         scrollX: true,
+        bScrollCollapse : true,
         processing: true,
         serverSide: false,
         order: [
