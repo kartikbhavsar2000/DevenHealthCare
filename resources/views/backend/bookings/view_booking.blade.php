@@ -179,6 +179,9 @@
                                                     <input type="text" class="form-control staff-rate-input" value="{{$staff->sell_rate ?? "00"}}" readonly>
                                                     <label for="StaffRate">Rate</label>
                                                 </div>
+                                                <button type="button" class="btn btn-secondary px-2" onclick="changeModalData('{{$staff->id}}','{{$staff->sell_rate}}')" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                    <i class="ri-edit-box-line ri-20px"></i>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -432,6 +435,37 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Change Customer Rate</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{{route('change_customer_rate')}}" method="POST">
+            @csrf
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <div class="mb-4">
+                        <label class="form-label">Customer Rate <span class="text-danger">*</span></label>
+                        <div class="input-group mb-1">
+                            <span class="input-group-text">₹</span>
+                            <input type="text" name="sell_price" id="sell_price"  class="form-control" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" required/>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="ID" name="id"/> 
+                <div class="col-12">
+                    <button type="submit" id="Submit" class="btn btn-flex btn-primary h-40px fs-7 fw-bold me-1">Submit</button>
+                </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
 @endsection
 
 
@@ -439,6 +473,10 @@
 <script src="{{asset('public')}}/assets/vendor/libs/jquery-repeater/jquery-repeater.js"></script>
 
 <script>
+    function changeModalData(id,sell_rate){
+        $('#ID').val(id);
+        $('#sell_price').val(sell_rate);
+    }
     $(document).ready(function() {
     
     });

@@ -1294,6 +1294,7 @@
                             doctorDetails += `<button class="badge badge-center bg-label-primary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Mark Attendance" data-bs-custom-class="tooltip-dark" onclick="markDoctorAttendance('` + dct.id + `')" type="button" style="line-height: 10px;"><i class="ri-calendar-check-line"></i></button>`;
                         }
                         doctorDetails += '<button class="badge badge-center bg-label-secondary border-none mt-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Staff Details" data-bs-custom-class="tooltip-dark" onclick=\'openDoctorDetailsModal(' + JSON.stringify(dct.doctor) + ')\'' + ' type="button" style="line-height: 10px;"><i class="ri-eye-line"></i></button>';
+                        doctorDetails += '<a href="{{asset("remove_single_doctor")}}/' + dct.id +'" class="badge badge-center text-white bg-danger border-none mt-1 ms-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="Remove Doctor" data-bs-custom-class="tooltip-dark"><i class="ri-close-line"></i></a>';
                         doctorDetails += '</div>';
                         doctorDetails += '</div>';
                         doctor_found = true;

@@ -57,6 +57,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/get_booking_assign_details', [App\Http\Controllers\BookingController::class, 'get_booking_assign_details'])->name('get_booking_assign_details');
     Route::post('/create_booking', [App\Http\Controllers\BookingController::class, 'create_booking'])->name('create_booking');
     Route::post('/change_staff_and_customer_rate', [App\Http\Controllers\BookingController::class, 'change_staff_and_customer_rate'])->name('change_staff_and_customer_rate');
+    Route::post('/change_customer_rate', [App\Http\Controllers\BookingController::class, 'change_customer_rate'])->name('change_customer_rate');
     Route::post('/extend_booking_post', [App\Http\Controllers\BookingController::class, 'extend_booking_post'])->name('extend_booking_post');
 
     Route::get('/closed_bookings', [App\Http\Controllers\BookingController::class, 'closed_bookings'])->name('closed_bookings');
@@ -71,6 +72,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::get('/assign_booking/{id}', [App\Http\Controllers\BookingController::class, 'assign_booking'])->name('assign_booking');
     Route::get('/cancel_booking_staff/{id}', [App\Http\Controllers\BookingController::class, 'cancel_booking_staff'])->name('cancel_booking_staff');
     Route::get('/remove_single_staff/{id}', [App\Http\Controllers\BookingController::class, 'remove_single_staff'])->name('remove_single_staff');
+    Route::get('/remove_single_doctor/{id}', [App\Http\Controllers\BookingController::class, 'remove_single_doctor'])->name('remove_single_doctor');
     Route::post('/cancel_staff/{id}', [App\Http\Controllers\BookingController::class, 'cancel_staff'])->name('cancel_staff');
     Route::post('/store_assign_booking/{id}', [App\Http\Controllers\BookingController::class, 'store_assign_booking'])->name('store_assign_booking');
     Route::post('/assign_single_staff', [App\Http\Controllers\BookingController::class, 'assign_single_staff'])->name('assign_single_staff');

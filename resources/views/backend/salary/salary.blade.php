@@ -120,7 +120,7 @@
                                 </tr>
                               </thead>
                               <tbody id="table-body">
-                                    <td colspan="9" class="text-center">No Data Found</td>
+                                    <td colspan="10" class="text-center">No Data Found</td>
                               </tbody>
                             </table>
                         </div>
@@ -216,8 +216,8 @@
                             '<td>' + present + '</td>' +
                             '<td>' + item.absent_count + '</td>' +
                             '<td>' + payment + '</td>' +
-                            '<td>' + '₹' +  parseInt(item.advance_salary, 10).toLocaleString() + '</td>' +
-                            '<td>' + '₹' +  parseInt(item.total_salary, 10).toLocaleString() + '</td>' +
+                            '<td>' + parseInt(item.advance_salary, 10).toLocaleString() + '</td>' +
+                            '<td>' + parseInt(item.total_salary, 10).toLocaleString() + '</td>' +
                             '</tr>'
                         );
                     });

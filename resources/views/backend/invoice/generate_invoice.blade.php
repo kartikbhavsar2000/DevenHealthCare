@@ -57,6 +57,7 @@
                             <th>Invoice Start Date</th>
                             <th>Invoice End Date</th>
                             <th>Added By</th>
+                            <th>Discount</th>
                             <th>Amount</th>
                           </tr>
                         </thead>
@@ -69,6 +70,7 @@
                                 <td class="text-nowrap">{{date('d/m/Y',strtotime($payment->start_date)) ?? "-"}}</td>
                                 <td class="text-nowrap">{{date('d/m/Y',strtotime($payment->end_date)) ?? "-"}}</td>
                                 <td>{{$payment->created_by->name ?? "-"}}</td>
+                                <td>₹{{ number_format($payment->discount ?? "0") }}</td>
                                 <td>₹{{ number_format($payment->amount ?? "0") }}</td>
                               </tr>
                             @endforeach
@@ -524,6 +526,15 @@
                     </div>
                 </div>
                 <span class="text-danger" id="AmountError"></span>
+            </div>
+            <div class="col-12 mt-5">
+                <div class="input-group input-group-merge">
+                    <span class="input-group-text text-secondary">₹</span>
+                    <div class="form-floating form-floating-outline">
+                        <input type="number" class="form-control" name="discount" min="0" max="{{$booking->pending_payment  - $booking_amount_diffrence ?? '0'}}" value="0" required id="Discount" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')">
+                        <label for="Discount">Discount</label>
+                    </div>
+                </div>
             </div>
             <div class="col-12 mt-8">
                 <button type="submit" class="btn btn-flex btn-primary h-40px fs-7 fw-bold me-1" onclick="return checkValidation()">Submit</button>

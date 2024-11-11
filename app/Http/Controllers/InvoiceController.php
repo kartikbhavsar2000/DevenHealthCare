@@ -449,6 +449,7 @@ class InvoiceController extends Controller
             $payment = new BookingPayment();
             $payment->booking_id = $booking->id;
             $payment->amount = $request->amount;
+            $payment->discount = $request->discount;
             $payment->date = $request->date;
             $payment->start_date = $request->start_date;
             $payment->end_date = $request->end_date;

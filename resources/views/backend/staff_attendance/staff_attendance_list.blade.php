@@ -51,6 +51,8 @@
                             <th><input type="checkbox" id="CheckAll" class="form-check" onclick="CheckAll()" /></th>
                             <th>Sr No.</th>
                             <th>Booking ID</th>
+                            <th>Booking Type</th>
+                            <th>Hospital Name</th>
                             <th>Type</th>
                             <th>Assigned Staff</th>
                             <th>Shift</th>
@@ -100,7 +102,7 @@
             extend: 'excel',
             title: 'Bookings List',
             exportOptions: {
-                columns: [2,3,4,5,6,7,8,10,11,12,13]
+                columns: [2,3,4,5,6,7,8,10,11,12,13,14,15]
             }
         }],
         columnDefs: [{
@@ -177,6 +179,20 @@
                     return meta.row+1;
             }},
             { "data": "booking.unique_id" ,"defaultContent": "-"},
+            {"data": "customer_details.h_type" , render : function ( data, type, row, meta ) {
+                if(row.booking.booking_type == "Corporate"){
+                    return "CRP";
+                }else if(row.booking.booking_type == "Patient"){
+                    if(data == "DHC"){
+                        return "DHC";
+                    }else{
+                        return "HSP";
+                    }
+                }else{
+                    return "-";
+                }
+            }},
+            { "data": "customer_details.h_type" ,"defaultContent": "-"},
             { "data": "type" ,"defaultContent": "-"},
             {
                 data: "staff.f_name",

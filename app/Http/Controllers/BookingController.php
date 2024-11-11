@@ -934,6 +934,50 @@ class BookingController extends Controller
         }
 
     }
+    public function change_customer_rate(Request $request)
+    {
+        $booking_details = BookingDetails::find($request->id);
+        if($booking_details){
+            
+            $booking = Booking::find($booking_details->booking_id);
+
+            if($booking){
+                $booking_assign = BookingAssign::where('booking_detail_id',$booking_details->id)->get();
+                foreach($booking_assign as $bookingA){
+                    $bookingA->sell_rate = $request->sell_price;
+                    $bookingA->update();
+                }
+
+                if($booking_details->sell_rate > $request->sell_price){
+                    $amountLess = $booking_details->sell_rate - $request->sell_price;
+                    $amountLessMain = $amountLess * count($booking_assign);
+
+                    $sub_total = $booking->sub_total - $amountLessMain;
+                    $total = $booking->total - $amountLessMain;
+                    $pending_payment = $booking->pending_payment - $amountLessMain;
+                }else{
+                    $amountLess = $request->sell_price - $booking_details->sell_rate;
+                    $amountLessMain = $amountLess * count($booking_assign);
+
+                    $sub_total = $booking->sub_total + $amountLessMain;
+                    $total = $booking->total + $amountLessMain;
+                    $pending_payment = $booking->pending_payment + $amountLessMain;
+                }
+
+                $booking->sub_total = $sub_total;
+                $booking->total = $total;
+                $booking->pending_payment = $pending_payment;
+                $booking->update();
+
+                $booking_details->sell_rate = $request->sell_price;
+                $booking_details->update();
+            }
+            return redirect()->back()->with('success','Customer Rate Changed Successfully.');
+        }else{
+            return redirect()->back()->with('error','Data Not Found.');
+        }
+
+    }
     public function extend_booking_post(Request $request)
     {
         $booking = Booking::find($request->booking_id);
@@ -1031,7 +1075,19 @@ class BookingController extends Controller
         }else{
             return redirect()->back()->with('error','Data Not Found.');
         }
+    }
+    public function remove_single_doctor($id)
+    {
+        $booking_assign = BookingAssign::find($id);
 
+        if($booking_assign){
+            $booking_assign->cost_rate = NULL;
+            $booking_assign->staff_id = NULL;
+            $booking_assign->update();
+            return redirect()->back()->with('success','Doctor Removed Successfully.');
+        }else{
+            return redirect()->back()->with('error','Data Not Found.');
+        }
     }
     public function assign_single_staff(Request $request)
     {
@@ -1372,7 +1428,28 @@ class BookingController extends Controller
             $date =  date('Y-m-d');
             $data = BookingAssign::where('is_cancled',0)->whereDate('date',$date)->where('att_marked',1)->with('booking')->with('updated_by_user')->with('staff')->with('shift')->orderBy('id',"DESC")->get();
         }
-        return response()->json(['data'=>$data]);
+        $allData = [];
+        foreach($data as $da){
+            $customer_details = $da->booking->customerDetails();
+            $da->customer_details = $customer_details;
+
+            if(Auth::user()->type == "CRP"){
+                if($da->booking->booking_type == "Corporate"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "HSP"){
+                if($da->booking->booking_type != "Corporate" && $customer_details->h_type != "DHC"){
+                    $allData[] = $da;
+                }
+            }elseif(Auth::user()->type == "DHC"){
+                if($da->booking->booking_type != "Corporate" && $customer_details->h_type == "DHC"){
+                    $allData[] = $da;
+                }
+            }else{
+                $allData[] = $da;
+            }
+        }
+        return response()->json(['data'=>$allData]);
     }
     public function approve_reject_staff_attendance(Request $request)
     {
